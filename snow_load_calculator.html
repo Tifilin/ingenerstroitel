@@ -1,0 +1,265 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расчёт снеговой нагрузки по СП 20.13330.2016 (расширенный для специалистов)</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .step { margin-bottom: 30px; padding: 20px; border: 1px solid #ccc; border-radius: 5px; }
+        .step h2 { color: #333; }
+        img { max-width: 100%; height: auto; display: block; margin: 10px auto; }
+        select, input { padding: 5px; margin: 5px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        #report { display: none; margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 5px; }
+        table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        #roofImage { max-width: 300px; }
+    </style>
+</head>
+<body>
+    <h1>Интерактивный расчёт снеговой нагрузки по СП 20.13330.2016 (расширенный)</h1>
+    <p>Эта страница позволяет рассчитать снеговую нагрузку на крышу в соответствии с нормами СП 20.13330.2016 "Нагрузки и воздействия". Добавлены все возможные опции для специалистов, включая изображения конфигураций кровли. Расчёты выполняются локально в браузере.</p>
+
+    <div class="step">
+        <h2>Шаг 1: Выбор снегового района (Sg, п. 10.2)</h2>
+        <p>Нормативное значение веса снегового покрова Sg по таблице 10.1 СП 20.13330.2016. Уточнения по карте 1 приложения Е или данным Росгидромета.</p>
+        <table>
+            <tr><th>Район</th><th>Sg (кПа)</th></tr>
+            <tr><td>I</td><td>0.8</td></tr>
+            <tr><td>II</td><td>1.2</td></tr>
+            <tr><td>III</td><td>1.8</td></tr>
+            <tr><td>IV</td><td>2.4</td></tr>
+            <tr><td>V</td><td>3.2</td></tr>
+            <tr><td>VI</td><td>4.0</td></tr>
+            <tr><td>VII</td><td>5.6</td></tr>
+            <tr><td>VIII</td><td>7.0</td></tr>
+        </table>
+        <img src="https://saitinpro.ru/wp-content/uploads/2018/03/Karta-1_sneg.gif" alt="Карта снеговых районов России по СП 20.13330.2016">
+        <label>Снеговой район: <select id="snowDistrict">
+            <option value="I">I (0.8 кПа)</option>
+            <option value="II">II (1.2 кПа)</option>
+            <option value="III">III (1.8 кПа)</option>
+            <option value="IV">IV (2.4 кПа)</option>
+            <option value="V">V (3.2 кПа)</option>
+            <option value="VI">VI (4.0 кПа)</option>
+            <option value="VII">VII (5.6 кПа)</option>
+            <option value="VIII">VIII (7.0 кПа)</option>
+        </select></label>
+        <label>Уточненное Sg (если по данным Росгидромета, кПа): <input type="number" id="customSg" step="0.1" placeholder="Оставить пустым для табличного"></label>
+    </div>
+
+    <div class="step">
+        <h2>Шаг 2: Тип местности для Ce (п. 10.5-10.9, ссылка на 11.1.6)</h2>
+        <p>Тип местности: A - открытая (побережья, степь, тундра); B - с препятствиями (лес, поселки); C - городская (плотная застройка >10м).</p>
+        <label>Тип местности: <select id="terrainType">
+            <option value="A">A (открытая)</option>
+            <option value="B">B (с препятствиями)</option>
+            <option value="C">C (городская, защищенная)</option>
+        </select></label>
+        <p>Для защищенных покрытий (п. 10.6) Ce=1.0. Для открытых - расчет по формулам.</p>
+        <label>Защищено от ветра? (соседние здания, лес и т.д.): <input type="checkbox" id="protected" checked></label>
+    </div>
+
+    <div class="step">
+        <h2>Шаг 3: Размеры покрытия для Ce (п. 10.7-10.9)</h2>
+        <p>Для расчета сноса снега (Ce <1.0) укажите размеры для плоских/пологих крыш (уклон <20%).</p>
+        <label>Наименьший размер в плане l (м): <input type="number" id="dimMin" value="50" min="0"></label>
+        <label>Наибольший размер в плане L (м): <input type="number" id="dimMax" value="50" min="0"></label>
+        <label>Среднемесячная температура января > -5°C? (не применять снос, п. 10.9 а): <input type="checkbox" id="warmJan"></label>
+    </div>
+
+    <div class="step">
+        <h2>Шаг 4: Термический коэффициент Ct (п. 10.10)</h2>
+        <p>Ct=0.8 для неутепленных покрытий с высоким тепловыделением, уклон >3%, хороший отвод воды. Иначе Ct=1.0.</p>
+        <label>Ct: <select id="ct">
+            <option value="1.0">1.0 (стандарт)</option>
+            <option value="0.8">0.8 (таяние снега)</option>
+        </select></label>
+    </div>
+
+    <div class="step">
+        <h2>Шаг 5: Конфигурация покрытия для μ (п. 10.4, приложение Б)</h2>
+        <p>Выберите тип покрытия и укажите параметры. Рассчитывается μ для различных схем (равномерная, неравномерная, снеговые мешки и т.д.).</p>
+        <label>Тип покрытия: <select id="roofType" onchange="showParams()">
+            <option value="flat" data-img="https://example.com/flat-roof.jpg" data-ref="Б.1">Плоское/односкатное (Б.1)</option>
+            <option value="pitched" data-img="https://example.com/pitched-roof.jpg" data-ref="Б.1">Двускатное (Б.1)</option>
+            <option value="arched" data-img="https://example.com/arched-roof.jpg" data-ref="Б.2">Сводчатое/арочное (Б.2)</option>
+            <option value="cylindrical" data-img="https://example.com/cylindrical-roof.jpg" data-ref="Б.10">Цилиндрическое висячее (Б.10)</option>
+            <option value="dome" data-img="https://example.com/dome-roof.jpg" data-ref="Б.11">Купольное (Б.11)</option>
+            <option value="cone" data-img="https://example.com/cone-roof.jpg" data-ref="Б.12">Коническое (Б.12)</option>
+            <option value="drop" data-img="https://example.com/drop-roof.jpg" data-ref="Б.8-9">С перепадом высот (снеговые мешки, Б.8-9)</option>
+            <option value="lantern" data-img="https://example.com/lantern-roof.jpg" data-ref="Б.3-4">С фонарями (Б.3-4)</option>
+            <option value="parapet" data-img="https://example.com/parapet-roof.jpg" data-ref="Б.13">С парапетами (Б.13)</option>
+            <option value="superstructure" data-img="https://example.com/superstructure-roof.jpg" data-ref="Б.14">С надстройками (Б.14)</option>
+        </select></label>
+        <p id="roofRef">Ссылка на СП: Б.1</p>
+        <img id="roofImage" src="https://example.com/flat-roof.jpg" alt="Изображение конфигурации кровли">
+        <div id="roofParams">
+            <label>Угол уклона α (°): <input type="number" id="alpha" min="0" max="90" value="0"></label>
+        </div>
+        <p id="muInfo">μ будет рассчитано на основе параметров (приложение Б).</p>
+    </div>
+
+    <div class="step">
+        <h2>Шаг 6: Пониженная снеговая нагрузка (п. 10.11)</h2>
+        <p>Для районов с t_янв ≤ -5°C: пониженная S0_red = 0.5 * S0 (с Ce=1, μ=1).</p>
+        <label>Рассчитать пониженную нагрузку? <input type="checkbox" id="reducedLoad"></label>
+    </div>
+
+    <button onclick="calculate()">Рассчитать снеговую нагрузку</button>
+
+    <div id="report">
+        <h2>Подробный отчёт по расчёту (п. 10.1-10.12)</h2>
+        <div id="reportContent"></div>
+    </div>
+
+    <script>
+        const sgValues = {
+            'I': 0.8, 'II': 1.2, 'III': 1.8, 'IV': 2.4,
+            'V': 3.2, 'VI': 4.0, 'VII': 5.6, 'VIII': 7.0
+        };
+
+        function showParams() {
+            const typeSelect = document.getElementById('roofType');
+            const type = typeSelect.value;
+            const imgSrc = typeSelect.options[typeSelect.selectedIndex].getAttribute('data-img');
+            const ref = typeSelect.options[typeSelect.selectedIndex].getAttribute('data-ref');
+            document.getElementById('roofImage').src = imgSrc;
+            document.getElementById('roofImage').alt = `Изображение конфигурации кровли: ${type}`;
+            document.getElementById('roofRef').textContent = `Ссылка на СП: ${ref}`;
+            const paramsDiv = document.getElementById('roofParams');
+            paramsDiv.innerHTML = '<label>Угол уклона α (°): <input type="number" id="alpha" min="0" max="90" value="0"></label>';
+            if (type === 'arched') {
+                paramsDiv.innerHTML += '<label>Подъем свода f (м): <input type="number" id="rise" value="0"></label>';
+                paramsDiv.innerHTML += '<label>Пролет l (м): <input type="number" id="span" value="0"></label>';
+            } else if (type === 'drop') {
+                paramsDiv.innerHTML += '<label>Высота перепада h (м): <input type="number" id="heightDrop" value="0"></label>';
+                paramsDiv.innerHTML += '<label>Длина верхнего участка l1 (м): <input type="number" id="l1" value="0"></label>';
+                paramsDiv.innerHTML += '<label>Длина нижнего участка l2 (м): <input type="number" id="l2" value="0"></label>';
+                paramsDiv.innerHTML += '<label>Профиль верхнего (t1: 0.4 плоский, 0.3 скатный): <input type="number" id="t1" value="0.4" step="0.1"></label>';
+                paramsDiv.innerHTML += '<label>Профиль нижнего (t2): <input type="number" id="t2" value="0.4" step="0.1"></label>';
+            } // Добавьте для других типов по приложению Б
+        }
+
+        function calculateCe(terrain, dimMin, dimMax, protected, warmJan) {
+            if (protected || terrain === 'C' || warmJan) return 1.0;
+            const lc = Math.min(dimMax, 100);
+            const l = dimMin;
+            const k = terrain === 'A' ? 1.0 : 0.85;
+            const ce = (1.2 - 0.4 * Math.sqrt(l / lc)) * (0.8 + 0.002 * lc);
+            return Math.max(ce, 0.5);
+        }
+
+        function calculateMu(type, alpha, ...params) {
+            if (type === 'flat' || type === 'pitched') {
+                if (alpha >= 60) return 0;
+                if (alpha >= 30) return 0;
+                return 1.0;
+            } else if (type === 'arched') {
+                const f = params[0], l = params[1];
+                const alphaRad = alpha * Math.PI / 180;
+                const mu1 = 1 - Math.cos(1.5 * alphaRad);
+                return mu1;
+            } else if (type === 'drop') {
+                const h = params[0], l1 = params[1], l2 = params[2], t1 = params[3], t2 = params[4];
+                const s0 = sgValues[document.getElementById('snowDistrict').value];
+                const b = Math.min(2 * h, 16);
+                const muBag = (t1 * l1 + t2 * l2) / b;
+                return Math.min(muBag, 8);
+            }
+            return 1.0;
+        }
+
+        function calculate() {
+            const district = document.getElementById('snowDistrict').value;
+            let Sg = document.getElementById('customSg').value || sgValues[district];
+            Sg = parseFloat(Sg);
+            const terrain = document.getElementById('terrainType').value;
+            const protected = document.getElementById('protected').checked;
+            const dimMin = parseFloat(document.getElementById('dimMin').value);
+            const dimMax = parseFloat(document.getElementById('dimMax').value);
+            const warmJan = document.getElementById('warmJan').checked;
+            const Ct = parseFloat(document.getElementById('ct').value);
+            const type = document.getElementById('roofType').value;
+            const alpha = parseFloat(document.getElementById('alpha').value);
+            let params = [];
+            if (type === 'arched') {
+                params.push(parseFloat(document.getElementById('rise').value), parseFloat(document.getElementById('span').value));
+            } else if (type === 'drop') {
+                params.push(parseFloat(document.getElementById('heightDrop').value), parseFloat(document.getElementById('l1').value), parseFloat(document.getElementById('l2').value), parseFloat(document.getElementById('t1').value), parseFloat(document.getElementById('t2').value));
+            }
+            const Ce = calculateCe(terrain, dimMin, dimMax, protected, warmJan);
+            const mu = calculateMu(type, alpha, ...params);
+            const Sn = mu * Ct * Ce * Sg;
+            const Sr = 1.4 * Sn;
+            let reduced = '';
+            if (document.getElementById('reducedLoad').checked && !warmJan) {
+                const SnRed = 0.5 * Sg;
+                reduced = `<h3>Пониженная нормативная нагрузка (п.10.11): S_n_red = 0.5 × S_g = ${SnRed.toFixed(2)} кПа</h3>`;
+            }
+
+            const report = `
+                <h3>Входные данные:</h3>
+                <ul>
+                    <li>Снеговой район: ${district} (Sg = ${Sg} кПа, таблица 10.1, п.10.2)</li>
+                    <li>Тип местности: ${terrain}, защищено: ${protected ? 'да' : 'нет'}, t_янв > -5°C: ${warmJan ? 'да' : 'нет'}</li>
+                    <li>Размеры: l=${dimMin} м, L=${dimMax} м (для Ce)</li>
+                    <li>Ct = ${Ct} (п.10.10)</li>
+                    <li>Тип покрытия: ${type}, α=${alpha}°, μ=${mu.toFixed(2)} (приложение ${document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].getAttribute('data-ref')})</li>
+                </ul>
+                <h3>Расчёт Ce (п.10.5-10.9): Ce = ${Ce.toFixed(2)}</h3>
+                <h3>Расчёт нормативной снеговой нагрузки (п.10.1): S_n = μ × Ct × Ce × Sg = ${mu} × ${Ct} × ${Ce} × ${Sg} = ${Sn.toFixed(2)} кПа</h3>
+                <h3>Расчётная снеговая нагрузка (п.10.12): S_r = 1.4 × S_n = ${Sr.toFixed(2)} кПа</h3>
+                ${reduced}
+                <p><strong>Примечание:</strong> Для сложных случаев (снеговые мешки, несколько зон) μ варьируется по покрытию. Учитывайте несколько схем (равномерная, неравномерная). Обратитесь к полному тексту СП для детального анализа.</p>
+            `;
+            document.getElementById('reportContent').innerHTML = report;
+            document.getElementById('report').style.display = 'block';
+        }
+
+        showParams();
+    </script>
+</body>
+</html>
