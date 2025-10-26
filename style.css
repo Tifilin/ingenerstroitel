@@ -1,0 +1,395 @@
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    margin: 15px; 
+    line-height: 1.4;
+    color: #333;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 14px;
+}
+.steps-container {
+    position: relative;
+}
+.step { 
+    margin-bottom: 20px; 
+    padding: 15px; 
+    border: 1px solid #ddd; 
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    display: none;
+}
+.step.active {
+    display: block;
+}
+.step h2 { 
+    color: #2c3e50; 
+    margin-top: 0;
+    border-bottom: 1px solid #3498db;
+    padding-bottom: 8px;
+    font-size: 18px;
+}
+img { 
+    max-width: 100%; 
+    height: auto; 
+    display: block; 
+    margin: 10px auto;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+select, input { 
+    padding: 6px 8px; 
+    margin: 5px 3px; 
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 13px;
+}
+button { 
+    padding: 8px 16px; 
+    background: #3498db; 
+    color: white; 
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+button:hover { 
+    background: #2980b9; 
+}
+#report { 
+    display: none; 
+    margin-top: 20px; 
+    padding: 15px; 
+    background: #f8f9fa; 
+    border-radius: 6px;
+    border-left: 3px solid #3498db;
+}
+table { 
+    border-collapse: collapse; 
+    width: 100%; 
+    margin: 10px 0; 
+    background: white;
+    font-size: 13px;
+}
+th, td { 
+    border: 1px solid #ddd; 
+    padding: 8px; 
+    text-align: left; 
+}
+th { 
+    background-color: #f2f2f2; 
+    font-weight: bold;
+}
+#roofImage { 
+    max-width: 350px; 
+}
+.italic { 
+    font-style: italic; 
+    font-weight: normal; 
+    color: #7f8c8d;
+    font-size: 12px;
+}
+#snowMap, #sp131Table { 
+    display: none; 
+}
+#ceValue, #muValue { 
+    font-weight: bold; 
+    color: #e74c3c; 
+    font-size: 14px;
+}
+.terrain-type { 
+    display: block; 
+    margin-bottom: 5px; 
+    padding: 6px;
+    background: #f8f9fa;
+    border-radius: 3px;
+    font-size: 13px;
+}
+.method-label { 
+    display: block; 
+    margin-bottom: 6px; 
+    padding: 6px;
+    cursor: pointer;
+    font-size: 13px;
+}
+.method-label input {
+    margin-right: 6px;
+}
+#sgDisplay { 
+    font-weight: bold; 
+    color: #2ecc71; 
+    font-size: 14px;
+}
+.zone-table {
+    margin: 10px 0;
+    background: #ecf0f1;
+    padding: 10px;
+    border-radius: 4px;
+}
+.scheme-toggle {
+    margin: 8px 0;
+}
+.scheme-toggle button {
+    padding: 6px 12px;
+    margin-right: 8px;
+    background: #95a5a6;
+    font-size: 12px;
+}
+.scheme-toggle button.active {
+    background: #3498db;
+}
+.calculation-formula {
+    background: #2c3e50;
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+}
+.note {
+    background: #fff3cd;
+    border-left: 3px solid #ffc107;
+    padding: 8px;
+    margin: 10px 0;
+    border-radius: 3px;
+    font-size: 12px;
+}
+.warning {
+    background: #f8d7da;
+    border-left: 3px solid #dc3545;
+    padding: 8px;
+    margin: 10px 0;
+    border-radius: 3px;
+    font-size: 12px;
+}
+.info {
+    background: #d1ecf1;
+    border-left: 3px solid #17a2b8;
+    padding: 8px;
+    margin: 10px 0;
+    border-radius: 3px;
+    font-size: 12px;
+}
+.algorithm {
+    background: #d1ecf1;
+    border-left: 3px solid #17a2b8;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 4px;
+    font-size: 13px;
+}
+.roof-scheme {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin: 15px 0;
+}
+.scheme-diagram {
+    flex: 1;
+    min-width: 280px;
+    background: white;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+.scheme-values {
+    flex: 1;
+    min-width: 280px;
+}
+.temperature-control {
+    background: #e8f5e8;
+    padding: 8px;
+    border-radius: 4px;
+    margin: 8px 0;
+}
+.calculation-method {
+    margin: 8px 0;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.calculation-method label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 13px;
+}
+.sp-calculation {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+.manual-input {
+    margin-top: 12px;
+}
+.city-temperature {
+    background: #e8f5e8;
+    padding: 8px;
+    border-radius: 4px;
+    margin: 8px 0;
+}
+.disclaimer {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 15px 0;
+    font-size: 12px;
+    text-align: center;
+}
+.feedback-link {
+    float: right;
+    font-size: 12px;
+    color: #7f8c8d;
+    margin-top: -5px;
+}
+.feedback-link a {
+    color: #3498db;
+    text-decoration: none;
+}
+.feedback-link a:hover {
+    text-decoration: underline;
+}
+.snow-height-info {
+    background: #e8f5e8;
+    padding: 8px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 12px;
+}
+.mu-manual-option {
+    margin-top: 10px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+.detailed-explanation {
+    background: #e8f5e8;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 12px;
+}
+.report-actions {
+    margin: 15px 0;
+    text-align: center;
+}
+.report-actions button {
+    margin: 0 10px;
+}
+.btn-print {
+    background: #e74c3c;
+}
+.btn-print:hover {
+    background: #c0392b;
+}
+.btn-reset {
+    background: #95a5a6;
+}
+.btn-reset:hover {
+    background: #7f8c8d;
+}
+.mu-scheme {
+    margin: 10px 0;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+.mu-zone {
+    margin: 5px 0;
+    padding: 5px;
+    background: white;
+    border-radius: 3px;
+}
+.scheme-description {
+    background: #e8f5e8;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 12px;
+}
+.zone-calculation {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+.load-result {
+    background: #2c3e50;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    margin: 5px 0;
+    font-family: 'Courier New', monospace;
+}
+.scheme-usage {
+    background: #fff3cd;
+    padding: 8px;
+    border-radius: 4px;
+    margin: 5px 0;
+    font-size: 12px;
+}
+.dimension-error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 8px;
+    border-radius: 4px;
+    margin: 5px 0;
+    border-left: 3px solid #dc3545;
+    font-size: 12px;
+}
+.step-navigation {
+    margin-top: 20px;
+    text-align: center;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+.btn-prev {
+    background: #95a5a6;
+    margin-right: 10px;
+}
+.btn-prev:hover {
+    background: #7f8c8d;
+}
+.btn-next {
+    background: #3498db;
+}
+.btn-next:hover {
+    background: #2980b9;
+}
+.btn-calculate {
+    background: #27ae60;
+    padding: 12px 24px;
+    font-size: 16px;
+}
+.btn-calculate:hover {
+    background: #219a52;
+}
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #report, #report * {
+        visibility: visible;
+    }
+    #report {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        border: none;
+        box-shadow: none;
+    }
+    .report-actions {
+        display: none;
+    }
+    .step-navigation {
+        display: none;
+    }
+}
