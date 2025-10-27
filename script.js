@@ -12,23 +12,23 @@ const mapUrls = {
 
 // Обновляем объект с изображениями
 const roofImages = {
-    'single_slope': 'https://via.placeholder.com/400x250/2ecc71/ffffff?text=1_Односкатная.png',
-    'pitched': 'https://via.placeholder.com/400x250/e74c3c/ffffff?text=2_Двускатная.png',
-    'arched': 'https://via.placeholder.com/400x250/3498db/ffffff?text=3_Сводчатая.png',
-    'pointed': 'https://via.placeholder.com/400x250/9b59b6/ffffff?text=4_Стрельчатая.png',
-    'lantern': 'https://via.placeholder.com/400x250/f39c12/ffffff?text=5_С+фонарями.png',
-    'long_lantern': 'https://via.placeholder.com/400x250/1abc9c/ffffff?text=6_С+продольными+фонарями.png',
-    'shed': 'https://via.placeholder.com/400x250/34495e/ffffff?text=7_Шедовые+покрытия.png',
-    'multi_pitched': 'https://via.placeholder.com/400x250/e67e22/ffffff?text=8_Многопролётные+двускатные.png',
-    'multi_arched': 'https://via.placeholder.com/400x250/16a085/ffffff?text=9_Многопролётные+сводчатые.png',
-    'multi_lantern': 'https://via.placeholder.com/400x250/c0392b/ffffff?text=10_Многопролётные+с+фонарями.png',
-    'height_drop': 'https://via.placeholder.com/400x250/8e44ad/ffffff?text=11_С+перепадом+высоты.png',
-    'double_height_drop': 'https://via.placeholder.com/400x250/27ae60/ffffff?text=12_С+двумя+перепадами+высоты.png',
-    'cylindrical': 'https://via.placeholder.com/400x250/2980b9/ffffff?text=13_Висячие+цилиндрической+формы.png',
-    'dome': 'https://via.placeholder.com/400x250/d35400/ffffff?text=14_Купольные+покрытия.png',
-    'cone': 'https://via.placeholder.com/400x250/7f8c8d/ffffff?text=15_Конические+круговые+покрытия.png',
-    'parapet': 'https://via.placeholder.com/400x250/f1c40f/ffffff?text=16_Парапеты.png',
-    'heightened': 'https://via.placeholder.com/400x250/2c3e50/ffffff?text=17_Участки+при+возвышающихся+надстройках.png'
+    'single_slope': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/1_Односкатная.png',
+    'pitched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/2_Двускатная.png',
+    'arched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/3_Сводчатая.png',
+    'pointed': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/4_Стрельчатая.png',
+    'lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/5_С+фонарями.png',
+    'long_lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/6_С+продольными+фонарями.png',
+    'shed': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/7_Шедовые+покрытия.png',
+    'multi_pitched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/8_Многопролётные+двускатные.png',
+    'multi_arched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/9_Многопролётные+сводчатые.png',
+    'multi_lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/10_Многопролётные+с+фонарями.png',
+    'height_drop': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/11_С+перепадом+высоты.png',
+    'double_height_drop': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/12_С+двумя+перепадами+высоты.png',
+    'cylindrical': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/13_Висячие+цилиндрической+формы.png',
+    'dome': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/14_Купольные+покрытия.png',
+    'cone': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/15_Конические+круговые+покрытия.png',
+    'parapet': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/16_Парапеты.png',
+    'heightened': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/17_Участки+при+возвышающихся+надстройках.png'
 };
 
 let currentScheme = 'uniform';
