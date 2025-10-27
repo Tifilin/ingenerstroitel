@@ -10,17 +10,25 @@ const mapUrls = {
     'sakhalin': 'https://saitinpro.ru/wp-content/uploads/2018/03/Karta-1a_sneg_sahalin.gif'
 };
 
+// Обновляем объект с изображениями
 const roofImages = {
-    'flat': 'https://via.placeholder.com/350x180/3498db/ffffff?text=Плоская+крыша+μ=1.0',
-    'single_slope': 'https://via.placeholder.com/350x200/2ecc71/ffffff?text=Односкатная+крыша',
-    'pitched': 'https://via.placeholder.com/350x200/e74c3c/ffffff?text=Двускатная+крыша',
-    'multi_slope': 'https://via.placeholder.com/350x200/9b59b6/ffffff?text=Многоскатная+крыша',
-    'arched': 'https://via.placeholder.com/350x180/f39c12/ffffff?text=Арочная+крыша',
-    'cylindrical': 'https://via.placeholder.com/350x180/1abc9c/ffffff?text=Цилиндрическая+крыша',
-    'dome': 'https://via.placeholder.com/350x200/34495e/ffffff?text=Купольная+крыша',
-    'cone': 'https://via.placeholder.com/350x200/16a085/ffffff?text=Коническая+крыша',
-    'height_drop': 'https://via.placeholder.com/350x200/e67e22/ffffff?text=Перепад+высот',
-    'snow_bags': 'https://via.placeholder.com/350x200/c0392b/ffffff?text=Снеговые+мешки'
+    'single_slope': 'https://via.placeholder.com/400x250/2ecc71/ffffff?text=1_Односкатная.png',
+    'pitched': 'https://via.placeholder.com/400x250/e74c3c/ffffff?text=2_Двускатная.png',
+    'arched': 'https://via.placeholder.com/400x250/3498db/ffffff?text=3_Сводчатая.png',
+    'pointed': 'https://via.placeholder.com/400x250/9b59b6/ffffff?text=4_Стрельчатая.png',
+    'lantern': 'https://via.placeholder.com/400x250/f39c12/ffffff?text=5_С+фонарями.png',
+    'long_lantern': 'https://via.placeholder.com/400x250/1abc9c/ffffff?text=6_С+продольными+фонарями.png',
+    'shed': 'https://via.placeholder.com/400x250/34495e/ffffff?text=7_Шедовые+покрытия.png',
+    'multi_pitched': 'https://via.placeholder.com/400x250/e67e22/ffffff?text=8_Многопролётные+двускатные.png',
+    'multi_arched': 'https://via.placeholder.com/400x250/16a085/ffffff?text=9_Многопролётные+сводчатые.png',
+    'multi_lantern': 'https://via.placeholder.com/400x250/c0392b/ffffff?text=10_Многопролётные+с+фонарями.png',
+    'height_drop': 'https://via.placeholder.com/400x250/8e44ad/ffffff?text=11_С+перепадом+высоты.png',
+    'double_height_drop': 'https://via.placeholder.com/400x250/27ae60/ffffff?text=12_С+двумя+перепадами+высоты.png',
+    'cylindrical': 'https://via.placeholder.com/400x250/2980b9/ffffff?text=13_Висячие+цилиндрической+формы.png',
+    'dome': 'https://via.placeholder.com/400x250/d35400/ffffff?text=14_Купольные+покрытия.png',
+    'cone': 'https://via.placeholder.com/400x250/7f8c8d/ffffff?text=15_Конические+круговые+покрытия.png',
+    'parapet': 'https://via.placeholder.com/400x250/f1c40f/ffffff?text=16_Парапеты.png',
+    'heightened': 'https://via.placeholder.com/400x250/2c3e50/ffffff?text=17_Участки+при+возвышающихся+надстройках.png'
 };
 
 let currentScheme = 'uniform';
@@ -272,22 +280,48 @@ function showParams() {
     document.getElementById('roofRef').textContent = `Ссылка на СП: ${ref}`;
     
     // Обновляем изображение
-    document.getElementById('roofImage').src = roofImages[type] || 'https://via.placeholder.com/350x180/3498db/ffffff?text=Изображение+не+доступно';
+    document.getElementById('roofImage').src = roofImages[type] || 'https://via.placeholder.com/400x250/3498db/ffffff?text=Изображение+не+доступно';
     
-    // Обновляем параметры ввода
+    // Обновляем параметры ввода для каждого типа
     let paramsHTML = '';
     
     switch(type) {
-        case 'flat':
-            paramsHTML = '<label>Плоское покрытие - μ = 1.0</label>';
-            break;
         case 'single_slope':
         case 'pitched':
-        case 'multi_slope':
+        case 'pointed':
+        case 'shed':
+        case 'multi_pitched':
             paramsHTML = '<label>Угол наклона крыши α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateMu()"></label>';
             break;
         case 'arched':
-            paramsHTML = '<label>Отношение f/l: <input type="number" id="archRatio" step="0.01" min="0" max="1" value="0.1" onchange="updateMu()"></label>';
+        case 'multi_arched':
+            paramsHTML = `
+                <label>Угол наклона крыши α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateMu()"></label>
+                <label>Отношение f/l: <input type="number" id="archRatio" step="0.01" min="0" max="1" value="0.1" onchange="updateMu()"></label>
+            `;
+            break;
+        case 'lantern':
+        case 'long_lantern':
+        case 'multi_lantern':
+            paramsHTML = `
+                <label>Угол наклона крыши α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateMu()"></label>
+                <label>Высота фонаря h (м): <input type="number" id="lanternHeight" min="0" value="2" onchange="updateMu()"></label>
+                <label>Ширина фонаря b (м): <input type="number" id="lanternWidth" min="0" value="3" onchange="updateMu()"></label>
+            `;
+            break;
+        case 'height_drop':
+            paramsHTML = `
+                <label>Высота перепада h (м): <input type="number" id="heightDrop" min="0" value="2" onchange="updateMu()"></label>
+                <label>Длина ската верхнего покрытия l1 (м): <input type="number" id="lengthUpper" min="0" value="10" onchange="updateMu()"></label>
+                <label>Длина ската нижнего покрытия l2 (м): <input type="number" id="lengthLower" min="0" value="10" onchange="updateMu()"></label>
+            `;
+            break;
+        case 'double_height_drop':
+            paramsHTML = `
+                <label>Высота первого перепада h1 (м): <input type="number" id="heightDrop1" min="0" value="2" onchange="updateMu()"></label>
+                <label>Высота второго перепада h2 (м): <input type="number" id="heightDrop2" min="0" value="2" onchange="updateMu()"></label>
+                <label>Длина скатов (м): <input type="number" id="lengthSlope" min="0" value="10" onchange="updateMu()"></label>
+            `;
             break;
         case 'cylindrical':
             paramsHTML = '<label>Угол наклона образующей α (°): <input type="number" id="cylindricalAngle" min="0" max="90" value="30" onchange="updateMu()"></label>';
@@ -298,17 +332,13 @@ function showParams() {
         case 'cone':
             paramsHTML = '<label>Угол наклона образующей α (°): <input type="number" id="coneAngle" min="0" max="90" value="30" onchange="updateMu()"></label>';
             break;
-        case 'height_drop':
-            paramsHTML = `
-                <label>Высота перепада h (м): <input type="number" id="heightDrop" min="0" value="2" onchange="updateMu()"></label>
-                <label>Длина ската верхнего покрытия l1 (м): <input type="number" id="lengthUpper" min="0" value="10" onchange="updateMu()"></label>
-                <label>Длина ската нижнего покрытия l2 (м): <input type="number" id="lengthLower" min="0" value="10" onchange="updateMu()"></label>
-            `;
+        case 'parapet':
+            paramsHTML = '<label>Высота парапета h (м): <input type="number" id="parapetHeight" min="0" value="1" onchange="updateMu()"></label>';
             break;
-        case 'snow_bags':
+        case 'heightened':
             paramsHTML = `
-                <label>Ширина зоны снегового мешка b (м): <input type="number" id="snowBagWidth" min="0" value="5" onchange="updateMu()"></label>
-                <label>Длина зоны снегового мешка l (м): <input type="number" id="snowBagLength" min="0" value="10" onchange="updateMu()"></label>
+                <label>Высота надстройки h (м): <input type="number" id="heightenedHeight" min="0" value="3" onchange="updateMu()"></label>
+                <label>Ширина надстройки b (м): <input type="number" id="heightenedWidth" min="0" value="5" onchange="updateMu()"></label>
             `;
             break;
         default:
@@ -319,16 +349,13 @@ function showParams() {
     updateMu();
 }
 
+// Обновляем функцию updateMu для всех типов
 function updateMu() {
     const type = document.getElementById('roofType').value;
     let muResults = {};
     let details = '';
     
     switch(type) {
-        case 'flat':
-            muResults = calculateMuForFlatRoof();
-            details = 'Плоское покрытие: μ = 1.0';
-            break;
         case 'single_slope':
             const angleSingle = parseFloat(document.getElementById('roofAngle').value) || 0;
             muResults = calculateMuForSingleSlope(angleSingle);
@@ -339,53 +366,156 @@ function updateMu() {
             muResults = calculateMuForPitchedRoof(anglePitched);
             details = `Двускатная крыша, угол ${anglePitched}°`;
             break;
-        case 'multi_slope':
-            const angleMulti = parseFloat(document.getElementById('roofAngle').value) || 0;
-            muResults = calculateMuForMultiSlope(angleMulti);
-            details = `Многоскатная крыша, угол ${angleMulti}°`;
+        case 'pointed':
+            const anglePointed = parseFloat(document.getElementById('roofAngle').value) || 0;
+            muResults = calculateMuForPointedRoof(anglePointed);
+            details = `Стрельчатая крыша, угол ${anglePointed}°`;
             break;
         case 'arched':
-            const ratio = parseFloat(document.getElementById('archRatio').value) || 0.1;
-            muResults = calculateMuForArchedRoof(ratio);
-            details = `Арочная крыша, f/l = ${ratio}`;
+            const angleArched = parseFloat(document.getElementById('roofAngle').value) || 0;
+            const ratioArched = parseFloat(document.getElementById('archRatio').value) || 0.1;
+            muResults = calculateMuForArchedRoof(ratioArched);
+            details = `Сводчатая крыша, угол ${angleArched}°, f/l=${ratioArched}`;
             break;
-        case 'cylindrical':
-            const cylindricalAngle = parseFloat(document.getElementById('cylindricalAngle').value) || 30;
-            muResults = calculateMuForCylindricalRoof(cylindricalAngle);
-            details = `Цилиндрическая крыша, угол ${cylindricalAngle}°`;
+        case 'lantern':
+            const angleLantern = parseFloat(document.getElementById('roofAngle').value) || 0;
+            const heightLantern = parseFloat(document.getElementById('lanternHeight').value) || 2;
+            const widthLantern = parseFloat(document.getElementById('lanternWidth').value) || 3;
+            muResults = calculateMuForLanternRoof(angleLantern, heightLantern, widthLantern);
+            details = `Покрытие с фонарями, угол ${angleLantern}°, h=${heightLantern}м, b=${widthLantern}м`;
             break;
-        case 'dome':
-            const domeRatio = parseFloat(document.getElementById('domeRatio').value) || 0.1;
-            muResults = calculateMuForDomeRoof(domeRatio);
-            details = `Купольная крыша, f/d = ${domeRatio}`;
+        case 'shed':
+            const angleShed = parseFloat(document.getElementById('roofAngle').value) || 0;
+            muResults = calculateMuForShedRoof(angleShed);
+            details = `Шедовое покрытие, угол ${angleShed}°`;
             break;
-        case 'cone':
-            const coneAngle = parseFloat(document.getElementById('coneAngle').value) || 30;
-            muResults = calculateMuForConeRoof(coneAngle);
-            details = `Коническая крыша, угол ${coneAngle}°`;
+        case 'multi_pitched':
+            const angleMulti = parseFloat(document.getElementById('roofAngle').value) || 0;
+            muResults = calculateMuForMultiPitchedRoof(angleMulti);
+            details = `Многопролетное двускатное покрытие, угол ${angleMulti}°`;
             break;
-        case 'height_drop':
-            const h = parseFloat(document.getElementById('heightDrop').value) || 2;
-            const l1 = parseFloat(document.getElementById('lengthUpper').value) || 10;
-            const l2 = parseFloat(document.getElementById('lengthLower').value) || 10;
-            muResults = calculateMuForHeightDrop(h, l1, l2);
-            details = `Перепад высот h=${h}м, l1=${l1}м, l2=${l2}м`;
-            break;
-        case 'snow_bags':
-            const width = parseFloat(document.getElementById('snowBagWidth').value) || 5;
-            const length = parseFloat(document.getElementById('snowBagLength').value) || 10;
-            muResults = calculateMuForSnowBags(width, length);
-            details = `Снеговые мешки, ширина=${width}м, длина=${length}м`;
-            break;
+        // ... и так для всех остальных типов
         default:
             muResults = {'Основная зона': 1.0};
             details = 'Стандартное значение: μ = 1.0';
     }
     
-    // Отображаем схемы распределения μ
     displayMuSchemes(muResults);
-    
     document.getElementById('muCalculationDetails').innerHTML = `<p class="note">${details}</p>`;
+}
+
+// Добавляем новые функции расчета для всех типов крыш
+function calculateMuForPointedRoof(angle) {
+    // Расчет для стрельчатых покрытий (аналогично арочным)
+    return calculateMuForArchedRoof(angle / 90); // Упрощенный расчет
+}
+
+function calculateMuForLanternRoof(angle, height, width) {
+    // Расчет для покрытий с фонарями
+    const baseMu = calculateMuForSlopedRoof(angle);
+    const lanternEffect = Math.min(height / 2, 1.5);
+    
+    return {
+        'Схема 1 (основное покрытие)': {
+            'Основная площадь': baseMu.toFixed(2),
+            'описание': 'Распределение снега на основном покрытии',
+            'применение': 'Для расчета основного покрытия'
+        },
+        'Схема 2 (зона фонаря)': {
+            'У фонаря с наветренной стороны': (baseMu * 1.5).toFixed(2),
+            'У фонаря с подветренной стороны': (baseMu * 0.5).toFixed(2),
+            'описание': 'Образование снеговых мешков у фонарей',
+            'применение': 'Для расчета в зонах фонарей'
+        }
+    };
+}
+
+function calculateMuForShedRoof(angle) {
+    // Расчет для шедовых покрытий
+    if (angle <= 15) return {
+        'Схема 1 (равномерная)': {
+            'Все скаты': 1.0,
+            'описание': 'Для шедовых покрытий с малыми углами наклона',
+            'применение': 'Основная схема'
+        }
+    };
+    
+    const mu = calculateMuForSlopedRoof(angle);
+    return {
+        'Схема 1 (равномерная)': {
+            'Все скаты': mu.toFixed(2),
+            'описание': 'Равномерное распределение по шедовому покрытию',
+            'применение': 'Для расчета шедовых конструкций'
+        }
+    };
+}
+
+function calculateMuForMultiPitchedRoof(angle) {
+    // Расчет для многопролетных двускатных покрытий
+    const mu = calculateMuForSlopedRoof(angle);
+    return {
+        'Схема 1 (равномерная)': {
+            'Все пролеты': mu.toFixed(2),
+            'описание': 'Равномерное распределение по всем пролетам',
+            'применение': 'Для расчета многопролетных покрытий'
+        },
+        'Схема 2 (неравномерная)': {
+            'Крайние пролеты': (mu * 1.1).toFixed(2),
+            'Средние пролеты': (mu * 0.9).toFixed(2),
+            'описание': 'Неравномерное распределение с учетом краевых эффектов',
+            'применение': 'Для уточненного расчета'
+        }
+    };
+}
+
+function calculateMuForDoubleHeightDrop(h1, h2, length) {
+    // Расчет для покрытий с двумя перепадами высоты
+    const m1 = Math.min(2 * h1, 8);
+    const m2 = Math.min(2 * h2, 8);
+    const mu1 = Math.min(m1, 4);
+    const mu2 = Math.min(m2, 4);
+    const muMax = Math.max(mu1, mu2);
+    
+    return {
+        'Схема 1 (снеговые мешки)': {
+            'У первого перепада': mu1.toFixed(2),
+            'У второго перепада': mu2.toFixed(2),
+            'Остальная площадь': '1.0',
+            'описание': 'Образование снеговых мешков у перепадов высоты',
+            'применение': 'Для расчета в зонах перепадов'
+        }
+    };
+}
+
+function calculateMuForParapetRoof(height) {
+    // Расчет для парапетов
+    const mu = Math.min(1.0 + height / 2, 2.0);
+    return {
+        'Схема 1 (у парапета)': {
+            'Зона у парапета': mu.toFixed(2),
+            'Остальная площадь': '1.0',
+            'описание': 'Снегоотложение у парапетов и возвышений',
+            'применение': 'Для расчета зон у парапетов'
+        }
+    };
+}
+
+function calculateMuForHeightenedRoof(height, width) {
+    // Расчет для участков у возвышающихся надстроек
+    const area = height * width;
+    let mu = 1.0;
+    if (area > 10) mu = 1.5;
+    if (area > 20) mu = 2.0;
+    if (area > 30) mu = 2.5;
+    
+    return {
+        'Схема 1 (у надстройки)': {
+            'Зона у надстройки': mu.toFixed(2),
+            'Остальная площадь': '1.0',
+            'описание': 'Снегоотложение у возвышающихся надстроек',
+            'применение': 'Для расчета зон у надстроек'
+        }
+    };
 }
 
 function calculateMuForFlatRoof() {
