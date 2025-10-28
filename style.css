@@ -371,6 +371,42 @@ th {
 .btn-calculate:hover {
     background: #219a52;
 }
+.mountain-control {
+    background: #e8f4fd;
+    padding: 12px;
+    border-radius: 4px;
+    margin: 10px 0;
+    border-left: 3px solid #3498db;
+}
+.mountain-table {
+    margin: 10px 0;
+    background: white;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.mountain-table table {
+    margin: 0;
+}
+.mountain-table th {
+    background: #3498db;
+    color: white;
+}
+.altitude-input {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+.kb-display {
+    background: #2c3e50;
+    color: white;
+    padding: 8px;
+    border-radius: 4px;
+    margin: 5px 0;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
 @media print {
     body * {
         visibility: hidden;
