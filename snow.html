@@ -350,78 +350,83 @@
             </div>
         </div>
 
-        <!-- Шаг 4 -->
-        <div class="step" id="step4">
-            <h2>🏠 Шаг 4: Коэффициент перехода μ и схема нагрузки</h2>
-            <p class="italic">п. 10.4, Приложение Б</p>
-            
-            <div class="calculation-method">
-                <label>Способ определения μ:</label>
-                <label class="method-label">
-                    <input type="radio" name="muMethod" value="sp" checked onchange="toggleMuMethod()"> 
-                    📖 Рассчитать по СП 20.13330.2016
-                </label>
-                <label class="method-label">
-                    <input type="radio" name="muMethod" value="manual" onchange="toggleMuMethod()"> 
-                    ✏️ Ввести значение вручную
-                </label>
-            </div>
+<!-- Шаг 4 -->
+<div class="step" id="step4">
+    <h2>🏠 Шаг 4: Коэффициент перехода μ и схема нагрузки</h2>
+    <p class="italic">п. 10.4, Приложение Б</p>
+    
+    <div class="calculation-method">
+        <label>Способ определения μ:</label>
+        <label class="method-label">
+            <input type="radio" name="muMethod" value="sp" checked onchange="toggleMuMethod()"> 
+            📖 Рассчитать по СП 20.13330.2016
+        </label>
+        <label class="method-label">
+            <input type="radio" name="muMethod" value="manual" onchange="toggleMuMethod()"> 
+            ✏️ Ввести значение вручную
+        </label>
+    </div>
 
-            <div id="muManualInput" class="manual-input mu-manual-option" style="display: none;">
-                <label>Коэффициент перехода μ: 
-                    <input type="number" id="muManual" step="0.01" value="1.0" min="0">
-                </label>
-            </div>
+    <div id="muManualInput" class="manual-input mu-manual-option" style="display: none;">
+        <label>Коэффициент перехода μ: 
+            <input type="number" id="muManual" step="0.01" value="1.0" min="0">
+        </label>
+    </div>
 
-            <div id="muSpCalculation">
-                <p>Выберите тип покрытия и укажите параметры. Рассчитывается μ для различных схем.</p>
-                
-                <label>Тип покрытия: 
-                    <select id="roofType" onchange="showParams()">
-                        <option value="single_slope" data-ref="Б.1">1. Односкатное покрытие</option>
-                        <option value="pitched" data-ref="Б.1" selected>2. Двускатное покрытие</option>
-                        <option value="arched" data-ref="Б.2">3. Сводчатое покрытие</option>
-                        <option value="pointed" data-ref="Б.2">4. Стрельчатое покрытие</option>
-                        <option value="lantern" data-ref="Б.3">5. Покрытие с фонарями</option>
-                        <option value="long_lantern" data-ref="Б.4">6. Покрытие с продольными фонарями</option>
-                        <option value="shed" data-ref="Б.5">7. Шедовые покрытия</option>
-                        <option value="multi_pitched" data-ref="Б.6">8. Многопролётные двускатные</option>
-                        <option value="multi_arched" data-ref="Б.6">9. Многопролётные сводчатые</option>
-                        <option value="multi_lantern" data-ref="Б.7">10. Многопролётные с фонарями</option>
-                        <option value="height_drop" data-ref="Б.8">11. Покрытия с перепадом высоты</option>
-                        <option value="double_height_drop" data-ref="Б.8">12. Покрытия с двумя перепадами высоты</option>
-                        <option value="cylindrical" data-ref="Б.10">13. Висячие цилиндрической формы</option>
-                        <option value="dome" data-ref="Б.11">14. Купольные покрытия</option>
-                        <option value="cone" data-ref="Б.12">15. Конические круговые покрытия</option>
-                        <option value="parapet" data-ref="Б.13">16. Парапеты</option>
-                        <option value="heightened" data-ref="Б.14">17. Участки, примыкающие к возвышающимся надстройкам</option>
-                    </select>
-                </label>
-                
-                <p id="roofRef">Ссылка на СП: Б.1</p>
-                
-                <div id="roofImageContainer">
-                    <img id="roofImage" src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/2_Двускатная.png" alt="Изображение конфигурации кровли">
-                </div>
-
-                <div id="roofParams">
-                    <label>Угол наклона крыши α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateMu()"></label>
-                </div>
-
-                <div id="muCalculationDetails">
-                    <!-- Детали расчета μ будут заполняться динамически -->
-                </div>
-
-                <div id="muSchemesContainer">
-                    <!-- Схемы распределения μ будут заполняться динамически -->
-                </div>
-            </div>
-
-            <div class="step-navigation">
-                <button type="button" class="btn-prev" onclick="prevStep(3)">← Назад</button>
-                <button type="button" class="btn-next" onclick="nextStep(5)">Далее →</button>
-            </div>
+    <div id="muSpCalculation">
+        <p>Выберите тип покрытия и укажите параметры. Рассчитывается μ для различных схем.</p>
+        
+        <label>Тип покрытия: 
+            <select id="roofType" onchange="showParams()">
+                <option value="single_slope" data-ref="Б.1">1. Односкатное покрытие</option>
+                <option value="pitched" data-ref="Б.1" selected>2. Двускатное покрытие</option>
+                <option value="arched" data-ref="Б.2">3. Сводчатое покрытие</option>
+                <option value="pointed" data-ref="Б.2">4. Стрельчатое покрытие</option>
+                <option value="lantern" data-ref="Б.3">5. Покрытие с фонарями</option>
+                <option value="long_lantern" data-ref="Б.4">6. Покрытие с продольными фонарями</option>
+                <option value="shed" data-ref="Б.5">7. Шедовые покрытия</option>
+                <option value="multi_pitched" data-ref="Б.6">8. Многопролётные двускатные</option>
+                <option value="multi_arched" data-ref="Б.6">9. Многопролётные сводчатые</option>
+                <option value="multi_lantern" data-ref="Б.7">10. Многопролётные с фонарями</option>
+                <option value="height_drop" data-ref="Б.8">11. Покрытия с перепадом высоты</option>
+                <option value="double_height_drop" data-ref="Б.8">12. Покрытия с двумя перепадами высоты</option>
+                <option value="cylindrical" data-ref="Б.10">13. Висячие цилиндрической формы</option>
+                <option value="dome" data-ref="Б.11">14. Купольные покрытия</option>
+                <option value="cone" data-ref="Б.12">15. Конические круговые покрытия</option>
+                <option value="parapet" data-ref="Б.13">16. Парапеты</option>
+                <option value="heightened" data-ref="Б.14">17. Участки, примыкающие к возвышающимся надстройкам</option>
+            </select>
+        </label>
+        
+        <p id="roofRef">Ссылка на СП: Б.1</p>
+        
+        <div id="roofImageContainer">
+            <img id="roofImage" src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/2_Двускатная.png" alt="Изображение конфигурации кровли">
         </div>
+
+        <div id="roofParams">
+            <label>Угол наклона крыши α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateMu()"></label>
+        </div>
+
+        <div id="muCalculationDetails">
+            <!-- Детали расчета μ будут заполняться динамически -->
+        </div>
+
+        <!-- ДОБАВЛЕННЫЙ БЛОК -->
+        <div id="muValueContainer" style="margin: 10px 0;">
+            <p id="muValue">Максимальное значение μ: 1.0</p>
+        </div>
+
+        <div id="muSchemesContainer">
+            <!-- Схемы распределения μ будут заполняться динамически -->
+        </div>
+    </div>
+
+    <div class="step-navigation">
+        <button type="button" class="btn-prev" onclick="prevStep(3)">← Назад</button>
+        <button type="button" class="btn-next" onclick="nextStep(5)">Далее →</button>
+    </div>
+</div>
 
         <!-- Шаг 5 -->
         <div class="step" id="step5">
