@@ -11,23 +11,23 @@ const mapUrls = {
 };
 
 const roofImages = {
-    'single_slope': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/1_Односкатная.png',
-    'pitched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/2_Двускатная.png',
-    'arched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/3_Сводчатая.png',
-    'pointed': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/4_Стрельчатая.png',
-    'lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/5_С фонарями.png',
-    'long_lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/6_С продольными фонарями.png',
-    'shed': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/7_Шедовые покрытия.png',
-    'multi_pitched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/8_Многопролётные двускатные.png',
-    'multi_arched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/9_Многопролётные сводчатые.png',
-    'multi_lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/10_Многопролётные с фонарями.png',
-    'height_drop': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/11_С перепадом высоты.png',
-    'double_height_drop': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/12_С двумя перепадами высоты.png',
-    'cylindrical': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/13_Висячие цилиндрической формы.png',
-    'dome': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/14_Купольные покрытия.png',
-    'cone': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/15_Конические круговые покрытия.png',
-    'parapet': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/16_Парапеты.png',
-    'heightened': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/17_Участки при возвышающихся надстройках.png'
+    'single_slope': '1_Односкатная.png',
+    'pitched': '2_Двускатная.png',
+    'arched': '3_Сводчатая.png',
+    'pointed': '4_Стрельчатая.png',
+    'lantern': '5_С фонарями.png',
+    'long_lantern': '6_С продольными фонарями.png',
+    'shed': '7_Шедовые покрытия.png',
+    'multi_pitched': '8_Многопролётные двускатные.png',
+    'multi_arched': '9_Многопролётные сводчатые.png',
+    'multi_lantern': '10_Многопролётные с фонарями.png',
+    'height_drop': '11_С перепадом высоты.png',
+    'double_height_drop': '12_С двумя перепадами высоты.png',
+    'cylindrical': '13_Висячие цилиндрической формы.png',
+    'dome': '14_Купольные покрытия.png',
+    'cone': '15_Конические круговые покрытия.png',
+    'parapet': '16_Парапеты.png',
+    'heightened': '17_Участки при возвышающихся надстройках.png'
 };
 
 // Глобальные переменные для хранения данных
@@ -44,6 +44,9 @@ let mountainRegion = '';
 let currentCity = '';
 let currentTemperature = null;
 let currentSgMethod = 'manual';
+
+// Базовый URL для изображений
+const baseImageUrl = 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/';
 
 // ФУНКЦИИ НАВИГАЦИИ
 function showStep(stepNumber) {
@@ -127,7 +130,12 @@ function toggleMap(id) {
 
 function updateMapSrc() {
     const type = document.getElementById('mapType').value;
-    document.getElementById('snowMap').src = mapUrls[type];
+    const mapImg = document.getElementById('snowMap');
+    mapImg.src = mapUrls[type];
+    mapImg.onerror = function() {
+        this.style.display = 'none';
+        console.warn('Карта не загружена:', this.src);
+    };
 }
 
 // Функции для работы с городами
@@ -161,7 +169,7 @@ function updateSgFromMap() {
     document.getElementById('sgValue').textContent = sgValue;
 }
 
-// Функции для расчета Ce
+// Функции для расчета Ce согласно п.10.5-10.9 СП 20.13330.2016
 function updateCe() {
     const terrain = document.getElementById('terrainType').value;
     const protected = document.getElementById('protected').checked;
@@ -189,6 +197,7 @@ function updateCe() {
         details = '<p class="note">🏠 Здание защищено от ветра - применяется Ce = 1.0 согласно п.10.6 СП 20.13330.2016</p>';
     } else {
         details = `<p class="note">📏 Размеры покрытия: ${dimMin}×${dimMax} м, тип местности: ${terrain}</p>`;
+        details += `<p class="italic">Расчет по п.10.7 СП 20.13330.2016</p>`;
     }
     document.getElementById('ceCalculationDetails').innerHTML = details;
 }
@@ -240,7 +249,7 @@ function updateTemperatureInfo() {
     }
 }
 
-// Функции для расчета Ct
+// Функции для расчета Ct согласно п.10.10 СП 20.13330.2016
 function updateCt() {
     const ctType = document.querySelector('input[name="ctType"]:checked').value;
     
@@ -279,8 +288,17 @@ function showParams() {
     
     document.getElementById('roofRef').textContent = `Ссылка на СП: ${ref}`;
     
-    // Обновляем изображение
-    document.getElementById('roofImage').src = roofImages[type] || 'https://via.placeholder.com/400x250/3498db/ffffff?text=Изображение+не+доступно';
+    // Обновляем изображение с обработкой ошибок
+    const roofImage = document.getElementById('roofImage');
+    const imageName = roofImages[type];
+    if (imageName) {
+        roofImage.src = baseImageUrl + imageName;
+        roofImage.onerror = function() {
+            this.src = 'https://via.placeholder.com/400x250/3498db/ffffff?text=Схема+не+доступна';
+            console.warn('Изображение схемы не загружено:', this.src);
+        };
+        roofImage.alt = `Схема покрытия: ${type}`;
+    }
     
     // Обновляем параметры ввода для каждого типа
     let paramsHTML = '';
@@ -456,26 +474,36 @@ function calculateMuForSingleSlope(angle) {
 function calculateMuForPitchedRoof(angle) {
     const mu = calculateBaseMu(angle);
     
-    return {
+    const results = {
         'Схема Б.1 (вариант 1)': {
             'μ₁': mu.toFixed(2),
             'μ₂': mu.toFixed(2),
             'описание': `Двускатное покрытие по схеме Б.1 (вариант 1). Угол наклона α = ${angle}°. Равномерное распределение: μ₁ = μ₂ = ${mu.toFixed(2)} согласно п.Б.1 СП 20.13330.2016`,
             'применение': 'Для расчета прогибов'
-        },
-        'Схема Б.1 (вариант 2)': {
-            'μ₁': (1.25 * mu).toFixed(2),
-            'μ₂': (0.75 * mu).toFixed(2),
-            'описание': `Двускатное покрытие по схеме Б.1 (вариант 2). Угол наклона α = ${angle}°. Неравномерное распределение: μ₁ = 1.25×${mu.toFixed(2)} = ${(1.25 * mu).toFixed(2)}, μ₂ = 0.75×${mu.toFixed(2)} = ${(0.75 * mu).toFixed(2)} согласно п.Б.1 СП 20.13330.2016`,
-            'применение': 'Для расчета прочности при 15°≤α≤40°'
-        },
-        'Схема Б.1 (вариант 3)': {
-            'μ₁': (0.6 * mu).toFixed(2),
-            'μ₂': (1.4 * mu).toFixed(2),
-            'описание': `Двускатное покрытие по схеме Б.1 (вариант 3). Угол наклона α = ${angle}°. Неравномерное распределение: μ₁ = 0.6×${mu.toFixed(2)} = ${(0.6 * mu).toFixed(2)}, μ₂ = 1.4×${mu.toFixed(2)} = ${(1.4 * mu).toFixed(2)} согласно п.Б.1 СП 20.13330.2016`,
-            'применение': 'Для расчета прочности при 10°≤α≤30° с ходовыми мостиками'
         }
     };
+    
+    // Вариант 2 согласно п.Б.1 б) СП 20.13330.2016
+    if (angle >= 15 && angle <= 40) {
+        results['Схема Б.1 (вариант 2)'] = {
+            'μ₁': (1.25 * mu).toFixed(2),
+            'μ₂': (0.75 * mu).toFixed(2),
+            'описание': `Двускатное покрытие по схеме Б.1 (вариант 2). Угол наклона α = ${angle}°. Неравномерное распределение: μ₁ = 1.25×${mu.toFixed(2)} = ${(1.25 * mu).toFixed(2)}, μ₂ = 0.75×${mu.toFixed(2)} = ${(0.75 * mu).toFixed(2)} согласно п.Б.1 б) СП 20.13330.2016`,
+            'применение': 'Для расчета прочности при 15°≤α≤40°'
+        };
+    }
+    
+    // Вариант 3 согласно п.Б.1 б) СП 20.13330.2016
+    if (angle >= 10 && angle <= 30) {
+        results['Схема Б.1 (вариант 3)'] = {
+            'μ₁': (0.6 * mu).toFixed(2),
+            'μ₂': (1.4 * mu).toFixed(2),
+            'описание': `Двускатное покрытие по схеме Б.1 (вариант 3). Угол наклона α = ${angle}°. Неравномерное распределение: μ₁ = 0.6×${mu.toFixed(2)} = ${(0.6 * mu).toFixed(2)}, μ₂ = 1.4×${mu.toFixed(2)} = ${(1.4 * mu).toFixed(2)} согласно п.Б.1 б) СП 20.13330.2016`,
+            'применение': 'Для расчета прочности при 10°≤α≤30° с ходовыми мостиками'
+        };
+    }
+    
+    return results;
 }
 
 function calculateMuForArchedRoof(angle, ratio) {
@@ -577,7 +605,7 @@ function calculateMuForMultiArchedRoof(angle, ratio) {
         'Схема Б.6 (вариант 2)': {
             'μ₁ в крайних пролетах': (1.4 * muArch).toFixed(2),
             'μ₂ в средних пролетах': (0.6 * muArch).toFixed(2),
-            'описание': `Многопролетное сводчатое покрытие по схеме Б.6 (вариант 2). Угол ${angle}°, отношение f/l = ${ratio}. Расчет: μ₁ = 1.4×${muArch.toFixed(2)} = ${(1.4 * muArch).toFixed(2)}, μ₂ = 0.6×${muArch.toFixed(2)} = ${(0.6 * muArch).toFixed(2)} согласно п.Б.6 СП 20.13330.2016`,
+            'описание': `Многопролетное сводчатое покрытие по схеме Б.6 (ваariant 2). Угол ${angle}°, отношение f/l = ${ratio}. Расчет: μ₁ = 1.4×${muArch.toFixed(2)} = ${(1.4 * muArch).toFixed(2)}, μ₂ = 0.6×${muArch.toFixed(2)} = ${(0.6 * muArch).toFixed(2)} согласно п.Б.6 СП 20.13330.2016`,
             'применение': 'Для расчета прочности'
         }
     };
@@ -664,7 +692,10 @@ function calculateArchMu(ratio) {
 
 function displayMuSchemes(muResults) {
     const container = document.getElementById('muSchemesContainer');
-    if (!container) return;
+    if (!container) {
+        console.error('Контейнер muSchemesContainer не найден');
+        return;
+    }
     
     let html = '<div class="mu-scheme"><h4>📐 Схемы распределения μ:</h4>';
     
@@ -1000,16 +1031,16 @@ function calculate() {
 
     // Добавляем схемы из СП в отчет
     const schemeImages = {
-        'single_slope': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/1_Односкатная.png',
-        'pitched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/2_Двускатная.png',
-        'arched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/3_Сводчатая.png',
-        'lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/5_С фонарями.png',
-        'shed': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/7_Шедовые покрытия.png',
-        'multi_pitched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/8_Многопролётные двускатные.png',
-        'multi_arched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/9_Многопролётные сводчатые.png',
-        'height_drop': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/11_С перепадом высоты.png',
-        'parapet': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/16_Парапеты.png',
-        'cone': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/15_Конические круговые покрытия.png'
+        'single_slope': '1_Односкатная.png',
+        'pitched': '2_Двускатная.png',
+        'arched': '3_Сводчатая.png',
+        'lantern': '5_С фонарями.png',
+        'shed': '7_Шедовые покрытия.png',
+        'multi_pitched': '8_Многопролётные двускатные.png',
+        'multi_arched': '9_Многопролётные сводчатые.png',
+        'height_drop': '11_С перепадом высоты.png',
+        'parapet': '16_Парапеты.png',
+        'cone': '15_Конические круговые покрытия.png'
     };
 
     const report = `
@@ -1034,7 +1065,7 @@ function calculate() {
 
         <div class="scheme-reference">
             <h3>📐 Используемые схемы распределения снеговой нагрузки:</h3>
-            <img src="${schemeImages[type] || 'https://via.placeholder.com/400x250/3498db/ffffff?text=Схема+не+доступна'}" alt="Схема распределения снеговой нагрузки" style="max-width: 500px;">
+            <img src="${baseImageUrl + (schemeImages[type] || '2_Двускатная.png')}" alt="Схема распределения снеговой нагрузки" style="max-width: 500px;" onerror="this.src='https://via.placeholder.com/400x250/3498db/ffffff?text=Схема+не+доступна'">
             <p class="italic">Схема распределения снеговой нагрузки по СП 20.13330.2016 Приложение Б</p>
         </div>
 
@@ -1111,4 +1142,7 @@ document.addEventListener('DOMContentLoaded', function() {
     updateTemperatureInfo();
     updateCe();
     updateCt();
+    
+    // Инициализация карты
+    updateMapSrc();
 });
