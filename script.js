@@ -16,7 +16,7 @@ const roofImages = {
     'arched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/3_Сводчатая.png',
     'pointed': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/4_Стрельчатая.png',
     'lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/5_С фонарями.png',
-    'long_lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/6_С продольными+фонарями.png',
+    'long_lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/6_С продольными фонарями.png',
     'shed': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/7_Шедовые покрытия.png',
     'multi_pitched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/8_Многопролётные двускатные.png',
     'multi_arched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/9_Многопролётные сводчатые.png',
