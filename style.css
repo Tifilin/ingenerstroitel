@@ -429,3 +429,43 @@ th {
         display: none;
     }
 }
+.roof-diagram {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.roof-diagram-element {
+    background: #ddd;
+    height: 100px;
+    width: 200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.diagram-label {
+    position: absolute;
+}
+
+.diagram-label-top {
+    top: 10px;
+    left: 10px;
+}
+
+.diagram-label-center {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.diagram-label-left {
+    left: 10px;
+}
+
+.diagram-label-right {
+    right: 10px;
+}
+
+.diagram-label-bottom {
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+}
