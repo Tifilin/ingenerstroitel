@@ -5,9 +5,13 @@ const sgValues = {
 };
 
 const mapUrls = {
-    'main': 'https://saitinpro.ru/wp-content/uploads/2018/03/Karta-1_sneg.gif',
-    'krym': 'https://saitinpro.ru/wp-content/uploads/2018/03/Karta-1b_sneg_krym.gif',
-    'sakhalin': 'https://saitinpro.ru/wp-content/uploads/2018/03/Karta-1a_sneg_sahalin.gif'
+    'main': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/karta1.jpg',
+    'krym': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/karta2.jpg',
+    'sakhalin': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/karta3.jpg'
+};
+
+const tableUrls = {
+    'tableG': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/tableG.jpg',
 };
 
 // Обновляем объект с изображениями
@@ -16,19 +20,19 @@ const roofImages = {
     'pitched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/2_Двускатная.png',
     'arched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/3_Сводчатая.png',
     'pointed': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/4_Стрельчатая.png',
-    'lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/5_С+фонарями.png',
-    'long_lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/6_С+продольными+фонарями.png',
-    'shed': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/7_Шедовые+покрытия.png',
-    'multi_pitched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/8_Многопролётные+двускатные.png',
-    'multi_arched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/9_Многопролётные+сводчатые.png',
-    'multi_lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/10_Многопролётные+с+фонарями.png',
-    'height_drop': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/11_С+перепадом+высоты.png',
-    'double_height_drop': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/12_С+двумя+перепадами+высоты.png',
-    'cylindrical': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/13_Висячие+цилиндрической+формы.png',
-    'dome': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/14_Купольные+покрытия.png',
-    'cone': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/15_Конические+круговые+покрытия.png',
+    'lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/5_С фонарями.png',
+    'long_lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/6_С продольными+фонарями.png',
+    'shed': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/7_Шедовые покрытия.png',
+    'multi_pitched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/8_Многопролётные двускатные.png',
+    'multi_arched': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/9_Многопролётные сводчатые.png',
+    'multi_lantern': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/10_Многопролётные с фонарями.png',
+    'height_drop': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/11_С перепадом высоты.png',
+    'double_height_drop': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/12_С двумя перепадами высоты.png',
+    'cylindrical': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/13_Висячие цилиндрической формы.png',
+    'dome': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/14_Купольные покрытия.png',
+    'cone': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/15_Конические круговые покрытия.png',
     'parapet': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/16_Парапеты.png',
-    'heightened': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/17_Участки+при+возвышающихся+надстройках.png'
+    'heightened': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/17_Участки при возвышающихся надстройках.png'
 };
 
 let currentScheme = 'uniform';
