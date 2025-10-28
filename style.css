@@ -469,3 +469,64 @@ th {
     left: 50%;
     transform: translateX(-50%);
 }
+
+.scheme-reference {
+    background: #e8f4fd;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+    text-align: center;
+    border-left: 4px solid #3498db;
+}
+
+.scheme-reference h3 {
+    color: #2c3e50;
+    margin-top: 0;
+}
+
+.scheme-reference img {
+    border: 2px solid #3498db;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.mu-zone {
+    margin: 5px 0;
+    padding: 8px;
+    background: white;
+    border-radius: 4px;
+    border-left: 3px solid #27ae60;
+}
+
+.mu-zone strong {
+    color: #2c3e50;
+}
+
+.zone-calculation {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 8px 0;
+    border: 1px solid #e9ecef;
+}
+
+.calculation-formula {
+    background: #2c3e50;
+    color: white;
+    padding: 12px;
+    border-radius: 6px;
+    margin: 8px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.load-result {
+    background: #34495e;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+    margin: 8px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+}
