@@ -38,7 +38,7 @@
 
             <div id="sgManualInput" class="manual-input">
                 <label>Нормативная снеговая нагрузка Sg (кПа): 
-                    <input type="number" id="sgManual" step="0.1" value="1.8" min="0">
+                    <input type="number" id="sgManual" step="0.1" value="1.5" min="0">
                 </label>
                 <p class="note">Уточненное Sg (по данным Росгидромета, кПа, если объект на границе районов или в сложном рельефе)</p>
             </div>
@@ -107,7 +107,7 @@
                             <option value="Петропавловск-Камчатский" data-temp="-7.6" data-district="VIII">Петропавловск-Камчатский</option>
                         </select>
                     </label>
-                    <p id="sgDisplay">Sg: <span id="sgValue">1.8</span> кПа</p>
+                    <p id="sgDisplay">Sg: <span id="sgValue">1.5</span> кПа</p>
                 </div>
 
                 <div id="mapMethod" style="display: none;">
@@ -123,14 +123,14 @@
                     <img id="snowMap" src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/karta1.jpg" alt="Карта снеговых районов России по СП 20.13330.2016" style="display: none;">
                     <label>Выбранный снеговой район: 
                         <select id="snowDistrictMap" onchange="updateSgFromMap()">
-                            <option value="I">I (0.8 кПа)</option>
-                            <option value="II">II (1.2 кПа)</option>
-                            <option value="III">III (1.8 кПа)</option>
-                            <option value="IV">IV (2.4 кПа)</option>
-                            <option value="V">V (3.2 кПа)</option>
-                            <option value="VI">VI (4.0 кПа)</option>
-                            <option value="VII">VII (5.6 кПа)</option>
-                            <option value="VIII">VIII (7.0 кПа)</option>
+                            <option value="I">I (0.5 кПа)</option>
+                            <option value="II">II (1.0 кПа)</option>
+                            <option value="III">III (1.5 кПа)</option>
+                            <option value="IV">IV (2.0 кПа)</option>
+                            <option value="V">V (2.5 кПа)</option>
+                            <option value="VI">VI (3.0 кПа)</option>
+                            <option value="VII">VII (3.5 кПа)</option>
+                            <option value="VIII">VIII (4.0 кПа)</option>
                         </select>
                     </label>
                 </div>
