@@ -1,1180 +1,1130 @@
-// Константы и переменные
-const sgValues = {
-    'I': 0.5, 'II': 1.0, 'III': 1.5, 'IV': 2.0,
-    'V': 2.5, 'VI': 3.0, 'VII': 3.5, 'VIII': 4.0
+// Константы согласно СП 20.13330.2016 с Изм.5
+const SNOW_DISTRICTS = {
+    'I': 0.5, 'II': 0.7, 'III': 1.0, 'IV': 1.5, 
+    'V': 2.0, 'VI': 2.5, 'VII': 3.0, 'VIII': 4.0
 };
 
-const mapUrls = {
+const GAMMA_F_VALUES = {
+    '1': 1.4, // I уровень ответственности
+    '2': 1.2, // II уровень ответственности  
+    '3': 1.0  // III уровень ответственности
+};
+
+// Данные по городам согласно карте районирования
+const CITIES_DATA = {
+    'Москва': { district: 'III', temp: -7.7, wind: 4.5 },
+    'Санкт-Петербург': { district: 'III', temp: -5.5, wind: 4.0 },
+    'Екатеринбург': { district: 'IV', temp: -12.6, wind: 5.2 },
+    'Новосибирск': { district: 'IV', temp: -16.2, wind: 5.8 },
+    'Нижний Новгород': { district: 'III', temp: -8.9, wind: 4.8 },
+    'Казань': { district: 'III', temp: -9.8, wind: 5.1 },
+    'Самара': { district: 'IV', temp: -9.5, wind: 5.3 },
+    'Омск': { district: 'IV', temp: -16.3, wind: 5.6 },
+    'Челябинск': { district: 'IV', temp: -12.8, wind: 5.4 },
+    'Ростов-на-Дону': { district: 'II', temp: -3.1, wind: 3.8 },
+    'Уфа': { district: 'IV', temp: -12.5, wind: 5.2 },
+    'Волгоград': { district: 'III', temp: -6.7, wind: 4.2 },
+    'Пермь': { district: 'IV', temp: -12.8, wind: 5.0 },
+    'Красноярск': { district: 'IV', temp: -15.6, wind: 5.5 },
+    'Воронеж': { district: 'III', temp: -6.5, wind: 4.5 },
+    'Саратов': { district: 'III', temp: -7.9, wind: 4.8 },
+    'Краснодар': { district: 'II', temp: -0.3, wind: 3.5 },
+    'Тольятти': { district: 'IV', temp: -9.2, wind: 5.0 },
+    'Ижевск': { district: 'IV', temp: -12.5, wind: 4.9 },
+    'Барнаул': { district: 'IV', temp: -15.5, wind: 5.7 },
+    'Ульяновск': { district: 'IV', temp: -10.1, wind: 5.1 },
+    'Иркутск': { district: 'II', temp: -17.8, wind: 5.3 },
+    'Хабаровск': { district: 'II', temp: -20.9, wind: 5.0 },
+    'Ярославль': { district: 'III', temp: -8.9, wind: 4.6 },
+    'Владивосток': { district: 'II', temp: -9.9, wind: 4.8 },
+    'Махачкала': { district: 'I', temp: 1.2, wind: 3.2 },
+    'Томск': { district: 'IV', temp: -17.1, wind: 5.6 },
+    'Кемерово': { district: 'IV', temp: -15.8, wind: 5.4 },
+    'Новокузнецк': { district: 'IV', temp: -14.2, wind: 5.5 },
+    'Сочи': { district: 'I', temp: 5.0, wind: 2.8 },
+    'Якутск': { district: 'II', temp: -39.6, wind: 6.2 },
+    'Мурманск': { district: 'V', temp: -8.1, wind: 5.8 },
+    'Архангельск': { district: 'IV', temp: -12.8, wind: 5.5 },
+    'Калининград': { district: 'II', temp: -1.5, wind: 3.6 },
+    'Петропавловск-Камчатский': { district: 'VII', temp: -7.6, wind: 5.9 }
+};
+
+// Константы для карт
+const MAP_URLS = {
     'main': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/karta1.jpg',
-    'krym': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/karta2.jpg',
+    'krym': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/karta2.jpg', 
     'sakhalin': 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/karta3.jpg'
 };
 
-const roofImages = {
-    'single_slope': '1_Односкатная.png',
+// Изображения для типов покрытий
+const ROOF_IMAGES = {
+    'flat': '1_Плоская.png',
+    'single_slope': '2_Односкатная.png',
     'pitched': '2_Двускатная.png',
     'arched': '3_Сводчатая.png',
-    'pointed': '4_Стрельчатая.png',
-    'lantern': '5_С фонарями.png',
-    'long_lantern': '6_С продольными фонарями.png',
-    'shed': '7_Шедовые покрытия.png',
-    'multi_pitched': '8_Многопролётные двускатные.png',
-    'multi_arched': '9_Многопролётные сводчатые.png',
-    'multi_lantern': '10_Многопролётные с фонарями.png',
-    'height_drop': '11_С перепадом высоты.png',
-    'double_height_drop': '12_С двумя перепадами высоты.png',
-    'cylindrical': '13_Висячие цилиндрической формы.png',
-    'dome': '14_Купольные покрытия.png',
-    'cone': '15_Конические круговые покрытия.png',
-    'parapet': '16_Парапеты.png',
-    'heightened': '17_Участки при возвышающихся надстройках.png'
+    'multi_slope': '4_Многопролетная.png',
+    'height_drop': '5_Перепад.png',
+    'obstacles': '6_Препятствия.png',
+    'spatial': '7_Пространственная.png',
+    'lantern': '8_Фонарь.png',
+    'shed': '9_Шедовая.png'
 };
 
-// Глобальные переменные для хранения данных
-let currentStep = 1;
-let sgValue = 1.5;
-let ceValue = 1.0;
-let ctValue = 1.0;
-let muValue = 1.0;
-let kbValue = 1.0;
-let gammaF = 1.4;
-let isMountainArea = false;
-let altitude = 500;
-let mountainRegion = '';
-let currentCity = '';
-let currentTemperature = null;
-let currentSgMethod = 'manual';
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', function() {
+    initializeCalculator();
+    updateAllCalculations();
+});
 
-// Базовый URL для изображений
-const baseImageUrl = 'https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/';
+function initializeCalculator() {
+    setupEventListeners();
+    initializeCitySelect();
+    initializeRoofTypeParameters();
+}
 
-// ФУНКЦИИ НАВИГАЦИИ
-function showStep(stepNumber) {
-    document.querySelectorAll('.step').forEach(step => {
-        step.classList.remove('active');
+function initializeCitySelect() {
+    const citySelect = document.getElementById('citySelect');
+    citySelect.innerHTML = '<option value="">Выберите город</option>';
+    
+    Object.keys(CITIES_DATA).forEach(city => {
+        const option = document.createElement('option');
+        option.value = city;
+        option.textContent = city;
+        option.setAttribute('data-district', CITIES_DATA[city].district);
+        option.setAttribute('data-temp', CITIES_DATA[city].temp);
+        option.setAttribute('data-wind', CITIES_DATA[city].wind);
+        citySelect.appendChild(option);
     });
-    document.getElementById(`step${stepNumber}`).classList.add('active');
-    currentStep = stepNumber;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function nextStep(nextStepNumber) {
-    showStep(nextStepNumber);
+function initializeRoofTypeParameters() {
+    const roofType = document.getElementById('roofType');
+    roofType.addEventListener('change', function() {
+        updateRoofParameters();
+        updateAllCalculations();
+    });
+    // Инициализация при загрузке
+    updateRoofParameters();
 }
 
-function prevStep(prevStepNumber) {
-    showStep(prevStepNumber);
+function setupEventListeners() {
+    const calculationElements = [
+        'sgManual', 'citySelect', 'snowDistrictMap', 'customSg', 'buildingType',
+        'protected', 'dimMin', 'dimMax', 'januaryTemp', 'manualWindSpeed',
+        'roofType', 'roofAngle', 'reducedLoad', 'forPurlins', 'terrainType'
+    ];
+    
+    calculationElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.addEventListener('change', updateAllCalculations);
+            element.addEventListener('input', updateAllCalculations);
+        }
+    });
+
+    document.querySelectorAll('input[name="sgMethod"]').forEach(radio => {
+        radio.addEventListener('change', toggleSgMethod);
+    });
+    document.querySelectorAll('input[name="ceMethod"]').forEach(radio => {
+        radio.addEventListener('change', toggleCeMethod);
+    });
+    document.querySelectorAll('input[name="ctMethod"]').forEach(radio => {
+        radio.addEventListener('change', toggleCtMethod);
+    });
+    document.querySelectorAll('input[name="muMethod"]').forEach(radio => {
+        radio.addEventListener('change', toggleMuMethod);
+    });
+    document.querySelectorAll('input[name="spMethod"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            showSpMethod(this.value);
+            updateAllCalculations();
+        });
+    });
+    document.querySelectorAll('input[name="ctType"]').forEach(radio => {
+        radio.addEventListener('change', updateAllCalculations);
+    });
 }
 
-// БАЗОВЫЕ ФУНКЦИИ ПЕРЕКЛЮЧЕНИЯ МЕТОДОВ
+// ФУНКЦИИ ПЕРЕКЛЮЧЕНИЯ МЕТОДОВ
 function toggleSgMethod() {
-    const method = document.querySelector('input[name="sgMethod"]:checked').value;
-    currentSgMethod = method;
-    document.getElementById('sgManualInput').style.display = method === 'manual' ? 'block' : 'none';
-    document.getElementById('sgSpCalculation').style.display = method === 'sp' ? 'block' : 'none';
+    const manualMethod = document.querySelector('input[name="sgMethod"][value="manual"]').checked;
+    document.getElementById('sgManualInput').style.display = manualMethod ? 'block' : 'none';
+    document.getElementById('sgSpCalculation').style.display = manualMethod ? 'none' : 'block';
+    updateAllCalculations();
 }
 
 function toggleCeMethod() {
-    const method = document.querySelector('input[name="ceMethod"]:checked').value;
-    document.getElementById('ceManualInput').style.display = method === 'manual' ? 'block' : 'none';
-    document.getElementById('ceSpCalculation').style.display = method === 'sp' ? 'block' : 'none';
-    if (method === 'sp') {
-        updateCe();
-    }
+    const manualMethod = document.querySelector('input[name="ceMethod"][value="manual"]').checked;
+    document.getElementById('ceManualInput').style.display = manualMethod ? 'block' : 'none';
+    document.getElementById('ceSpCalculation').style.display = manualMethod ? 'none' : 'block';
+    updateAllCalculations();
 }
 
 function toggleCtMethod() {
-    const method = document.querySelector('input[name="ctMethod"]:checked').value;
-    document.getElementById('ctManualInput').style.display = method === 'manual' ? 'block' : 'none';
-    document.getElementById('ctSpCalculation').style.display = method === 'sp' ? 'block' : 'none';
-    if (method === 'sp') {
-        updateCt();
-    }
+    const manualMethod = document.querySelector('input[name="ctMethod"][value="manual"]').checked;
+    document.getElementById('ctManualInput').style.display = manualMethod ? 'block' : 'none';
+    document.getElementById('ctSpCalculation').style.display = manualMethod ? 'none' : 'block';
+    updateAllCalculations();
 }
 
 function toggleMuMethod() {
-    const method = document.querySelector('input[name="muMethod"]:checked').value;
-    document.getElementById('muManualInput').style.display = method === 'manual' ? 'block' : 'none';
-    document.getElementById('muSpCalculation').style.display = method === 'sp' ? 'block' : 'none';
-    if (method === 'sp') {
-        updateMu();
-    }
+    const manualMethod = document.querySelector('input[name="muMethod"][value="manual"]').checked;
+    document.getElementById('muManualInput').style.display = manualMethod ? 'block' : 'none';
+    document.getElementById('muSpCalculation').style.display = manualMethod ? 'none' : 'block';
+    updateAllCalculations();
 }
 
-// Функции для работы с картой
 function showSpMethod(method) {
-    const cityMethod = document.getElementById('cityMethod');
-    const mapMethod = document.getElementById('mapMethod');
-    const mapToggleBtn = document.getElementById('mapToggleBtn');
-    
-    if (method === 'city') {
-        cityMethod.style.display = 'block';
-        mapMethod.style.display = 'none';
-        if (mapToggleBtn) mapToggleBtn.style.display = 'none';
-        setFromCity();
-    } else {
-        cityMethod.style.display = 'none';
-        mapMethod.style.display = 'block';
-        if (mapToggleBtn) mapToggleBtn.style.display = 'inline-block';
-    }
+    document.getElementById('cityMethod').style.display = method === 'city' ? 'block' : 'none';
+    document.getElementById('mapMethod').style.display = method === 'map' ? 'block' : 'none';
+    updateAllCalculations();
 }
 
-function toggleMap(id) {
-    const elem = document.getElementById(id);
-    elem.style.display = elem.style.display === 'none' ? 'block' : 'none';
+// ФУНКЦИИ ДЛЯ РАБОТЫ С КАРТАМИ
+function toggleMap() {
+    const mapContainer = document.getElementById('mapContainer');
     const btn = document.getElementById('mapToggleBtn');
-    if (btn) {
-        btn.textContent = elem.style.display === 'none' ? '🗺️ Показать карту' : '🗺️ Скрыть карту';
+    
+    if (mapContainer.style.display === 'none') {
+        mapContainer.style.display = 'block';
+        btn.textContent = '🗺️ Скрыть карту';
+        if (!document.getElementById('snowMap').src) {
+            updateMapSrc();
+        }
+    } else {
+        mapContainer.style.display = 'none';
+        btn.textContent = '🗺️ Показать карту';
     }
 }
 
 function updateMapSrc() {
     const type = document.getElementById('mapType').value;
     const mapImg = document.getElementById('snowMap');
-    mapImg.src = mapUrls[type];
+    mapImg.src = MAP_URLS[type];
+    
     mapImg.onerror = function() {
-        this.style.display = 'none';
+        this.alt = 'Карта временно недоступна';
         console.warn('Карта не загружена:', this.src);
     };
 }
 
-// Функции для работы с городами
-function setFromCity() {
-    const select = document.getElementById('citySelect');
-    const option = select.options[select.selectedIndex];
-    currentCity = option.value;
-    const district = option.getAttribute('data-district');
-    const temp = option.getAttribute('data-temp') || null;
+// ФУНКЦИИ ДЛЯ РАБОТЫ С ТИПАМИ ПОКРЫТИЙ
+function updateRoofParameters() {
+    const roofType = document.getElementById('roofType').value;
+    const paramsContainer = document.getElementById('roofParams');
     
-    currentTemperature = temp ? parseFloat(temp) : null;
+    let html = '';
     
-    if (district) {
-        sgValue = sgValues[district] || 1.5;
-        document.getElementById('sgValue').textContent = sgValue;
+    switch(roofType) {
+        case 'flat':
+            html = `
+                <label>Уклон покрытия i (%): <input type="number" id="roofSlopePercent" min="0" max="2.5" value="1.0" step="0.1" onchange="updateAllCalculations()"></label>
+                <p class="note">Для плоских покрытий уклон i ≤ 2.5% (Б.1)</p>
+            `;
+            break;
+        case 'single_slope':
+            html = `
+                <label>Угол наклона α (°): <input type="number" id="roofAngle" min="0" max="90" value="15" onchange="updateAllCalculations()"></label>
+                <label>Длина ската l (м): <input type="number" id="slopeLength" min="1" value="20" onchange="updateAllCalculations()"></label>
+                <p class="note">Односкатное покрытие (Б.1 схема 3)</p>
+            `;
+            break;
+        case 'pitched':
+            html = `
+                <label>Угол наклона α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateAllCalculations()"></label>
+                <label>Длина ската l (м): <input type="number" id="slopeLength" min="1" value="15" onchange="updateAllCalculations()"></label>
+                <p class="note">Двускатное покрытие (Б.1 схема 2)</p>
+            `;
+            break;
+        case 'arched':
+            html = `
+                <label>Угол в коньке α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateAllCalculations()"></label>
+                <label>Отношение f/l: <input type="number" id="archRatio" step="0.01" min="0" max="0.5" value="0.1" onchange="updateAllCalculations()"></label>
+                <label>Пролет l (м): <input type="number" id="archSpan" min="1" value="24" onchange="updateAllCalculations()"></label>
+                <p class="note">Сводчатые покрытия (Б.2)</p>
+            `;
+            break;
+        case 'multi_slope':
+            html = `
+                <label>Угол наклона α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateAllCalculations()"></label>
+                <label>Количество пролетов: <input type="number" id="spanCount" min="2" max="10" value="3" onchange="updateAllCalculations()"></label>
+                <p class="note">Многопролетные покрытия (Б.3)</p>
+            `;
+            break;
+        case 'height_drop':
+            html = `
+                <label>Высота перепада h (м): <input type="number" id="heightDrop" min="0.5" value="2.0" step="0.1" onchange="updateAllCalculations()"></label>
+                <label>Длина верхнего ската l₁ (м): <input type="number" id="lengthUpper" min="1" value="10" onchange="updateAllCalculations()"></label>
+                <label>Длина нижнего ската l₂ (м): <input type="number" id="lengthLower" min="1" value="10" onchange="updateAllCalculations()"></label>
+                <p class="note">Покрытия с перепадами высот (Б.4)</p>
+            `;
+            break;
+        case 'obstacles':
+            html = `
+                <label>Высота парапета h (м): <input type="number" id="parapetHeight" min="0.5" value="1.0" step="0.1" onchange="updateAllCalculations()"></label>
+                <label>Ширина зоны снегоотложения b (м): <input type="number" id="snowZoneWidth" min="1" value="5" onchange="updateAllCalculations()"></label>
+                <p class="note">Покрытия с препятствиями (Б.5)</p>
+            `;
+            break;
+        case 'spatial':
+            html = `
+                <label>Угол наклона α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateAllCalculations()"></label>
+                <label>Отношение f/d: <input type="number" id="spatialRatio" step="0.01" min="0" max="0.5" value="0.1" onchange="updateAllCalculations()"></label>
+                <p class="note">Пространственные покрытия (Б.6)</p>
+            `;
+            break;
+        case 'lantern':
+            html = `
+                <label>Высота фонаря h (м): <input type="number" id="lanternHeight" min="0.5" value="2.0" step="0.1" onchange="updateAllCalculations()"></label>
+                <label>Ширина фонаря b (м): <input type="number" id="lanternWidth" min="1" value="3" onchange="updateAllCalculations()"></label>
+                <label>Расстояние между фонарями (м): <input type="number" id="lanternSpacing" min="3" value="6" onchange="updateAllCalculations()"></label>
+                <p class="note">Покрытия с фонарями (Б.7)</p>
+            `;
+            break;
+        case 'shed':
+            html = `
+                <label>Угол наклона α (°): <input type="number" id="roofAngle" min="0" max="90" value="15" onchange="updateAllCalculations()"></label>
+                <label>Длина шеда l (м): <input type="number" id="shedLength" min="1" value="12" onchange="updateAllCalculations()"></label>
+                <p class="note">Шедовые покрытия (Б.8)</p>
+            `;
+            break;
+        default:
+            html = `
+                <label>Угол наклона α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateAllCalculations()"></label>
+            `;
     }
     
-    // Автоматически устанавливаем температуру в селекте
-    if (currentTemperature !== null) {
-        const tempSelect = document.getElementById('januaryTemp');
-        tempSelect.value = currentTemperature <= -5 ? 'cold' : 'warm';
+    paramsContainer.innerHTML = html;
+    
+    const ref = document.getElementById('roofType').selectedOptions[0].getAttribute('data-ref');
+    document.getElementById('roofRef').textContent = `Ссылка на СП: ${ref}`;
+    
+    updateRoofImage();
+}
+
+function updateRoofImage() {
+    const roofType = document.getElementById('roofType').value;
+    const roofImage = document.getElementById('roofImage');
+    const imageName = ROOF_IMAGES[roofType];
+    
+    if (imageName) {
+        roofImage.src = `https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/${imageName}`;
+        roofImage.alt = `Схема покрытия: ${roofType}`;
+        
+        roofImage.onerror = function() {
+            this.alt = 'Схема временно недоступна';
+        };
+    }
+}
+
+// ФУНКЦИИ НАВИГАЦИИ
+function nextStep(stepNumber) {
+    document.querySelectorAll('.step').forEach(step => {
+        step.classList.remove('active');
+    });
+    document.getElementById(`step${stepNumber}`).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevStep(stepNumber) {
+    document.querySelectorAll('.step').forEach(step => {
+        step.classList.remove('active');
+    });
+    document.getElementById(`step${stepNumber}`).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ОСНОВНЫЕ ФУНКЦИИ РАСЧЕТА СОГЛАСНО СП 20.13330.2016
+
+function calculateSg() {
+    const method = document.querySelector('input[name="sgMethod"]:checked').value;
+    
+    if (method === 'manual') {
+        const manualSg = parseFloat(document.getElementById('sgManual').value) || 1.0;
+        return Math.max(0.5, Math.min(4.0, manualSg));
+    } else {
+        let district;
+        if (document.querySelector('input[name="spMethod"]:checked').value === 'city') {
+            const city = document.getElementById('citySelect').value;
+            district = city ? CITIES_DATA[city].district : 'III';
+        } else {
+            district = document.getElementById('snowDistrictMap').value;
+        }
+        
+        const customSg = parseFloat(document.getElementById('customSg').value);
+        if (!isNaN(customSg) && customSg > 0) {
+            return Math.max(0.5, Math.min(4.0, customSg));
+        }
+        
+        return SNOW_DISTRICTS[district] || 1.0;
+    }
+}
+
+function calculateCe() {
+    const method = document.querySelector('input[name="ceMethod"]:checked').value;
+    
+    if (method === 'manual') {
+        const manualCe = parseFloat(document.getElementById('ceManual').value) || 1.0;
+        return Math.max(0.5, Math.min(1.0, manualCe));
     }
     
-    updateTemperatureInfo();
-    updateCe();
-}
-
-function updateSgFromMap() {
-    const district = document.getElementById('snowDistrictMap').value;
-    sgValue = sgValues[district] || 1.5;
-    document.getElementById('sgValue').textContent = sgValue;
-}
-
-// Функции для расчета Ce согласно п.10.5-10.9 СП 20.13330.2016
-function updateCe() {
-    const terrain = document.getElementById('terrainType').value;
-    const protected = document.getElementById('protected').checked;
-    const dimMin = parseFloat(document.getElementById('dimMin').value) || 50;
-    const dimMax = parseFloat(document.getElementById('dimMax').value) || 50;
+    // Расчет по СП 20.13330.2016 п.10.5-10.9
+    const isProtected = document.getElementById('protected').checked;
     
-    // Проверка размеров
+    if (isProtected) {
+        return 1.0; // п.10.6 - для защищенных зданий
+    }
+    
+    // Проверка условий п.10.7 для применения снижения Ce
+    if (!checkCeReductionConditions()) {
+        return 1.0; // условия не выполнены - Ce = 1.0
+    }
+    
+    // Формула 10.3: Ce = (1.2 - 0.1√l) 
+    const l = calculateCharacteristicSize();
+    const ce = 1.2 - 0.1 * Math.sqrt(l);
+    
+    // Ограничение согласно п.10.5: 0.5 ≤ Ce ≤ 1.0
+    return Math.max(0.5, Math.min(1.0, ce));
+}
+
+function checkCeReductionConditions() {
+    const roofType = document.getElementById('roofType').value;
+    const angle = parseFloat(document.getElementById('roofAngle').value) || 0;
+    const archRatio = parseFloat(document.getElementById('archRatio').value) || 0;
+    const b = parseFloat(document.getElementById('dimMin').value) || 50;
+    
+    // Условия п.10.7 для снижения Ce
+    if (roofType === 'flat' || roofType === 'single_slope' || roofType === 'pitched') {
+        if (angle <= 12 && b >= 48) return true;
+        if (angle > 12 && angle <= 20 && b >= 24) return true;
+    }
+    
+    // Для сводчатых покрытий
+    if (roofType === 'arched') {
+        if (archRatio <= 1/6 && b >= 48) return true;
+        if (archRatio > 1/6 && archRatio <= 1/3 && b >= 24) return true;
+    }
+    
+    return false;
+}
+
+function calculateCharacteristicSize() {
+    const b = parseFloat(document.getElementById('dimMin').value) || 50;
+    const L = parseFloat(document.getElementById('dimMax').value) || 50;
+    
     const dimensionError = document.getElementById('dimensionError');
-    if (dimMin > dimMax) {
+    if (b > L) {
         dimensionError.style.display = 'block';
-        document.getElementById('ceValue').textContent = '❌ Ошибка в размерах';
-        document.getElementById('ceCalculationDetails').innerHTML = '<p class="warning">Пожалуйста, исправьте размеры покрытия</p>';
-        return;
+        return 50;
     } else {
         dimensionError.style.display = 'none';
     }
     
-    const Ce = calculateCe(terrain, dimMin, dimMax, protected);
-    ceValue = Ce;
-    document.getElementById('ceValue').textContent = `Рассчитанное значение Ce: ${Ce.toFixed(2)}`;
-    
-    // Обновляем детали расчета
-    let details = '';
-    if (protected) {
-        details = '<p class="note">🏠 Здание защищено от ветра - применяется Ce = 1.0 согласно п.10.6 СП 20.13330.2016</p>';
-    } else {
-        details = `<p class="note">📏 Размеры покрытия: ${dimMin}×${dimMax} м, тип местности: ${terrain}</p>`;
-        details += `<p class="italic">Расчет по п.10.7 СП 20.13330.2016</p>`;
-    }
-    document.getElementById('ceCalculationDetails').innerHTML = details;
+    // Характеристический размер согласно п.10.7 - наименьший размер
+    return Math.min(b, L);
 }
 
-// ФУНКЦИЯ РАСЧЕТА Ce согласно п.10.5-10.9 СП 20.13330.2016
-function calculateCe(terrain, dimMin, dimMax, protected) {
-    // Согласно п.10.6 СП 20.13330.2016
-    if (protected) return 1.0;
+function calculateCt() {
+    const method = document.querySelector('input[name="ctMethod"]:checked').value;
     
-    const l = Math.min(dimMin, dimMax);
-    const L = Math.max(dimMin, dimMax);
-    
-    // ПРАВИЛЬНЫЙ расчет по СП 20.13330.2016 п.10.7
-    if (terrain === 'A') {
-        if (l <= 50 && L <= 100) return 0.7;
-        if (l > 100 || L > 200) return 1.0;
-        return 0.85;
-    } else if (terrain === 'B') {
-        if (l <= 50 && L <= 100) return 0.7;
-        if (l > 100 || L > 200) return 1.0;
-        return 0.85;
-    } else if (terrain === 'C') {
-        return 1.0; // Для типа C всегда 1.0
+    if (method === 'manual') {
+        const manualCt = parseFloat(document.getElementById('ctManual').value) || 1.0;
+        return Math.max(0.8, Math.min(1.2, manualCt));
     }
     
+    const ctType = document.querySelector('input[name="ctType"]:checked').value;
+    
+    // Согласно п.10.10 СП 20.13330.2016
+    const ctValues = {
+        'normal': 1.0,      // Обычные покрытия
+        'transparent': 1.1, // Прозрачные покрытия
+        'highLoss': 1.2,    // С повышенными теплопотерями
+        'cold': 1.0         // Холодные покрытия
+    };
+    
+    return ctValues[ctType] || 1.0;
+}
+
+function calculateMu() {
+    const method = document.querySelector('input[name="muMethod"]:checked').value;
+    
+    if (method === 'manual') {
+        const manualMu = parseFloat(document.getElementById('muManual').value) || 1.0;
+        return Math.max(0, Math.min(4.0, manualMu));
+    }
+    
+    const roofType = document.getElementById('roofType').value;
+    const angle = parseFloat(document.getElementById('roofAngle').value) || 30;
+    
+    // Расчет согласно Приложению Б СП 20.13330.2016
+    switch(roofType) {
+        case 'flat':
+            return calculateMuForFlat();
+        case 'single_slope':
+            return calculateMuForSingleSlope(angle);
+        case 'pitched':
+            return calculateMuForPitched(angle);
+        case 'arched':
+            return calculateMuForArched(angle);
+        case 'multi_slope':
+            return calculateMuForMultiSlope(angle);
+        case 'height_drop':
+            return calculateMuForHeightDrop();
+        case 'obstacles':
+            return calculateMuForObstacles();
+        case 'spatial':
+            return calculateMuForSpatial(angle);
+        case 'lantern':
+            return calculateMuForLantern();
+        case 'shed':
+            return calculateMuForShed(angle);
+        default:
+            return 1.0;
+    }
+}
+
+// РЕАЛИЗАЦИЯ ВСЕХ ФУНКЦИЙ ДЛЯ РАЗЛИЧНЫХ ТИПОВ ПОКРЫТИЙ
+
+function calculateMuForFlat() {
+    // Б.1 - плоские покрытия (уклон ≤ 2,5%)
     return 1.0;
 }
 
-// Функции для работы с температурой
-function updateTemperatureInfo() {
-    const temperatureInfo = document.getElementById('temperatureInfo');
-    const tempSelect = document.getElementById('januaryTemp');
-    
-    let temperatureHTML = '';
-    
-    if (tempSelect.value === 'cold') {
-        temperatureHTML = `
-            <p>✅ Холодный регион - пониженная нагрузка доступна согласно п.10.11</p>
-            <p class="italic">${currentCity ? `Для населенного пункта ${currentCity}` : 'Для выбранного региона'}</p>
-        `;
-    } else if (tempSelect.value === 'warm') {
-        temperatureHTML = `
-            <p>❌ Теплый регион - пониженная нагрузка не применяется согласно п.10.11</p>
-            <p class="italic">${currentCity ? `Для населенного пункта ${currentCity}` : 'Для выбранного региона'}</p>
-        `;
+function calculateMuForSingleSlope(angle) {
+    // Б.1 - односкатные покрытия (схема 3)
+    if (angle <= 25) {
+        return 1.0;
+    } else if (angle <= 60) {
+        return (60 - angle) / 35;
     } else {
-        temperatureHTML = `
-            <p class="italic">Выберите тип зимы вручную для определения возможности применения пониженной нагрузки согласно п.10.11 СП 20.13330.2016</p>
-        `;
-    }
-    
-    if (temperatureInfo) {
-        temperatureInfo.innerHTML = temperatureHTML;
+        return 0;
     }
 }
 
-// Функции для расчета Ct согласно п.10.10 СП 20.13330.2016
-function updateCt() {
+function calculateMuForPitched(angle) {
+    // Б.1 - двускатные покрытия - ВСЕ ТРИ СХЕМЫ
+    const schemes = calculateMuSchemesForPitched(angle);
+    
+    // Для расчета берем максимальное значение из всех схем и зон
+    let maxMu = 0;
+    Object.values(schemes).forEach(scheme => {
+        Object.values(scheme.zones).forEach(zone => {
+            if (zone.mu > maxMu) maxMu = zone.mu;
+        });
+    });
+    
+    return maxMu;
+}
+
+function calculateMuSchemesForPitched(angle) {
+    const schemes = {};
+    
+    // Схема 1 - равномерное распределение (Б.1 схема 1)
+    if (angle <= 30) {
+        schemes.scheme1 = { 
+            name: "Схема 1 - Равномерное распределение",
+            zones: {
+                'zone1': { mu: 1.0, description: "μ₁ = 1,0" },
+                'zone2': { mu: 1.0, description: "μ₂ = 1,0" }
+            }
+        };
+    } else if (angle <= 60) {
+        const mu = (60 - angle) / 30;
+        schemes.scheme1 = {
+            name: "Схема 1 - Равномерное распределение", 
+            zones: {
+                'zone1': { mu: mu, description: `μ₁ = (60 - ${angle})/30 = ${mu.toFixed(2)}` },
+                'zone2': { mu: mu, description: `μ₂ = (60 - ${angle})/30 = ${mu.toFixed(2)}` }
+            }
+        };
+    } else {
+        schemes.scheme1 = {
+            name: "Схема 1 - Равномерное распределение",
+            zones: {
+                'zone1': { mu: 0, description: "μ₁ = 0" },
+                'zone2': { mu: 0, description: "μ₂ = 0" }
+            }
+        };
+    }
+    
+    // Схема 2 - неравномерное распределение (Б.1 схема 2)
+    if (angle <= 15) {
+        schemes.scheme2 = {
+            name: "Схема 2 - Неравномерное распределение",
+            zones: {
+                'zone1': { mu: 1.0, description: "μ₁ = 1,0" },
+                'zone2': { mu: 1.0, description: "μ₂ = 1,0" }
+            }
+        };
+    } else if (angle <= 60) {
+        const mu = (60 - angle) / 30;
+        schemes.scheme2 = {
+            name: "Схема 2 - Неравномерное распределение",
+            zones: {
+                'zone1': { mu: 0.5, description: "μ₁ = 0,5" },
+                'zone2': { mu: 1.5 * mu, description: `μ₂ = 1,5 × (60 - ${angle})/30 = ${(1.5 * mu).toFixed(2)}` }
+            }
+        };
+    } else {
+        schemes.scheme2 = {
+            name: "Схема 2 - Неравномерное распределение",
+            zones: {
+                'zone1': { mu: 0, description: "μ₁ = 0" },
+                'zone2': { mu: 0, description: "μ₂ = 0" }
+            }
+        };
+    }
+    
+    // Схема 3 - образование снегового мешка (Б.1 схема 3) - для углов 20-30°
+    if (angle >= 20 && angle <= 30) {
+        schemes.scheme3 = {
+            name: "Схема 3 - Образование снегового мешка",
+            zones: {
+                'zone1': { mu: 1.0, description: "μ₁ = 1,0" },
+                'zone2': { mu: 2.0, description: "μ₂ = 2,0 (снеговой мешок)" },
+                'zone3': { mu: 1.0, description: "μ₃ = 1,0" }
+            }
+        };
+    }
+    
+    return schemes;
+}
+
+function calculateMuForArched(angle) {
+    // Б.2 - сводчатые покрытия
+    const archRatio = parseFloat(document.getElementById('archRatio').value) || 0.1;
+    
+    if (angle <= 30) {
+        return 1.0;
+    } else if (angle <= 60) {
+        return (60 - angle) / 30;
+    } else {
+        return 0;
+    }
+}
+
+function calculateMuForMultiSlope(angle) {
+    // Б.3 - многопролетные покрытия
+    if (angle <= 25) {
+        return 1.0;
+    } else if (angle <= 60) {
+        return (60 - angle) / 35;
+    } else {
+        return 0;
+    }
+}
+
+function calculateMuForHeightDrop() {
+    // Б.4 - покрытия с перепадами высот
+    const heightDrop = parseFloat(document.getElementById('heightDrop').value) || 2.0;
+    return Math.min(2.0, 1 + heightDrop);
+}
+
+function calculateMuForObstacles() {
+    // Б.5 - покрытия с препятствиями
+    const parapetHeight = parseFloat(document.getElementById('parapetHeight').value) || 1.0;
+    return Math.min(2.0, 1 + parapetHeight);
+}
+
+function calculateMuForSpatial(angle) {
+    // Б.6 - пространственные покрытия
+    if (angle <= 30) {
+        return 1.0;
+    } else if (angle <= 60) {
+        return (60 - angle) / 30;
+    } else {
+        return 0;
+    }
+}
+
+function calculateMuForLantern() {
+    // Б.7 - покрытия с фонарями
+    return 1.4; // Типовое значение для фонарей
+}
+
+function calculateMuForShed(angle) {
+    // Б.8 - шедовые покрытия
+    if (angle <= 25) {
+        return 1.0;
+    } else if (angle <= 60) {
+        return (60 - angle) / 35;
+    } else {
+        return 0;
+    }
+}
+
+// ОБНОВЛЕНИЕ ИНТЕРФЕЙСА
+function updateAllCalculations() {
+    updateSgDisplay();
+    updateCeDisplay();
+    updateCtDisplay();
+    updateMuDisplay();
+    updateTemperatureInfo();
+    updateWindInfo();
+    updatePreview();
+}
+
+function updateSgDisplay() {
+    const Sg = calculateSg();
+    let district = 'III';
+    
+    if (document.querySelector('input[name="sgMethod"]:checked').value === 'sp') {
+        if (document.querySelector('input[name="spMethod"]:checked').value === 'city') {
+            const city = document.getElementById('citySelect').value;
+            district = city ? CITIES_DATA[city].district : 'III';
+        } else {
+            district = document.getElementById('snowDistrictMap').value;
+        }
+    }
+    
+    document.getElementById('sgValue').textContent = Sg.toFixed(2);
+    document.getElementById('snowDistrict').textContent = district;
+    
+    const details = generateSgCalculationDetails(Sg, district);
+    document.getElementById('sgCalculationDetails').innerHTML = details;
+}
+
+function generateSgCalculationDetails(Sg, district) {
+    let details = '<div class="protocol-step">';
+    details += '<div class="protocol-header"><strong>Расчет нормативной снеговой нагрузки Sg</strong><span class="protocol-reference">п.10.2, Таблица 10.1</span></div>';
+    
+    if (document.querySelector('input[name="sgMethod"]:checked').value === 'manual') {
+        details += `<div class="protocol-description"><strong>Метод определения:</strong> Ручной ввод нормативной снеговой нагрузки</div>`;
+        details += `<div class="protocol-description"><strong>Обоснование:</strong> п.10.2 СП 20.13330.2016 - Sg принимается по карте районирования или задается вручную</div>`;
+    } else {
+        const method = document.querySelector('input[name="spMethod"]:checked').value;
+        if (method === 'city') {
+            const city = document.getElementById('citySelect').value;
+            details += `<div class="protocol-description"><strong>Метод определения:</strong> По населенному пункту</div>`;
+            details += `<div class="protocol-description"><strong>Населенный пункт:</strong> ${city}</div>`;
+            details += `<div class="protocol-description"><strong>Снеговой район:</strong> ${district} (определен по карте районирования территории РФ)</div>`;
+        } else {
+            details += `<div class="protocol-description"><strong>Метод определения:</strong> По карте снеговых районов</div>`;
+            details += `<div class="protocol-description"><strong>Снеговой район:</strong> ${district} (выбран вручную по карте)</div>`;
+        }
+        
+        const customSg = parseFloat(document.getElementById('customSg').value);
+        if (!isNaN(customSg) && customSg > 0) {
+            details += `<div class="protocol-description"><strong>Уточнение:</strong> Применено уточненное значение по данным Росгидромета (для объектов на границах районов или в сложном рельефе)</div>`;
+        }
+        
+        details += `<div class="protocol-description"><strong>Нормативное основание:</strong> Таблица 10.1 СП 20.13330.2016 - Значения весового покрова снега на 1 м² горизонтальной поверхности земли</div>`;
+    }
+    
+    details += `<div class="protocol-formula">Sg = ${Sg.toFixed(2)} кПа</div>`;
+    details += `<div class="protocol-result">Нормативная снеговая нагрузка: ${Sg.toFixed(2)} кПа</div>`;
+    details += '</div>';
+    
+    return details;
+}
+
+function updateCeDisplay() {
+    const Ce = calculateCe();
+    document.getElementById('ceValue').textContent = `Рассчитанное значение Ce: ${Ce.toFixed(2)}`;
+    
+    const details = generateCeCalculationDetails(Ce);
+    document.getElementById('ceCalculationDetails').innerHTML = details;
+}
+
+function generateCeCalculationDetails(Ce) {
+    let details = '<div class="protocol-step">';
+    details += '<div class="protocol-header"><strong>Расчет коэффициента воздействия ветра Ce</strong><span class="protocol-reference">п.10.5-10.9</span></div>';
+    
+    const isProtected = document.getElementById('protected').checked;
+    
+    if (isProtected) {
+        details += `<div class="protocol-description"><strong>Условия:</strong> Объект защищен от прямого воздействия ветра</div>`;
+        details += `<div class="protocol-description"><strong>Обоснование:</strong> п.10.6 СП 20.13330.2016 - для защищенных зданий Ce = 1.0</div>`;
+    } else {
+        const l = calculateCharacteristicSize();
+        const canReduce = checkCeReductionConditions();
+        
+        if (!canReduce) {
+            details += `<div class="protocol-description"><strong>Условия:</strong> Не выполнены условия п.10.7 для снижения Ce</div>`;
+            details += `<div class="protocol-description"><strong>Обоснование:</strong> п.10.5 СП 20.13330.2016 - при невыполнении условий Ce = 1.0</div>`;
+        } else {
+            details += `<div class="protocol-description"><strong>Условия:</strong> Выполнены условия п.10.7 для снижения Ce</div>`;
+            details += `<div class="protocol-description"><strong>Характеристический размер:</strong> l = ${l} м</div>`;
+            details += `<div class="protocol-description"><strong>Формула расчета:</strong> п.10.3 СП 20.13330.2016 - Ce = 1.2 - 0.1√l</div>`;
+            details += `<div class="protocol-description"><strong>Расчет:</strong> Ce = 1.2 - 0.1 × ${Math.sqrt(l).toFixed(2)} = ${Ce.toFixed(2)}</div>`;
+        }
+    }
+    
+    details += `<div class="protocol-formula">Ce = ${Ce.toFixed(2)}</div>`;
+    details += `<div class="protocol-result">Коэффициент воздействия ветра: ${Ce.toFixed(2)}</div>`;
+    details += '</div>';
+    
+    return details;
+}
+
+function updateCtDisplay() {
+    const Ct = calculateCt();
+    document.getElementById('ctValue').textContent = `Рассчитанное значение Ct: ${Ct.toFixed(1)}`;
+    
+    const details = generateCtCalculationDetails(Ct);
+    document.getElementById('ctCalculationDetails').innerHTML = details;
+}
+
+function generateCtCalculationDetails(Ct) {
     const ctType = document.querySelector('input[name="ctType"]:checked').value;
+    let typeDescription = '';
     
-    let ct = 1.0;
-    let calculationDetails = '';
-    
-    // Согласно п.10.10 СП 20.13330.2016
     switch(ctType) {
         case 'normal':
-            ct = 1.0;
-            calculationDetails = 'Ct = 1.0 (обычное покрытие с утеплением) согласно п.10.10 СП 20.13330.2016';
+            typeDescription = 'Обычные покрытия с утеплением';
             break;
         case 'transparent':
-            ct = 1.0;
-            calculationDetails = 'Ct = 1.0 (прозрачные покрытия) согласно п.10.10 СП 20.13330.2016';
+            typeDescription = 'Прозрачные покрытия (с коэффициентом теплопередачи > 1 Вт/(м²·°C))';
             break;
         case 'highLoss':
-            ct = 0.8;
-            calculationDetails = 'Ct = 0.8 (покрытия с повышенными тепловыми потерями) согласно п.10.10 СП 20.13330.2016';
+            typeDescription = 'Покрытия с повышенными тепловыми потерями';
             break;
         case 'cold':
-            ct = 1.0;
-            calculationDetails = 'Ct = 1.0 (холодные покрытия) согласно п.10.10 СП 20.13330.2016';
+            typeDescription = 'Холодные покрытия (с коэффициентом теплопередачи ≤ 1 Вт/(м²·°C))';
             break;
     }
     
-    ctValue = ct;
-    document.getElementById('ctValue').textContent = `Рассчитанное значение Ct: ${ct.toFixed(2)}`;
-    document.getElementById('ctCalculationDetails').innerHTML = `<div class="detailed-explanation">${calculationDetails}</div>`;
+    let details = '<div class="protocol-step">';
+    details += '<div class="protocol-header"><strong>Расчет термического коэффициента Ct</strong><span class="protocol-reference">п.10.10</span></div>';
+    details += `<div class="protocol-description"><strong>Тип покрытия:</strong> ${typeDescription}</div>`;
+    details += `<div class="protocol-description"><strong>Обоснование:</strong> п.10.10 СП 20.13330.2016 - значения коэффициента Ct в зависимости от теплового режима покрытия</div>`;
+    details += `<div class="protocol-formula">Ct = ${Ct.toFixed(1)}</div>`;
+    details += `<div class="protocol-result">Термический коэффициент: ${Ct.toFixed(1)}</div>`;
+    details += '</div>';
+    
+    return details;
 }
 
-// Функции для расчета μ
-function showParams() {
-    const type = document.getElementById('roofType').value;
-    const ref = document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].getAttribute('data-ref');
+function updateMuDisplay() {
+    const Mu = calculateMu();
+    document.getElementById('muValue').textContent = `Максимальное значение μ: ${Mu.toFixed(2)}`;
     
-    document.getElementById('roofRef').textContent = `Ссылка на СП: ${ref}`;
+    const details = generateMuCalculationDetails(Mu);
+    document.getElementById('muCalculationDetails').innerHTML = details;
     
-    // Обновляем изображение с обработкой ошибок
-    const roofImage = document.getElementById('roofImage');
-    const imageName = roofImages[type];
-    if (imageName) {
-        roofImage.src = baseImageUrl + imageName;
-        roofImage.onerror = function() {
-            this.src = 'https://via.placeholder.com/400x250/3498db/ffffff?text=Схема+не+доступна';
-            console.warn('Изображение схемы не загружено:', this.src);
-        };
-        roofImage.alt = `Схема покрытия: ${type}`;
-    }
+    updateMuSchemesDisplay();
+}
+
+function generateMuCalculationDetails(Mu) {
+    const roofType = document.getElementById('roofType').value;
+    const angle = parseFloat(document.getElementById('roofAngle').value) || 30;
     
-    // Обновляем параметры ввода для каждого типа
-    let paramsHTML = '';
+    let details = '<div class="protocol-step">';
+    details += '<div class="protocol-header"><strong>Расчет коэффициента перехода μ</strong><span class="protocol-reference">п.10.4, Приложение Б</span></div>';
     
-    switch(type) {
-        case 'single_slope':
+    switch(roofType) {
+        case 'flat':
+            details += `<div class="protocol-description"><strong>Тип покрытия:</strong> Плоское покрытие (уклон ≤ 2.5%)</div>`;
+            details += `<div class="protocol-description"><strong>Обоснование:</strong> Б.1 СП 20.13330.2016 - для плоских покрытий μ = 1.0</div>`;
+            break;
+            
         case 'pitched':
-        case 'pointed':
-        case 'shed':
-        case 'multi_pitched':
-            paramsHTML = '<label>Угол наклона крыши α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateMu()"></label>';
+            details += `<div class="protocol-description"><strong>Тип покрытия:</strong> Двускатное покрытие</div>`;
+            details += `<div class="protocol-description"><strong>Угол наклона:</strong> α = ${angle}°</div>`;
+            
+            const schemes = calculateMuSchemesForPitched(angle);
+            Object.keys(schemes).forEach(schemeKey => {
+                const scheme = schemes[schemeKey];
+                details += `<div class="protocol-description"><strong>${scheme.name}:</strong></div>`;
+                Object.values(scheme.zones).forEach(zone => {
+                    details += `<div class="protocol-description" style="margin-left: 20px;">${zone.description}</div>`;
+                });
+            });
+            
+            details += `<div class="protocol-description"><strong>Принято для расчета:</strong> μ = ${Mu.toFixed(2)} (максимальное значение из всех схем)</div>`;
             break;
-        case 'arched':
-        case 'multi_arched':
-            paramsHTML = `
-                <label>Угол наклона крыши α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateMu()"></label>
-                <label>Отношение f/l: <input type="number" id="archRatio" step="0.01" min="0" max="1" value="0.1" onchange="updateMu()"></label>
-            `;
-            break;
-        case 'lantern':
-        case 'long_lantern':
-        case 'multi_lantern':
-            paramsHTML = `
-                <label>Угол наклона крыши α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateMu()"></label>
-                <label>Высота фонаря h (м): <input type="number" id="lanternHeight" min="0" value="2" onchange="updateMu()"></label>
-                <label>Ширина фонаря b (м): <input type="number" id="lanternWidth" min="0" value="3" onchange="updateMu()"></label>
-                <label>Расстояние между фонарями (м): <input type="number" id="lanternDistance" min="0" value="6" onchange="updateMu()"></label>
-            `;
-            break;
-        case 'height_drop':
-            paramsHTML = `
-                <label>Высота перепада h (м): <input type="number" id="heightDrop" min="0" value="2" onchange="updateMu()"></label>
-                <label>Длина ската верхнего покрытия l1 (м): <input type="number" id="lengthUpper" min="0" value="10" onchange="updateMu()"></label>
-                <label>Длина ската нижнего покрытия l2 (м): <input type="number" id="lengthLower" min="0" value="10" onchange="updateMu()"></label>
-            `;
-            break;
-        case 'double_height_drop':
-            paramsHTML = `
-                <label>Высота первого перепада h1 (м): <input type="number" id="heightDrop1" min="0" value="2" onchange="updateMu()"></label>
-                <label>Высота второго перепада h2 (м): <input type="number" id="heightDrop2" min="0" value="2" onchange="updateMu()"></label>
-                <label>Длина скатов (м): <input type="number" id="lengthSlope" min="0" value="10" onchange="updateMu()"></label>
-            `;
-            break;
-        case 'cylindrical':
-            paramsHTML = '<label>Угол наклона образующей α (°): <input type="number" id="cylindricalAngle" min="0" max="90" value="30" onchange="updateMu()"></label>';
-            break;
-        case 'dome':
-            paramsHTML = '<label>Отношение f/d: <input type="number" id="domeRatio" step="0.01" min="0" max="0.5" value="0.1" onchange="updateMu()"></label>';
-            break;
-        case 'cone':
-            paramsHTML = '<label>Угол наклона образующей α (°): <input type="number" id="coneAngle" min="0" max="90" value="30" onchange="updateMu()"></label>';
-            break;
-        case 'parapet':
-            paramsHTML = `
-                <label>Высота парапета h (м): <input type="number" id="parapetHeight" min="0" value="1" onchange="updateMu()"></label>
-                <label>Расстояние от парапета s (м): <input type="number" id="parapetDistance" min="0" value="2" onchange="updateMu()"></label>
-            `;
-            break;
-        case 'heightened':
-            paramsHTML = `
-                <label>Высота надстройки h (м): <input type="number" id="heightenedHeight" min="0" value="3" onchange="updateMu()"></label>
-                <label>Ширина надстройки b (м): <input type="number" id="heightenedWidth" min="0" value="5" onchange="updateMu()"></label>
-            `;
-            break;
-        default:
-            paramsHTML = '<label>Данный тип покрытия требует специального расчета</label>';
-    }
-    
-    document.getElementById('roofParams').innerHTML = paramsHTML;
-    updateMu();
-}
-
-function updateMu() {
-    const type = document.getElementById('roofType').value;
-    let muResults = {};
-    let details = '';
-    
-    switch(type) {
+            
         case 'single_slope':
-            const angleSingle = parseFloat(document.getElementById('roofAngle').value) || 0;
-            muResults = calculateMuForSingleSlope(angleSingle);
-            details = `Односкатное покрытие, угол ${angleSingle}°`;
+            details += `<div class="protocol-description"><strong>Тип покрытия:</strong> Односкатное покрытие</div>`;
+            details += `<div class="protocol-description"><strong>Угол наклона:</strong> α = ${angle}°</div>`;
+            
+            if (angle <= 25) {
+                details += `<div class="protocol-description"><strong>Обоснование:</strong> Б.1 схема 3 СП 20.13330.2016 - при α ≤ 25° μ = 1.0</div>`;
+            } else if (angle <= 60) {
+                details += `<div class="protocol-description"><strong>Формула расчета:</strong> Б.1 схема 3 СП 20.13330.2016 - μ = (60 - α)/35</div>`;
+                details += `<div class="protocol-description"><strong>Расчет:</strong> μ = (60 - ${angle})/35 = ${Mu.toFixed(2)}</div>`;
+            } else {
+                details += `<div class="protocol-description"><strong>Обоснование:</strong> Б.1 схема 3 СП 20.13330.2016 - при α > 60° μ = 0</div>`;
+            }
             break;
-        case 'pitched':
-            const anglePitched = parseFloat(document.getElementById('roofAngle').value) || 0;
-            muResults = calculateMuForPitchedRoof(anglePitched);
-            details = `Двускатное покрытие, угол ${anglePitched}°`;
-            break;
-        case 'pointed':
-            const anglePointed = parseFloat(document.getElementById('roofAngle').value) || 0;
-            muResults = calculateMuForPointedRoof(anglePointed);
-            details = `Стрельчатое покрытие, угол ${anglePointed}°`;
-            break;
-        case 'arched':
-            const angleArched = parseFloat(document.getElementById('roofAngle').value) || 0;
-            const ratioArched = parseFloat(document.getElementById('archRatio').value) || 0.1;
-            muResults = calculateMuForArchedRoof(angleArched, ratioArched);
-            details = `Сводчатое покрытие, угол ${angleArched}°, f/l=${ratioArched}`;
-            break;
-        case 'lantern':
-            const angleLantern = parseFloat(document.getElementById('roofAngle').value) || 0;
-            const heightLantern = parseFloat(document.getElementById('lanternHeight').value) || 2;
-            const widthLantern = parseFloat(document.getElementById('lanternWidth').value) || 3;
-            const distanceLantern = parseFloat(document.getElementById('lanternDistance').value) || 6;
-            muResults = calculateMuForLanternRoof(angleLantern, heightLantern, widthLantern, distanceLantern);
-            details = `Покрытие с фонарями, угол ${angleLantern}°, h=${heightLantern}м, b=${widthLantern}м`;
-            break;
-        case 'shed':
-            const angleShed = parseFloat(document.getElementById('roofAngle').value) || 0;
-            muResults = calculateMuForShedRoof(angleShed);
-            details = `Шедовое покрытие, угол ${angleShed}°`;
-            break;
-        case 'multi_pitched':
-            const angleMulti = parseFloat(document.getElementById('roofAngle').value) || 0;
-            muResults = calculateMuForMultiPitchedRoof(angleMulti);
-            details = `Многопролетное двускатное покрытие, угол ${angleMulti}°`;
-            break;
-        case 'multi_arched':
-            const angleMultiArched = parseFloat(document.getElementById('roofAngle').value) || 0;
-            const ratioMultiArched = parseFloat(document.getElementById('archRatio').value) || 0.1;
-            muResults = calculateMuForMultiArchedRoof(angleMultiArched, ratioMultiArched);
-            details = `Многопролетное сводчатое покрытие, угол ${angleMultiArched}°, f/l=${ratioMultiArched}`;
-            break;
-        case 'height_drop':
-            const h = parseFloat(document.getElementById('heightDrop').value) || 2;
-            const l1 = parseFloat(document.getElementById('lengthUpper').value) || 10;
-            const l2 = parseFloat(document.getElementById('lengthLower').value) || 10;
-            muResults = calculateMuForHeightDrop(h, l1, l2);
-            details = `Покрытие с перепадом высоты, h=${h}м, l1=${l1}м, l2=${l2}м`;
-            break;
-        case 'parapet':
-            const parapetHeight = parseFloat(document.getElementById('parapetHeight').value) || 1;
-            const parapetDistance = parseFloat(document.getElementById('parapetDistance').value) || 2;
-            muResults = calculateMuForParapet(parapetHeight, parapetDistance);
-            details = `Парапет высотой ${parapetHeight}м, расстояние ${parapetDistance}м`;
-            break;
-        case 'cone':
-            const coneAngle = parseFloat(document.getElementById('coneAngle').value) || 30;
-            muResults = calculateMuForConeRoof(coneAngle);
-            details = `Коническое покрытие, угол ${coneAngle}°`;
-            break;
+            
         default:
-            muResults = {
-                'Схема 1 (равномерная)': {
-                    'μ': '1.0',
-                    'описание': 'Стандартное значение по умолчанию',
-                    'применение': 'Общий расчет'
-                }
-            };
-            details = 'Стандартное значение: μ = 1.0';
+            details += `<div class="protocol-description"><strong>Тип покрытия:</strong> ${roofType}</div>`;
+            details += `<div class="protocol-description"><strong>Обоснование:</strong> Расчет по соответствующей схеме Приложения Б</div>`;
     }
     
-    displayMuSchemes(muResults);
-    const muCalculationDetails = document.getElementById('muCalculationDetails');
-    if (muCalculationDetails) {
-        muCalculationDetails.innerHTML = `<p class="note">${details}</p>`;
-    }
+    details += `<div class="protocol-formula">μ = ${Mu.toFixed(2)}</div>`;
+    details += `<div class="protocol-result">Коэффициент перехода: ${Mu.toFixed(2)}</div>`;
+    details += '</div>';
+    
+    return details;
 }
 
-// ДЕТАЛЬНЫЕ ФУНКЦИИ РАСЧЕТА μ ПО СП 20.13330.2016
-function calculateMuForSingleSlope(angle) {
-    const mu = calculateBaseMu(angle);
+function updateMuSchemesDisplay() {
+    const roofType = document.getElementById('roofType').value;
+    const angle = parseFloat(document.getElementById('roofAngle').value) || 30;
+    const schemesContainer = document.getElementById('muSchemesContainer');
     
-    return {
-        'Схема Б.1 (вариант 1)': {
-            'μ': mu.toFixed(2),
-            'описание': `Односкатное покрытие по схеме Б.1 (вариант 1). Угол наклона α = ${angle}°. Расчет по таблице Б.1 СП 20.13330.2016: μ = ${mu.toFixed(2)}`,
-            'применение': 'Для расчета равномерно распределенной нагрузки'
-        }
-    };
-}
-
-// ИСПРАВЛЕННАЯ ФУНКЦИЯ РАСЧЕТА ДЛЯ ДВУСКАТНОЙ КРЫШИ
-function calculateMuForPitchedRoof(angle) {
-    const mu = calculateBaseMu(angle);
+    let schemesHTML = '';
     
-    const results = {
-        'Схема Б.1 (вариант 1) - для расчета прогибов': {
-            'μ₁ (левый скат)': mu.toFixed(2),
-            'μ₂ (правый скат)': mu.toFixed(2),
-            'описание': `Двускатное покрытие по схеме Б.1 (вариант 1). Угол наклона α = ${angle}°. Равномерное распределение: μ₁ = μ₂ = ${mu.toFixed(2)} согласно п.Б.1 СП 20.13330.2016`,
-            'применение': 'Для расчета прогибов и перемещений'
-        }
-    };
-    
-    // Вариант 2 согласно п.Б.1 б) СП 20.13330.2016
-    if (angle >= 15 && angle <= 40) {
-        results['Схема Б.1 (вариант 2) - для расчета прочности'] = {
-            'μ₁ (наветренный скат)': (0.75 * mu).toFixed(2),
-            'μ₂ (подветренный скат)': (1.25 * mu).toFixed(2),
-            'описание': `Двускатное покрытие по схеме Б.1 (вариант 2). Угол наклона α = ${angle}°. Неравномерное распределение: μ₁ = 0.75×${mu.toFixed(2)} = ${(0.75 * mu).toFixed(2)}, μ₂ = 1.25×${mu.toFixed(2)} = ${(1.25 * mu).toFixed(2)} согласно п.Б.1 б) СП 20.13330.2016`,
-            'применение': 'Для расчета прочности при 15°≤α≤40°'
-        };
-    }
-    
-    // Вариант 3 согласно п.Б.1 б) СП 20.13330.2016
-    if (angle >= 10 && angle <= 30) {
-        results['Схема Б.1 (вариант 3) - с ходовыми мостиками'] = {
-            'μ₁ (один скат)': (0.6 * mu).toFixed(2),
-            'μ₂ (другой скат)': (1.4 * mu).toFixed(2),
-            'описание': `Двускатное покрытие по схеме Б.1 (вариант 3). Угол наклона α = ${angle}°. Неравномерное распределение: μ₁ = 0.6×${mu.toFixed(2)} = ${(0.6 * mu).toFixed(2)}, μ₂ = 1.4×${mu.toFixed(2)} = ${(1.4 * mu).toFixed(2)} согласно п.Б.1 б) СП 20.13330.2016`,
-            'применение': 'Для расчета прочности при 10°≤α≤30° с ходовыми мостиками'
-        };
-    }
-    
-    return results;
-}
-
-function calculateMuForArchedRoof(angle, ratio) {
-    const muArch = calculateArchMu(ratio);
-    
-    return {
-        'Схема Б.2 (вариант 1)': {
-            'μ': muArch.toFixed(2),
-            'описание': `Сводчатое покрытие по схеме Б.2 (вариант 1). Угол ${angle}°, отношение f/l = ${ratio}. Расчет по формуле Б.1 СП 20.13330.2016: μ = ${muArch.toFixed(2)}`,
-            'применение': 'Для равномерного распределения'
-        },
-        'Схема Б.2 (вариант 2)': {
-            'μ на участке 0-0.5l': '0.5',
-            'μ на участке 0.5l-l': '1.0',
-            'μ на участке l-1.5l': '1.5',
-            'μ на участке 1.5l-2l': '1.0',
-            'μ на участке 2l-2.5l': '0.5',
-            'описание': `Сводчатое покрытие по схеме Б.2 (вариант 2). Угол ${angle}°, отношение f/l = ${ratio}. Неравномерное распределение по длине покрытия согласно п.Б.2 СП 20.13330.2016`,
-            'применение': 'Для расчета прочности'
-        }
-    };
-}
-
-function calculateMuForLanternRoof(angle, height, width, distance) {
-    const mu = calculateBaseMu(angle);
-    const b = width;
-    const h = height;
-    const l = distance;
-    
-    // Расчет по п.Б.3 СП 20.13330.2016
-    const mu1 = Math.min(2 * h / b, 4).toFixed(2);
-    const mu2 = Math.min(2 * h / l, 4).toFixed(2);
-    const mu3 = Math.min(2 * h / b, 2).toFixed(2);
-    
-    return {
-        'Схема Б.3 (вариант 1)': {
-            'μ в зоне A': mu.toFixed(2),
-            'μ₁ в зоне B': Math.max(mu, parseFloat(mu2)).toFixed(2),
-            'μ₂ в зоне C': Math.max(mu, parseFloat(mu1), parseFloat(mu2)).toFixed(2),
-            'описание': `Покрытие с фонарями по схеме Б.3 (вариант 1). h=${h}м, b=${b}м, l=${l}м. Расчет по формулам Б.2 СП 20.13330.2016: μ₁ = max(${mu.toFixed(2)}, 2h/l=${mu2}) = ${Math.max(mu, parseFloat(mu2)).toFixed(2)}, μ₂ = max(${mu.toFixed(2)}, 2h/b=${mu1}, 2h/l=${mu2}) = ${Math.max(mu, parseFloat(mu1), parseFloat(mu2)).toFixed(2)}`,
-            'применение': 'Для основного покрытия'
-        },
-        'Схема Б.3 (вариант 2)': {
-            'μ на покрытии фонаря': mu1,
-            'μ у торцов фонаря': mu2,
-            'μ в зоне B': mu3,
-            'описание': `Покрытие с фонарями по схеме Б.3 (вариант 2). Расчет коэффициентов для фонарей по формулам Б.2 СП 20.13330.2016: μ = 2h/b = ${mu1} (но не более 4), μ = 2h/l = ${mu2} (но не более 4), μ в зоне B = 2h/b = ${mu3} (но не более 2)`,
-            'применение': 'Для покрытия фонарей'
-        }
-    };
-}
-
-function calculateMuForShedRoof(angle) {
-    const mu = calculateBaseMu(angle);
-    
-    return {
-        'Схема Б.5 (вариант 1)': {
-            'μ в зоне A': mu.toFixed(2),
-            'μ₁ в зоне B': (1.4 * mu).toFixed(2),
-            'μ₂ в зоне C': (0.6 * mu).toFixed(2),
-            'описание': `Шедовое покрытие по схеме Б.5 (вариант 1). Угол наклона α = ${angle}°. Расчет: μ₁ = 1.4×${mu.toFixed(2)} = ${(1.4 * mu).toFixed(2)}, μ₂ = 0.6×${mu.toFixed(2)} = ${(0.6 * mu).toFixed(2)} согласно п.Б.5 СП 20.13330.2016`,
-            'применение': 'Для расчета прочности'
-        },
-        'Схема Б.5 (вариант 2)': {
-            'μ в зоне A': mu.toFixed(2),
-            'μ₁ в зоне B': (0.6 * mu).toFixed(2),
-            'μ₂ в зоне C': (1.4 * mu).toFixed(2),
-            'описание': `Шедовое покрытие по схеме Б.5 (вариант 2). Угол наклона α = ${angle}°. Расчет: μ₁ = 0.6×${mu.toFixed(2)} = ${(0.6 * mu).toFixed(2)}, μ₂ = 1.4×${mu.toFixed(2)} = ${(1.4 * mu).toFixed(2)} согласно п.Б.5 СП 20.13330.2016`,
-            'применение': 'Для расчета прочности'
-        }
-    };
-}
-
-function calculateMuForMultiPitchedRoof(angle) {
-    const mu = calculateBaseMu(angle);
-    
-    return {
-        'Схема Б.6 (вариант 1)': {
-            'μ на всех скатах': mu.toFixed(2),
-            'описание': `Многопролетное двускатное покрытие по схеме Б.6 (вариант 1). Угол наклона α = ${angle}°. Равномерное распределение согласно п.Б.6 СП 20.13330.2016`,
-            'применение': 'Для расчета прогибов'
-        },
-        'Схема Б.6 (вариант 2)': {
-            'μ₁ на крайних скатах': (1.4 * mu).toFixed(2),
-            'μ₂ на средних скатах': (0.6 * mu).toFixed(2),
-            'описание': `Многопролетное двускатное покрытие по схеме Б.6 (вариант 2). Угол наклона α = ${angle}°. Расчет: μ₁ = 1.4×${mu.toFixed(2)} = ${(1.4 * mu).toFixed(2)}, μ₂ = 0.6×${mu.toFixed(2)} = ${(0.6 * mu).toFixed(2)} согласно п.Б.6 СП 20.13330.2016`,
-            'применение': 'Для расчета прочности'
-        }
-    };
-}
-
-function calculateMuForMultiArchedRoof(angle, ratio) {
-    const muArch = calculateArchMu(ratio);
-    
-    return {
-        'Схема Б.6 (вариант 1)': {
-            'μ во всех пролетах': muArch.toFixed(2),
-            'описание': `Многопролетное сводчатое покрытие по схеме Б.6 (вариант 1). Угол ${angle}°, отношение f/l = ${ratio}. Равномерное распределение согласно п.Б.6 СП 20.13330.2016`,
-            'применение': 'Для расчета прогибов'
-        },
-        'Схема Б.6 (вариант 2)': {
-            'μ₁ в крайних пролетах': (1.4 * muArch).toFixed(2),
-            'μ₂ в средних пролетах': (0.6 * muArch).toFixed(2),
-            'описание': `Многопролетное сводчатое покрытие по схеме Б.6 (вариант 2). Угол ${angle}°, отношение f/l = ${ratio}. Расчет: μ₁ = 1.4×${muArch.toFixed(2)} = ${(1.4 * muArch).toFixed(2)}, μ₂ = 0.6×${muArch.toFixed(2)} = ${(0.6 * muArch).toFixed(2)} согласно п.Б.6 СП 20.13330.2016`,
-            'применение': 'Для расчета прочности'
-        }
-    };
-}
-
-// ИСПРАВЛЕННАЯ ФУНКЦИЯ РАСЧЕТА ДЛЯ ПЕРЕПАДА ВЫСОТ
-function calculateMuForHeightDrop(h, l1, l2) {
-    // ПРАВИЛЬНЫЙ расчет по п.Б.8 СП 20.13330.2016
-    const mu1 = Math.min(2 * h / l1, 2).toFixed(2);
-    const mu2 = Math.min(2 * h / l2, 2).toFixed(2);
-    const mu3_max = Math.min(2 * h / Math.sqrt(sgValue), 4).toFixed(2);
-    
-    return {
-        'Схема Б.8 (вариант 1)': {
-            'μ₁ (верхнее покрытие)': mu1,
-            'μ₂ (нижнее покрытие)': mu2,
-            'μ₃ (зона перепада)': `2.0 (max ${mu3_max})`,
-            'описание': `Покрытие с перепадом высоты по схеме Б.8 (вариант 1). h=${h}м, l1=${l1}м, l2=${l2}м. ` +
-                       `Расчет по формуле Б.5 СП 20.13330.2016: μ₁ = min(2h/l1, 2) = ${mu1}, μ₂ = min(2h/l2, 2) = ${mu2}, ` +
-                       `μ₃ = 2.0 (не более 2h/√S₀ = ${mu3_max})`,
-            'применение': 'Для расчета прочности'
-        },
-        'Схема Б.8 (вариант 2)': {
-            'μ₁ (верхнее покрытие)': mu1,
-            'μ₂ (нижнее покрытие)': mu2,
-            'μ₃ (зона перепада)': '0.0',
-            'описание': `Покрытие с перепадом высоты по схеме Б.8 (вариант 2). h=${h}м, l1=${l1}м, l2=${l2}м. ` +
-                       `Расчет по формуле Б.5 СП 20.13330.2016: μ₁ = min(2h/l1, 2) = ${mu1}, μ₂ = min(2h/l2, 2) = ${mu2}, μ₃ = 0.0`,
-            'применение': 'Для расчета прочности'
-        }
-    };
-}
-
-function calculateMuForParapet(h, distance) {
-    // Расчет по п.Б.13 СП 20.13330.2016
-    // б) Схему на рисунке Б.16 для покрытий с парапетами следует применять при h/S₀ > 0,8;
-    // μ = 2h/s, но не более 3.
-    
-    const s = distance;
-    let mu = Math.min(2 * h / s, 3).toFixed(2);
-    
-    // Проверка условия применения схемы Б.13
-    const sg = sgValue; // S₀ в кПа
-    const condition = h / sg > 0.8;
-    
-    let description = '';
-    if (condition) {
-        description = `Парапет по схеме Б.13. Высота парапета h=${h}м, расстояние от парапета s=${s}м. `;
-        description += `Условие применения: h/S₀ = ${h}/${sg} = ${(h/sg).toFixed(2)} > 0.8 - выполняется. `;
-        description += `Расчет по п.Б.13 б) СП 20.13330.2016: μ = min(2h/s, 3) = min(${2*h}/${s}, 3) = ${mu}`;
-    } else {
-        description = `Парапет по схеме Б.13. Высота парапета h=${h}м, расстояние от парапета s=${s}м. `;
-        description += `Условие применения: h/S₀ = ${h}/${sg} = ${(h/sg).toFixed(2)} ≤ 0.8 - не выполняется. `;
-        description += `Схема Б.13 не применяется, используется μ = 1.0`;
-        mu = '1.0';
-    }
-    
-    return {
-        'Схема Б.13': {
-            'μ': mu,
-            'описание': description,
-            'применение': 'Для расчета нагрузки у парапетов согласно п.Б.13 СП 20.13330.2016'
-        }
-    };
-}
-
-function calculateMuForConeRoof(angle) {
-    const mu = calculateBaseMu(angle);
-    
-    return {
-        'Схема Б.15': {
-            'μ': mu.toFixed(2),
-            'описание': `Коническое круговое покрытие по схеме Б.15. Угол наклона образующей α = ${angle}°. Расчет по таблице Б.3 СП 20.13330.2016: μ = ${mu.toFixed(2)}`,
-            'применение': 'Для равномерного распределения'
-        }
-    };
-}
-
-function calculateMuForPointedRoof(angle) {
-    const mu = calculateBaseMu(angle);
-    
-    return {
-        'Схема Б.2 (вариант 1)': {
-            'μ': mu.toFixed(2),
-            'описание': `Стрельчатое покрытие по схеме Б.2 (вариант 1). Угол наклона ${angle}°. Равномерное распределение согласно п.Б.2 СП 20.13330.2016`,
-            'применение': 'Для равномерного распределения'
-        }
-    };
-}
-
-// БАЗОВЫЕ ФУНКЦИИ РАСЧЕТА
-function calculateBaseMu(angle) {
-    // Согласно таблице Б.1 СП 20.13330.2016
-    if (angle <= 25) return 1.0;
-    if (angle >= 60) return 0.0;
-    return (60 - angle) / 35;
-}
-
-function calculateArchMu(ratio) {
-    // Согласно п.Б.2 СП 20.13330.2016
-    if (ratio <= 0.1) return 1.0;
-    if (ratio >= 0.4) return 0.0;
-    return 1.25 * (1 - 2.5 * ratio);
-}
-
-// ИСПРАВЛЕННАЯ ФУНКЦИЯ ОТОБРАЖЕНИЯ СХЕМ μ
-function displayMuSchemes(muResults) {
-    const container = document.getElementById('muSchemesContainer');
-    if (!container) return;
-    
-    let html = '<div class="mu-scheme"><h4>📐 Схемы распределения μ:</h4>';
-    
-    Object.keys(muResults).forEach(scheme => {
-        const schemeData = muResults[scheme];
+    if (roofType === 'pitched') {
+        const schemes = calculateMuSchemesForPitched(angle);
         
-        html += `<div class="scheme-description">`;
-        html += `<h5>${scheme}</h5>`;
-        html += `<p><strong>📝 Описание:</strong> ${schemeData.описание}</p>`;
-        html += `<p><strong>🎯 Применение:</strong> ${schemeData.применение}</p>`;
-        html += `<div class="zone-calculation">`;
-        
-        // Находим максимальное значение μ для этой схемы
-        let maxMuInScheme = 0;
-        Object.keys(schemeData).forEach(key => {
-            if (!['описание', 'применение', 'description', 'application'].includes(key)) {
-                const value = schemeData[key];
-                const muVal = parseFloat(value) || 0;
-                if (muVal > maxMuInScheme) maxMuInScheme = muVal;
-                html += `<div class="mu-zone"><strong>${key}:</strong> ${value}</div>`;
-            }
-        });
-        
-        html += `<div class="mu-zone" style="background:#2c3e50;color:white;"><strong>Макс. μ в схеме:</strong> ${maxMuInScheme.toFixed(2)}</div>`;
-        html += `</div></div>`;
-    });
-    
-    html += '</div>';
-    container.innerHTML = html;
-    
-    // Обновляем глобальное максимальное значение μ
-    updateGlobalMuValue(muResults);
-}
-
-// НОВАЯ ФУНКЦИЯ для обновления глобального значения μ
-function updateGlobalMuValue(muResults) {
-    let maxMu = 0;
-    
-    Object.keys(muResults).forEach(scheme => {
-        const schemeData = muResults[scheme];
-        Object.keys(schemeData).forEach(key => {
-            if (!['описание', 'применение', 'description', 'application'].includes(key)) {
-                const value = schemeData[key];
-                // Извлекаем числовое значение из строки (может содержать доп. текст)
-                const muMatch = value.toString().match(/(\d+\.?\d*)/);
-                if (muMatch) {
-                    const muVal = parseFloat(muMatch[1]);
-                    if (muVal > maxMu) maxMu = muVal;
-                }
-            }
-        });
-    });
-    
-    muValue = maxMu > 0 ? maxMu : 1.0;
-    
-    const muValueElement = document.getElementById('muValue');
-    if (muValueElement) {
-        muValueElement.textContent = `Максимальное значение μ: ${muValue.toFixed(2)}`;
-    }
-}
-
-// Переключение учета горных районов
-function toggleMountainArea() {
-    isMountainArea = document.getElementById('mountainArea').checked;
-    document.getElementById('mountainCalculation').style.display = isMountainArea ? 'block' : 'none';
-    
-    if (!isMountainArea) {
-        kbValue = 1.0;
-        document.getElementById('kbDisplay').innerHTML = '';
-    } else {
-        updateKb();
-    }
-}
-
-// Обновление высотного коэффициента k_b
-function updateKb() {
-    if (!isMountainArea) return;
-    
-    altitude = parseFloat(document.getElementById('altitude').value) || 500;
-    mountainRegion = document.getElementById('mountainRegion').value;
-    
-    let kb = 1.0;
-    let calculationDetails = '';
-    
-    const regionCoefficients = {
-        'dagestan': 0.001,
-        'krasnodar_adler': 0.009,
-        'krasnodar_apsheron': 0.008,
-        'krasnodar_tuapse': 0.005,
-        'krasnodar_other': 0.003,
-        'stavropol': 0.001,
-        'evenkia': 0.001,
-        'krasnoyarsk_kuznetsk': 0.0068,
-        'krasnoyarsk_sayan': 0.0063,
-        'krasnoyarsk_north': 0.0028,
-        'buryatia_khamar': 0.002,
-        'buryatia_baikal': 0.0046,
-        'yakutia_aldan': 0.002,
-        'crimea_yayla': 0.004,
-        'crimea_south': 0.002
-    };
-    
-    if (mountainRegion && regionCoefficients[mountainRegion]) {
-        const coefficient = regionCoefficients[mountainRegion];
-        kb = 1 + coefficient * altitude;
-        calculationDetails = `k_b = 1 + ${coefficient} × ${altitude} = ${kb.toFixed(3)}`;
-        
-        document.getElementById('kbCalculationDetails').innerHTML = `
-            <div class="detailed-explanation">
-                <strong>Расчет высотного коэффициента:</strong><br>
-                ${calculationDetails}
-            </div>
-        `;
-        
-        document.getElementById('kbDisplay').innerHTML = `
-            <div class="kb-display">
-                Высотный коэффициент k_b = ${kb.toFixed(3)}
-            </div>
-        `;
-    } else {
-        calculationDetails = 'k_b = 1.0 (район не выбран)';
-        document.getElementById('kbCalculationDetails').innerHTML = `
-            <div class="warning">
-                ⚠️ Высотный коэффициент не рассчитан. Выберите горный район для расчета.
-            </div>
-        `;
-        document.getElementById('kbDisplay').innerHTML = '';
-    }
-    
-    kbValue = kb;
-}
-
-// Основная функция расчета
-function calculate() {
-    let Sg, Ce, Ct;
-    let SgSource = '', CeSource = '', CtSource = '';
-    
-    // Проверка размеров покрытия
-    const dimMin = parseFloat(document.getElementById('dimMin').value) || 50;
-    const dimMax = parseFloat(document.getElementById('dimMax').value) || 50;
-    if (dimMin > dimMax) {
-        alert('❌ Ошибка: Наименьший размер покрытия не может быть больше наибольшего размера. Пожалуйста, исправьте значения в шаге 2.');
-        showStep(2);
-        return;
-    }
-    
-    // Sg
-    const sgMethod = document.querySelector('input[name="sgMethod"]:checked').value;
-    if (sgMethod === 'manual') {
-        Sg = parseFloat(document.getElementById('sgManual').value) || 1.5;
-        SgSource = 'Ручной ввод';
-    } else {
-        if (document.querySelector('input[name="spMethod"]:checked').value === 'city') {
-            const citySelect = document.getElementById('citySelect');
-            const district = citySelect.options[citySelect.selectedIndex].getAttribute('data-district');
-            Sg = sgValues[district] || 1.5;
-            SgSource = `По населенному пункту (${document.getElementById('citySelect').value})`;
-        } else {
-            const district = document.getElementById('snowDistrictMap').value;
-            Sg = sgValues[district] || 1.5;
-            SgSource = 'По карте снеговых районов';
-        }
-        const customSg = document.getElementById('customSg').value;
-        if (customSg) {
-            Sg = parseFloat(customSg);
-            SgSource += ' (уточнено по данным Росгидромета)';
-        }
-    }
-    
-    // Ce
-    const ceMethod = document.querySelector('input[name="ceMethod"]:checked').value;
-    if (ceMethod === 'manual') {
-        Ce = parseFloat(document.getElementById('ceManual').value) || 1.0;
-        CeSource = 'Ручной ввод';
-    } else {
-        Ce = ceValue;
-        CeSource = 'Расчет по СП 20.13330.2016';
-    }
-    
-    // Ct
-    const ctMethod = document.querySelector('input[name="ctMethod"]:checked').value;
-    if (ctMethod === 'manual') {
-        Ct = parseFloat(document.getElementById('ctManual').value) || 1.0;
-        CtSource = 'Ручной ввод';
-    } else {
-        Ct = ctValue;
-        CtSource = 'Расчет по СП 20.13330.2016';
-    }
-    
-    // Получаем все схемы μ
-    const type = document.getElementById('roofType').value;
-    let muResults = {};
-    
-    if (document.querySelector('input[name="muMethod"]:checked').value === 'manual') {
-        const singleMu = parseFloat(document.getElementById('muManual').value) || 1.0;
-        muResults = {
-            'Схема 1 (ручной ввод)': {
-                'μ': singleMu.toFixed(2),
-                'описание': 'Значение μ задано вручную пользователем',
-                'применение': 'Для расчета по заданному коэффициенту'
-            }
-        };
-    } else {
-        switch(type) {
-            case 'single_slope':
-                const angleSingle = parseFloat(document.getElementById('roofAngle').value) || 0;
-                muResults = calculateMuForSingleSlope(angleSingle);
-                break;
-            case 'pitched':
-                const anglePitched = parseFloat(document.getElementById('roofAngle').value) || 0;
-                muResults = calculateMuForPitchedRoof(anglePitched);
-                break;
-            case 'arched':
-                const angleArched = parseFloat(document.getElementById('roofAngle').value) || 0;
-                const ratioArched = parseFloat(document.getElementById('archRatio').value) || 0.1;
-                muResults = calculateMuForArchedRoof(angleArched, ratioArched);
-                break;
-            case 'lantern':
-                const angleLantern = parseFloat(document.getElementById('roofAngle').value) || 0;
-                const heightLantern = parseFloat(document.getElementById('lanternHeight').value) || 2;
-                const widthLantern = parseFloat(document.getElementById('lanternWidth').value) || 3;
-                const distanceLantern = parseFloat(document.getElementById('lanternDistance').value) || 6;
-                muResults = calculateMuForLanternRoof(angleLantern, heightLantern, widthLantern, distanceLantern);
-                break;
-            case 'shed':
-                const angleShed = parseFloat(document.getElementById('roofAngle').value) || 0;
-                muResults = calculateMuForShedRoof(angleShed);
-                break;
-            case 'multi_pitched':
-                const angleMulti = parseFloat(document.getElementById('roofAngle').value) || 0;
-                muResults = calculateMuForMultiPitchedRoof(angleMulti);
-                break;
-            case 'multi_arched':
-                const angleMultiArched = parseFloat(document.getElementById('roofAngle').value) || 0;
-                const ratioMultiArched = parseFloat(document.getElementById('archRatio').value) || 0.1;
-                muResults = calculateMuForMultiArchedRoof(angleMultiArched, ratioMultiArched);
-                break;
-            case 'height_drop':
-                const h = parseFloat(document.getElementById('heightDrop').value) || 2;
-                const l1 = parseFloat(document.getElementById('lengthUpper').value) || 10;
-                const l2 = parseFloat(document.getElementById('lengthLower').value) || 10;
-                muResults = calculateMuForHeightDrop(h, l1, l2);
-                break;
-            case 'parapet':
-                const parapetHeight = parseFloat(document.getElementById('parapetHeight').value) || 1;
-                const parapetDistance = parseFloat(document.getElementById('parapetDistance').value) || 2;
-                muResults = calculateMuForParapet(parapetHeight, parapetDistance);
-                break;
-            case 'cone':
-                const coneAngle = parseFloat(document.getElementById('coneAngle').value) || 30;
-                muResults = calculateMuForConeRoof(coneAngle);
-                break;
-            default:
-                muResults = {
-                    'Схема 1 (равномерная)': {
-                        'μ': '1.0',
-                        'описание': 'Стандартное значение по умолчанию',
-                        'применение': 'Общий расчет'
-                    }
-                };
-        }
-    }
-    
-    // Расчет нагрузок для всех схем и зон
-    let allLoadResults = [];
-    let calculationDetails = '';
-    
-    Object.keys(muResults).forEach(scheme => {
-        const schemeData = muResults[scheme];
-        calculationDetails += `<h4>${scheme}</h4>`;
-        calculationDetails += `<div class="scheme-description">`;
-        calculationDetails += `<p><strong>📝 Описание:</strong> ${schemeData.описание}</p>`;
-        calculationDetails += `<p><strong>🎯 Применение:</strong> ${schemeData.применение}</p>`;
-        calculationDetails += `</div>`;
-        
-        Object.keys(schemeData).forEach(zone => {
-            if (!['описание', 'применение'].includes(zone)) {
-                const mu = parseFloat(schemeData[zone]) || 1.0;
-                const Sn = mu * Ct * Ce * Sg * kbValue;
-                const Sr = 1.4 * Sn;
-                
-                allLoadResults.push({ scheme, zone, mu, Sn, Sr });
-                
-                calculationDetails += `
-                    <div class="zone-calculation">
-                        <div class="calculation-formula">
-                            <strong>Расчет для зоны "${zone}":</strong><br>
-                            ${zone} = ${mu.toFixed(2)}<br>
-                            S_n = ${zone} × Ct × Ce × Sg × k_b = ${mu.toFixed(2)} × ${Ct.toFixed(2)} × ${Ce.toFixed(2)} × ${Sg} × ${kbValue.toFixed(3)} = ${Sn.toFixed(2)} кПа<br>
-                            S_r = 1.4 × S_n = 1.4 × ${Sn.toFixed(2)} = ${Sr.toFixed(2)} кПа
-                        </div>
-                        <div class="load-result">
-                            <strong>Результат для ${zone}:</strong><br>
-                            Нормативная нагрузка S_n = ${Sn.toFixed(2)} кПа<br>
-                            Расчетная нагрузка S_r = ${Sr.toFixed(2)} кПа
-                        </div>
+        Object.keys(schemes).forEach(schemeKey => {
+            const scheme = schemes[schemeKey];
+            schemesHTML += `<div class="mu-scheme">`;
+            schemesHTML += `<h4>${scheme.name}</h4>`;
+            
+            // Визуализация зон
+            schemesHTML += `<div class="scheme-visualization">`;
+            Object.values(scheme.zones).forEach((zone, index) => {
+                schemesHTML += `
+                    <div class="scheme-zone">
+                        <div class="zone-label">Зона ${index + 1}</div>
+                        <div class="zone-value">${zone.mu.toFixed(2)}</div>
+                        <div class="zone-label">μ</div>
                     </div>
                 `;
-            }
+            });
+            schemesHTML += `</div>`;
+            
+            // Описание зон
+            Object.values(scheme.zones).forEach(zone => {
+                schemesHTML += `<div class="protocol-description">${zone.description}</div>`;
+            });
+            
+            schemesHTML += `</div>`;
         });
-    });
+    }
     
-    // Информация о высоте снега (перенесена в конец отчета)
-    const maxSn = Math.max(...allLoadResults.map(r => r.Sn));
-    const snowHeight = calculateSnowHeight(maxSn);
-    
-    // Информация о температуре для отчета
+    schemesContainer.innerHTML = schemesHTML;
+}
+
+function updateTemperatureInfo() {
     const tempSelect = document.getElementById('januaryTemp');
-    let temperatureInfo = '';
-    if (tempSelect.value === 'cold') {
-        temperatureInfo = `Температура января: ≤ -5°C (холодная зима)${currentCity ? ` - ${currentCity}` : ''}`;
-    } else if (tempSelect.value === 'warm') {
-        temperatureInfo = `Температура января: > -5°C (теплая зима)${currentCity ? ` - ${currentCity}` : ''}`;
-    } else {
-        temperatureInfo = 'Температура января: не определена';
+    const tempInfo = document.getElementById('temperatureInfo');
+    const reducedLoadCheckbox = document.getElementById('reducedLoad');
+    
+    let explanation = '';
+    let className = '';
+    
+    switch(tempSelect.value) {
+        case 'cold':
+            explanation = '❄️ Холодный регион (t_янв ≤ -5°C). Согласно п.10.11 допускается применение пониженной снеговой нагрузки 0.5Sg для расчета деформаций конструкций.';
+            className = 'cold-region';
+            reducedLoadCheckbox.disabled = false;
+            break;
+        case 'warm':
+            explanation = '☀️ Теплый регион (t_янв > -5°C). Пониженная снеговая нагрузка не применяется из-за неравномерного отложения снега и образования ледяных корок.';
+            className = 'warm-region';
+            reducedLoadCheckbox.disabled = true;
+            reducedLoadCheckbox.checked = false;
+            break;
+        default:
+            explanation = '❓ Температура января не определена. Для применения пониженной нагрузки необходимо указать среднемесячную температуру января.';
+            className = 'unknown-region';
+            reducedLoadCheckbox.disabled = true;
     }
     
-    let reduced = '';
-    const reducedLoadChecked = document.getElementById('reducedLoad').checked;
-    if (reducedLoadChecked && tempSelect.value === 'cold') {
-        const SnRed = 0.5 * Sg;
-        reduced = `
-            <h3>📉 Пониженная нормативная нагрузка (п.10.11)</h3>
-            <div class="calculation-formula">
-                S_n_red = 0.5 × S_g = 0.5 × ${Sg} = ${SnRed.toFixed(2)} кПа
-            </div>
-            <div class="scheme-usage">
-                <strong>🎯 Применение пониженной нагрузки согласно п.10.11 СП 20.13330.2016:</strong><br>
-                • Используется ТОЛЬКО для расчета деформаций и прогибов<br>
-                • НЕ используется для расчета прочности<br>
-                • Применяется только в холодных регионах (t_янв ≤ -5°C)<br>
-                • Для расчета прочности используйте полную нормативную нагрузку из таблицы выше
-            </div>
-        `;
-    } else if (reducedLoadChecked && tempSelect.value === 'warm') {
-        reduced = '<div class="warning"><p>❌ Пониженная снеговая нагрузка не применяется для теплых регионов (t_янв > -5°C) по требованиям п.10.11 СП 20.13330.2016!</p></div>';
+    tempInfo.innerHTML = `<div class="${className}">${explanation}</div>`;
+}
+
+function updateWindInfo() {
+    const windInfo = document.getElementById('windInfo');
+    const windSpeed = parseFloat(document.getElementById('manualWindSpeed').value) || 4.0;
+    const terrainType = document.getElementById('terrainType').value;
+    
+    let terrainDescription = '';
+    switch(terrainType) {
+        case 'A':
+            terrainDescription = 'A - открытые побережья морей, озер и водохранилищ, пустыни, степи, лесостепи, тундра';
+            break;
+        case 'B':
+            terrainDescription = 'B - городские территории, лесные массивы и другие местности, равномерно покрытые препятствиями высотой более 10 м';
+            break;
+        case 'C':
+            terrainDescription = 'C - городские районы с застройкой зданиями высотой более 25 м';
+            break;
     }
+    
+    windInfo.innerHTML = `
+        <strong>Параметры ветра:</strong><br>
+        • Средняя скорость ветра: ${windSpeed} м/с<br>
+        • Тип местности: ${terrainDescription}
+    `;
+}
 
-    // Добавляем схемы из СП в отчет
-    const schemeImages = {
-        'single_slope': '1_Односкатная.png',
-        'pitched': '2_Двускатная.png',
-        'arched': '3_Сводчатая.png',
-        'lantern': '5_С фонарями.png',
-        'shed': '7_Шедовые покрытия.png',
-        'multi_pitched': '8_Многопролётные двускатные.png',
-        'multi_arched': '9_Многопролётные сводчатые.png',
-        'height_drop': '11_С перепадом высоты.png',
-        'parapet': '16_Парапеты.png',
-        'cone': '15_Конические круговые покрытия.png'
-    };
-
-    const report = `
-        <h3>📝 Исходные данные:</h3>
-        <table>
-            <tr><th>Параметр</th><th>Значение</th><th>Метод определения</th></tr>
-            <tr><td>Нормативная нагрузка Sg</td><td>${Sg} кПа</td><td>${SgSource}</td></tr>
-            <tr><td>Коэффициент ветра Ce</td><td>${Ce.toFixed(2)}</td><td>${CeSource}</td></tr>
-            <tr><td>Термический коэффициент Ct</td><td>${Ct.toFixed(2)}</td><td>${CtSource}</td></tr>
-            ${isMountainArea ? `<tr><td>Высотный коэффициент k_b</td><td>${kbValue.toFixed(3)}</td><td>По Таблице Ж.1 СП 20.13330.2016</td></tr>` : ''}
-            <tr><td>Тип покрытия</td><td>${document.getElementById('roofType').options[document.getElementById('roofType').selectedIndex].text}</td><td>-</td></tr>
-            <tr><td>${temperatureInfo}</td><td></td><td></td></tr>
-        </table>
-
-        ${isMountainArea ? `
-        <div class="mountain-control">
-            <h3>🏔️ Учёт высотного коэффициента для горных районов</h3>
-            <p>Применён высотный коэффициент k_b = ${kbValue.toFixed(3)} для ${document.getElementById('mountainRegion').options[document.getElementById('mountainRegion').selectedIndex].text}</p>
-            <p>Высота расположения объекта: ${altitude} м над уровнем моря</p>
-        </div>
-        ` : ''}
-
-        <div class="scheme-reference">
-            <h3>📐 Используемые схемы распределения снеговой нагрузки:</h3>
-            <img src="${baseImageUrl + (schemeImages[type] || '2_Двускатная.png')}" alt="Схема распределения снеговой нагрузки" style="max-width: 500px;" onerror="this.src='https://via.placeholder.com/400x250/3498db/ffffff?text=Схема+не+доступна'">
-            <p class="italic">Схема распределения снеговой нагрузки по СП 20.13330.2016 Приложение Б</p>
-        </div>
-
-        <h3>🧮 Детальный расчет по схемам и зонам:</h3>
-        ${calculationDetails}
-
-        <h3>📊 Сводная таблица результатов:</h3>
-        <table>
-            <tr><th>Схема</th><th>Зона/Коэффициент</th><th>Значение</th><th>Нормативная S_n, кПа</th><th>Расчетная S_r, кПа</th><th>Применение</th></tr>
-            ${allLoadResults.map(result => `
-                <tr>
-                    <td>${result.scheme}</td>
-                    <td>${result.zone}</td>
-                    <td>${result.mu.toFixed(2)}</td>
-                    <td>${result.Sn.toFixed(2)}</td>
-                    <td><strong>${result.Sr.toFixed(2)}</strong></td>
-                    <td>${muResults[result.scheme].применение}</td>
-                </tr>
-            `).join('')}
-        </table>
-
-        ${reduced}
-
-        <div class="snow-height-info">
-            <strong>📏 Справочная информация:</strong> Максимальная нормативная снеговая нагрузка ${maxSn.toFixed(2)} кПа соответствует высоте снежного покрова 
-            от ${snowHeight.min} м до ${snowHeight.max} м (при плотности снега 0.3-0.8 т/м³)
-        </div>
-
-        <div class="note">
-            <p><strong>💡 Рекомендации по применению результатов:</strong></p>
-            <p>• <strong>Для расчета ПРОЧНОСТИ</strong> используйте МАКСИМАЛЬНОЕ значение расчетной нагрузки S_r из таблицы</p>
-            <p>• <strong>Для расчета ДЕФОРМАЦИЙ</strong> используйте нормативную нагрузку S_n соответствующей зоны</p>
-            <p>• <strong>Для сложных конструкций</strong> проверяйте каждую зону отдельно при наличии разных нагрузок</p>
-            <p>• <strong>Для ответственных конструкций</strong> обязательна проверка квалифицированным специалистом</p>
-            <p>• <strong>При наличии нескольких схем</strong> рассматривайте каждую как отдельное загружение</p>
-        </div>
-
-        <div class="warning">
-            <p><strong>⚠️ Важные замечания:</strong></p>
-            <p>• Данный расчет выполнен в соответствии с СП 20.13330.2016</p>
-            <p>• Для окончательного проектирования необходим учет всех факторов</p>
-            <p>• Рекомендуется консультация с квалифицированным проектировщиком</p>
-            <p>• Несущая способность конструкций должна быть проверена на все комбинации нагрузок</p>
+function updatePreview() {
+    const Sg = calculateSg();
+    const Ce = calculateCe();
+    const Ct = calculateCt();
+    const Mu = calculateMu();
+    const buildingType = document.getElementById('buildingType').value;
+    const gammaF = GAMMA_F_VALUES[buildingType];
+    const forPurlins = document.getElementById('forPurlins').checked;
+    const reducedLoad = document.getElementById('reducedLoad').checked;
+    
+    // Расчет по прочности
+    const S0 = Sg * Ce * Ct * Mu; // Нормативное значение
+    const S = gammaF * S0;         // Расчетное значение
+    
+    // Для прогонов (п.10.4 примечание 4)
+    const S_purlins = forPurlins ? S * 1.1 : S;
+    
+    // Для деформаций (п.10.11)
+    const S0_reduced = reducedLoad ? 0.5 * Sg * Ce * Ct * Mu : S0;
+    
+    let previewHTML = `
+        <strong>Предварительный расчет:</strong><br>
+        <div class="calculation-formula">
+            S₀ = Sg × Ce × Ct × μ = ${Sg.toFixed(2)} × ${Ce.toFixed(2)} × ${Ct.toFixed(1)} × ${Mu.toFixed(2)} = ${S0.toFixed(2)} кПа<br>
+            S = γf × S₀ = ${gammaF} × ${S0.toFixed(2)} = ${S.toFixed(2)} кПа
         </div>
     `;
     
-    document.getElementById('reportContent').innerHTML = report;
+    if (forPurlins) {
+        previewHTML += `<div class="calculation-result">Для прогонов (×1.1): ${S_purlins.toFixed(2)} кПа</div>`;
+    }
+    
+    if (reducedLoad) {
+        previewHTML += `<div class="calculation-result">Для деформаций (0.5Sg): ${S0_reduced.toFixed(2)} кПа</div>`;
+    }
+    
+    document.getElementById('previewResult').innerHTML = previewHTML;
+}
+
+// ФИНАЛЬНЫЙ РАСЧЕТ
+function calculateFinal() {
+    const Sg = calculateSg();
+    const Ce = calculateCe();
+    const Ct = calculateCt();
+    const Mu = calculateMu();
+    const buildingType = document.getElementById('buildingType').value;
+    const gammaF = GAMMA_F_VALUES[buildingType];
+    const forPurlins = document.getElementById('forPurlins').checked;
+    const reducedLoad = document.getElementById('reducedLoad').checked;
+    
+    // Расчет по прочности
+    const S0 = Sg * Ce * Ct * Mu; // Нормативное значение
+    const S = gammaF * S0;         // Расчетное значение
+    
+    // Для прогонов (п.10.4 примечание 4)
+    const S_purlins = forPurlins ? S * 1.1 : S;
+    
+    // Для деформаций (п.10.11)
+    const S0_reduced = reducedLoad ? 0.5 * Sg * Ce * Ct * Mu : S0;
+    
+    generateReport(S, S_purlins, S0_reduced, Sg, Ce, Ct, Mu, gammaF, S0);
+}
+
+function generateReport(S, S_purlins, S0_reduced, Sg, Ce, Ct, Mu, gammaF, S0) {
+    const reportContent = document.getElementById('reportContent');
+    
+    reportContent.innerHTML = `
+        <div class="report-section">
+            <h3>📋 Итоговые результаты расчета</h3>
+            
+            <div class="final-result">
+                🎯 <strong>РАСЧЕТНАЯ СНЕГОВАЯ НАГРУЗКА ДЛЯ РАСЧЕТА ПО ПРОЧНОСТИ</strong><br>
+                <span style="font-size: 24px;">${S.toFixed(2)} кПа (${(S * 100).toFixed(0)} кгс/м²)</span>
+            </div>
+            
+            ${S_purlins !== S ? `
+            <div class="calculation-result">
+                <strong>Для расчета прогонов (п.10.4 примечание 4):</strong><br>
+                ${S_purlins.toFixed(2)} кПа
+            </div>
+            ` : ''}
+            
+            <div class="calculation-result">
+                <strong>Нормативное значение для расчета деформаций:</strong><br>
+                ${S0_reduced.toFixed(2)} кПа
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h3>🧮 Протокол расчета</h3>
+            
+            <div class="protocol-step">
+                <div class="protocol-header"><strong>Исходные данные</strong></div>
+                <div class="protocol-description">• Нормативная снеговая нагрузка Sg = ${Sg.toFixed(2)} кПа</div>
+                <div class="protocol-description">• Коэффициент воздействия ветра Ce = ${Ce.toFixed(2)}</div>
+                <div class="protocol-description">• Термический коэффициент Ct = ${Ct.toFixed(1)}</div>
+                <div class="protocol-description">• Коэффициент перехода μ = ${Mu.toFixed(2)}</div>
+                <div class="protocol-description">• Коэффициент надежности γf = ${gammaF} (п.10.12)</div>
+            </div>
+            
+            <div class="protocol-step">
+                <div class="protocol-header"><strong>Расчет нормативного значения снеговой нагрузки S₀ (п.10.1)</strong></div>
+                <div class="protocol-formula">
+                    S₀ = Sg × Ce × Ct × μ<br>
+                    S₀ = ${Sg.toFixed(2)} × ${Ce.toFixed(2)} × ${Ct.toFixed(1)} × ${Mu.toFixed(2)}<br>
+                    S₀ = ${S0.toFixed(2)} кПа
+                </div>
+            </div>
+            
+            <div class="protocol-step">
+                <div class="protocol-header"><strong>Расчет расчетного значения снеговой нагрузки S (п.10.1)</strong></div>
+                <div class="protocol-formula">
+                    S = γf × S₀<br>
+                    S = ${gammaF} × ${S0.toFixed(2)}<br>
+                    S = ${S.toFixed(2)} кПа
+                </div>
+            </div>
+            
+            ${S0_reduced !== S0 ? `
+            <div class="protocol-step">
+                <div class="protocol-header"><strong>Пониженное нормативное значение для расчета деформаций (п.10.11)</strong></div>
+                <div class="protocol-formula">
+                    S₀ = 0,5 × Sg × Ce × Ct × μ<br>
+                    S₀ = 0,5 × ${Sg.toFixed(2)} × ${Ce.toFixed(2)} × ${Ct.toFixed(1)} × ${Mu.toFixed(2)}<br>
+                    S₀ = ${S0_reduced.toFixed(2)} кПа
+                </div>
+            </div>
+            ` : ''}
+        </div>
+
+        <div class="report-section">
+            <h3>📚 Нормативные ссылки</h3>
+            <p>• СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</p>
+            <p>• п.10.1 - Общая формула снеговой нагрузки</p>
+            <p>• п.10.2, Таблица 10.1 - Нормативная снеговая нагрузка Sg</p>
+            <p>• п.10.5-10.9 - Коэффициент воздействия ветра Ce</p>
+            <p>• п.10.10 - Термический коэффициент Ct</p>
+            <p>• п.10.4, Приложение Б - Коэффициент перехода μ</p>
+            <p>• п.10.12 - Коэффициент надежности γf</p>
+            <p>• п.10.11 - Пониженная снеговая нагрузка для расчета деформаций</p>
+        </div>
+    `;
+    
     document.getElementById('report').style.display = 'block';
+    document.querySelector('.steps-container').style.display = 'none';
     document.getElementById('report').scrollIntoView({ behavior: 'smooth' });
 }
 
-function calculateSnowHeight(snowLoad) {
-    const minHeight = (snowLoad / 8).toFixed(2);
-    const maxHeight = (snowLoad / 3).toFixed(2);
-    return { min: minHeight, max: maxHeight };
-}
-
-function resetCalculator() {
-    location.reload();
-}
-
+// Вспомогательные функции
 function saveAsPDF() {
     window.print();
 }
 
-// Инициализация при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-    toggleSgMethod();
-    toggleCeMethod();
-    toggleCtMethod();
-    toggleMuMethod();
-    showSpMethod('city');
-    showParams();
-    updateTemperatureInfo();
-    updateCe();
-    updateCt();
-    
-    // Инициализация карты
-    updateMapSrc();
-});
+function resetCalculator() {
+    if (confirm('Вы уверены, что хотите начать новый расчет? Все введенные данные будут потеряны.')) {
+        location.reload();
+    }
+}
+
+// Экспорт функций
+window.nextStep = nextStep;
+window.prevStep = prevStep;
+window.toggleSgMethod = toggleSgMethod;
+window.showSpMethod = showSpMethod;
+window.toggleCeMethod = toggleCeMethod;
+window.toggleCtMethod = toggleCtMethod;
+window.toggleMuMethod = toggleMuMethod;
+window.updateRoofParameters = updateRoofParameters;
+window.toggleMap = toggleMap;
+window.updateMapSrc = updateMapSrc;
+window.calculateFinal = calculateFinal;
+window.saveAsPDF = saveAsPDF;
+window.resetCalculator = resetCalculator;

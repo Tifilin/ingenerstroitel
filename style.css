@@ -1,532 +1,559 @@
-body { 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-    margin: 15px; 
-    line-height: 1.4;
+/* Основные стили */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 20px;
+    background: #f5f7fa;
     color: #333;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
+}
+
+.feedback-link {
+    text-align: right;
+    margin-bottom: 15px;
     font-size: 14px;
 }
-.steps-container {
-    position: relative;
+
+h1 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
 }
-.step { 
-    margin-bottom: 20px; 
-    padding: 15px; 
-    border: 1px solid #ddd; 
+
+.disclaimer {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
     border-radius: 6px;
-    background: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    display: none;
+    padding: 12px;
+    margin-bottom: 25px;
+    font-size: 14px;
 }
+
+.steps-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.step {
+    display: none;
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
 .step.active {
     display: block;
 }
-.step h2 { 
-    color: #2c3e50; 
+
+.step h2 {
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
     margin-top: 0;
-    border-bottom: 1px solid #3498db;
-    padding-bottom: 8px;
-    font-size: 18px;
 }
-img { 
-    max-width: 100%; 
-    height: auto; 
-    display: block; 
-    margin: 10px auto;
-    border: 1px solid #ddd;
-    border-radius: 3px;
-}
-select, input { 
-    padding: 6px 8px; 
-    margin: 5px 3px; 
-    border: 1px solid #ddd;
-    border-radius: 3px;
-    font-size: 13px;
-}
-button { 
-    padding: 8px 16px; 
-    background: #3498db; 
-    color: white; 
-    border: none; 
-    border-radius: 4px; 
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: bold;
-    transition: background 0.3s;
-}
-button:hover { 
-    background: #2980b9; 
-}
-#report { 
-    display: none; 
-    margin-top: 20px; 
-    padding: 15px; 
-    background: #f8f9fa; 
-    border-radius: 6px;
-    border-left: 3px solid #3498db;
-}
-table { 
-    border-collapse: collapse; 
-    width: 100%; 
-    margin: 10px 0; 
-    background: white;
-    font-size: 13px;
-}
-th, td { 
-    border: 1px solid #ddd; 
-    padding: 8px; 
-    text-align: left; 
-}
-th { 
-    background-color: #f2f2f2; 
-    font-weight: bold;
-}
-#roofImage { 
-    max-width: 400px; 
-}
-.italic { 
-    font-style: italic; 
-    font-weight: normal; 
-    color: #7f8c8d;
-    font-size: 12px;
-}
-#snowMap, #sp131Table { 
-    display: none; 
-}
-#ceValue, #muValue { 
-    font-weight: bold; 
-    color: #e74c3c; 
+
+.italic {
+    font-style: italic;
+    color: #666;
     font-size: 14px;
 }
-.terrain-type { 
-    display: block; 
-    margin-bottom: 5px; 
-    padding: 6px;
-    background: #f8f9fa;
-    border-radius: 3px;
-    font-size: 13px;
-}
-.method-label { 
-    display: block; 
-    margin-bottom: 6px; 
-    padding: 6px;
-    cursor: pointer;
-    font-size: 13px;
-}
-.method-label input {
-    margin-right: 6px;
-}
-#sgDisplay { 
-    font-weight: bold; 
-    color: #2ecc71; 
-    font-size: 14px;
-}
-.zone-table {
-    margin: 10px 0;
-    background: #ecf0f1;
-    padding: 10px;
-    border-radius: 4px;
-}
-.scheme-toggle {
-    margin: 8px 0;
-}
-.scheme-toggle button {
-    padding: 6px 12px;
-    margin-right: 8px;
-    background: #95a5a6;
-    font-size: 12px;
-}
-.scheme-toggle button.active {
-    background: #3498db;
-}
-.calculation-formula {
-    background: #2c3e50;
-    color: white;
-    padding: 10px;
-    border-radius: 4px;
-    margin: 10px 0;
-    font-family: 'Courier New', monospace;
-    font-size: 12px;
-}
-.note {
-    background: #fff3cd;
-    border-left: 3px solid #ffc107;
-    padding: 8px;
-    margin: 10px 0;
-    border-radius: 3px;
-    font-size: 12px;
-}
-.warning {
-    background: #f8d7da;
-    border-left: 3px solid #dc3545;
-    padding: 8px;
-    margin: 10px 0;
-    border-radius: 3px;
-    font-size: 12px;
-}
-.info {
-    background: #d1ecf1;
-    border-left: 3px solid #17a2b8;
-    padding: 8px;
-    margin: 10px 0;
-    border-radius: 3px;
-    font-size: 12px;
-}
-.algorithm {
-    background: #d1ecf1;
-    border-left: 3px solid #17a2b8;
-    padding: 15px;
-    margin: 20px 0;
-    border-radius: 4px;
-    font-size: 13px;
-}
-.roof-scheme {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    margin: 15px 0;
-}
-.scheme-diagram {
-    flex: 1;
-    min-width: 280px;
-    background: white;
-    padding: 10px;
-    border-radius: 4px;
-    border: 1px solid #ddd;
-}
-.scheme-values {
-    flex: 1;
-    min-width: 280px;
-}
-.temperature-control {
-    background: #e8f5e8;
-    padding: 8px;
-    border-radius: 4px;
-    margin: 8px 0;
-}
+
 .calculation-method {
-    margin: 8px 0;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    margin: 15px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
 }
-.calculation-method label {
+
+.method-label {
     display: block;
-    margin-bottom: 6px;
-    font-weight: bold;
+    margin: 8px 0;
+    cursor: pointer;
+}
+
+.method-label input {
+    margin-right: 8px;
+}
+
+.manual-input, .sp-calculation {
+    margin: 15px 0;
+    padding: 15px;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    background: #f8f9fa;
+}
+
+.note {
     font-size: 13px;
-}
-.sp-calculation {
-    display: none;
-    margin-top: 12px;
-    padding: 12px;
-    background: #f8f9fa;
-    border-radius: 4px;
-}
-.manual-input {
-    margin-top: 12px;
-}
-.city-temperature {
-    background: #e8f5e8;
-    padding: 8px;
-    border-radius: 4px;
+    color: #666;
     margin: 8px 0;
 }
-.disclaimer {
-    background: #fff3cd;
-    border: 1px solid #ffc107;
-    padding: 10px;
-    border-radius: 4px;
+
+.parameter-group {
     margin: 15px 0;
-    font-size: 12px;
-    text-align: center;
+    padding: 15px;
+    background: #e8f4fd;
+    border-radius: 6px;
 }
-.feedback-link {
-    float: right;
-    font-size: 12px;
-    color: #7f8c8d;
-    margin-top: -5px;
-}
-.feedback-link a {
-    color: #3498db;
-    text-decoration: none;
-}
-.feedback-link a:hover {
-    text-decoration: underline;
-}
-.snow-height-info {
-    background: #e8f5e8;
-    padding: 8px;
-    border-radius: 4px;
-    margin: 8px 0;
-    font-size: 12px;
-}
-.mu-manual-option {
-    margin-top: 10px;
-    padding: 8px;
-    background: #f8f9fa;
-    border-radius: 4px;
-}
-.detailed-explanation {
-    background: #e8f5e8;
-    padding: 10px;
-    border-radius: 4px;
-    margin: 10px 0;
-    font-size: 12px;
-}
-.report-actions {
+
+/* Температура */
+.temperature-control {
     margin: 15px 0;
-    text-align: center;
-}
-.report-actions button {
-    margin: 0 10px;
-}
-.btn-print {
-    background: #e74c3c;
-}
-.btn-print:hover {
-    background: #c0392b;
-}
-.btn-reset {
-    background: #95a5a6;
-}
-.btn-reset:hover {
-    background: #7f8c8d;
-}
-.mu-scheme {
-    margin: 10px 0;
-    padding: 10px;
-    background: #f8f9fa;
-    border-radius: 4px;
-}
-.mu-zone {
-    margin: 5px 0;
-    padding: 5px;
-    background: white;
-    border-radius: 3px;
-}
-.scheme-description {
-    background: #e8f5e8;
-    padding: 10px;
-    border-radius: 4px;
-    margin: 10px 0;
-    font-size: 12px;
-}
-.zone-calculation {
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 4px;
-    margin: 5px 0;
-}
-.load-result {
-    background: #2c3e50;
-    color: white;
-    padding: 8px;
-    border-radius: 4px;
-    margin: 5px 0;
-    font-family: 'Courier New', monospace;
-}
-.scheme-usage {
+    padding: 15px;
     background: #fff3cd;
-    padding: 8px;
-    border-radius: 4px;
-    margin: 5px 0;
-    font-size: 12px;
+    border-radius: 6px;
 }
-.dimension-error {
+
+.cold-region {
+    background: #d1ecf1;
+    color: #0c5460;
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 4px solid #17a2b8;
+}
+
+.warm-region {
     background: #f8d7da;
     color: #721c24;
-    padding: 8px;
+    padding: 10px;
     border-radius: 4px;
-    margin: 5px 0;
-    border-left: 3px solid #dc3545;
-    font-size: 12px;
+    border-left: 4px solid #dc3545;
 }
+
+.unknown-region {
+    background: #fff3cd;
+    color: #856404;
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 4px solid #ffc107;
+}
+
+.wind-info {
+    background: #e8f4fd;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+}
+
+/* Навигация */
 .step-navigation {
-    margin-top: 20px;
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
     padding-top: 15px;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #e9ecef;
 }
-.btn-prev {
-    background: #95a5a6;
-    margin-right: 10px;
-}
-.btn-prev:hover {
-    background: #7f8c8d;
-}
-.btn-next {
+
+.btn-prev, .btn-next, .btn-calculate {
     background: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
 }
-.btn-next:hover {
+
+.btn-prev:hover, .btn-next:hover, .btn-calculate:hover {
     background: #2980b9;
 }
+
 .btn-calculate {
     background: #27ae60;
-    padding: 12px 24px;
-    font-size: 16px;
 }
+
 .btn-calculate:hover {
     background: #219a52;
 }
-.mountain-control {
-    background: #e8f4fd;
+
+/* Отчет */
+#report {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.report-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.btn-print, .btn-reset {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-print:hover, .btn-reset:hover {
+    background: #5a6268;
+}
+
+/* Детали расчета */
+.calculation-details {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 14px;
+}
+
+.calculation-result {
+    background: #d4edda;
+    color: #155724;
     padding: 12px;
     border-radius: 4px;
-    margin: 10px 0;
-    border-left: 3px solid #3498db;
-}
-.mountain-table {
-    margin: 10px 0;
-    background: white;
-    border-radius: 4px;
-    overflow: hidden;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-.mountain-table table {
-    margin: 0;
-}
-.mountain-table th {
-    background: #3498db;
-    color: white;
-}
-.altitude-input {
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 4px;
-    margin: 10px 0;
-}
-.kb-display {
-    background: #2c3e50;
-    color: white;
-    padding: 8px;
-    border-radius: 4px;
-    margin: 5px 0;
-    font-family: 'Courier New', monospace;
+    border-left: 4px solid #28a745;
     font-weight: bold;
 }
-@media print {
-    body * {
-        visibility: hidden;
-    }
-    #report, #report * {
-        visibility: visible;
-    }
-    #report {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        border: none;
-        box-shadow: none;
-    }
-    .report-actions {
-        display: none;
-    }
-    .step-navigation {
-        display: none;
-    }
+
+.dimension-error {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 4px solid #dc3545;
+    margin: 10px 0;
 }
-.roof-diagram {
+
+/* Типы местности */
+.terrain-type {
+    margin: 5px 0;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Алгоритм */
+.algorithm {
+    background: #e8f4fd;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 10px 0;
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+/* Схемы */
+.mu-scheme {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.mu-scheme h4 {
+    color: #2c3e50;
+    margin-top: 0;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 8px;
+}
+
+.mu-scheme-image {
     text-align: center;
     margin: 10px 0;
 }
 
-.roof-diagram-element {
-    background: #ddd;
-    height: 100px;
-    width: 200px;
-    margin: 0 auto;
-    position: relative;
+.mu-scheme-image img {
+    max-width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
 }
 
-.diagram-label {
-    position: absolute;
-}
-
-.diagram-label-top {
-    top: 10px;
-    left: 10px;
-}
-
-.diagram-label-center {
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.diagram-label-left {
-    left: 10px;
-}
-
-.diagram-label-right {
-    right: 10px;
-}
-
-.diagram-label-bottom {
-    bottom: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-.scheme-reference {
+/* Подробное объяснение */
+.detailed-explanation {
     background: #e8f4fd;
     padding: 15px;
     border-radius: 6px;
     margin: 15px 0;
-    text-align: center;
-    border-left: 4px solid #3498db;
 }
 
-.scheme-reference h3 {
+.detailed-explanation p {
+    margin: 8px 0;
+}
+
+/* Дополнительные параметры */
+.additional-parameters {
+    background: #fff3cd;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+}
+
+/* Предварительный расчет */
+.preview-calculation {
+    background: #d4edda;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+}
+
+/* Отчет */
+.report-section {
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.report-section h3 {
     color: #2c3e50;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 8px;
     margin-top: 0;
 }
 
-.scheme-reference img {
-    border: 2px solid #3498db;
+.final-result {
+    background: #d4edda;
+    color: #155724;
+    padding: 20px;
     border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 2px solid #28a745;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 20px 0;
 }
 
-.mu-zone {
-    margin: 5px 0;
-    padding: 8px;
-    background: white;
-    border-radius: 4px;
-    border-left: 3px solid #27ae60;
-}
-
-.mu-zone strong {
-    color: #2c3e50;
-}
-
-.zone-calculation {
+/* Протокол расчета */
+.protocol-step {
     background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 12px;
+    margin: 8px 0;
+    border-left: 4px solid #3498db;
+}
+
+.protocol-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.protocol-reference {
+    background: #2c3e50;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.protocol-description {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.protocol-formula {
+    background: #2c3e50;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    margin: 6px 0;
+}
+
+.protocol-result {
+    background: #27ae60;
+    color: white;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-top: 6px;
+}
+
+/* Схемы распределения */
+.scheme-visualization {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.scheme-zone {
+    flex: 1;
+    min-width: 120px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
     padding: 12px;
     border-radius: 6px;
-    margin: 8px 0;
-    border: 1px solid #e9ecef;
+    text-align: center;
 }
 
+.zone-value {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.zone-label {
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+/* Стили для изображений */
+#roofImageContainer {
+    text-align: center;
+    margin: 15px 0;
+}
+
+#roofImageContainer img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Стили для карт */
+#mapContainer {
+    margin: 15px 0;
+    text-align: center;
+}
+
+#snowMap {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Формулы */
 .calculation-formula {
     background: #2c3e50;
     color: white;
     padding: 12px;
-    border-radius: 6px;
-    margin: 8px 0;
+    border-radius: 4px;
     font-family: 'Courier New', monospace;
-    font-size: 13px;
-    line-height: 1.5;
+    margin: 10px 0;
+    font-size: 14px;
 }
 
-.load-result {
+/* Адаптивность */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+    
+    .step {
+        padding: 15px;
+    }
+    
+    .step-navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn-prev, .btn-next, .btn-calculate {
+        width: 100%;
+    }
+    
+    .scheme-visualization {
+        flex-direction: column;
+    }
+    
+    .scheme-zone {
+        min-width: auto;
+    }
+    
+    .protocol-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .protocol-reference {
+        margin-top: 5px;
+    }
+}
+
+/* Стили для полей ввода */
+input[type="number"], select {
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    margin: 5px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input[type="number"]:focus, select:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+}
+
+/* Стили для чекбоксов */
+input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+}
+
+/* Стили для таблиц */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
     background: #34495e;
     color: white;
-    padding: 10px;
-    border-radius: 6px;
-    margin: 8px 0;
-    font-family: 'Courier New', monospace;
-    font-size: 13px;
+}
+
+tr:nth-child(even) {
+    background: #f8f9fa;
+}
+
+/* Стили для печати */
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+    
+    .step-navigation,
+    .report-actions,
+    .feedback-link {
+        display: none;
+    }
+    
+    .step {
+        box-shadow: none;
+        border: 1px solid #ddd;
+        margin-bottom: 15px;
+        page-break-inside: avoid;
+    }
+    
+    #report {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .final-result {
+        background: #f8f9fa !important;
+        color: black !important;
+        border: 2px solid #333;
+    }
 }

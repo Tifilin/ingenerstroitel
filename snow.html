@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Расчёт снеговой нагрузки по СП 20.13330.2016 с учётом горных районов</title>
+    <title>Расчёт снеговой нагрузки по СП 20.13330.2016 с Изменением №5</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -11,18 +11,18 @@
         Обратная связь: <a href="https://dzen.ru/ingenerstroitel" target="_blank">dzen.ru/ingenerstroitel</a>
     </div>
     
-    <h1>🏔️🧮 Расчёт снеговой нагрузки по СП 20.13330.2016 с учётом горных районов </h1>
+    <h1>🏔️🧮 Расчёт снеговой нагрузки по СП 20.13330.2016 с Изменением №5</h1>
     
     <div class="disclaimer">
-        <strong>Внимание:</strong> Данный калькулятор предоставляет справочный расчёт и был настроен в соответствии с указанными пунктами СП 20.13330.2016. 
-        Следует проверять актуальность норм и результаты расчёта.
+        <strong>Внимание:</strong> Данный калькулятор предоставляет справочный расчёт в соответствии с нормами СП 20.13330.2016 (с Изменением №5). 
+        Для окончательного проектирования необходима проверка квалифицированным специалистом.
     </div>
 
     <div class="steps-container">
         <!-- Шаг 1 -->
         <div class="step active" id="step1">
-            <h2>📊 Шаг 1: Нормативная снеговая нагрузка Sg и температура</h2>
-            <p class="italic">Sg, п. 10.2; Температура для п. 10.11</p>
+            <h2>📊 Шаг 1: Нормативная снеговая нагрузка Sg</h2>
+            <p class="italic">п. 10.2, Таблица 10.1</p>
             
             <div class="calculation-method">
                 <label>Способ определения Sg:</label>
@@ -32,22 +32,22 @@
                 </label>
                 <label class="method-label">
                     <input type="radio" name="sgMethod" value="sp" onchange="toggleSgMethod()"> 
-                    📖 Рассчитать по СП 20.13330.2016
+                    📖 Определить по СП 20.13330.2016
                 </label>
             </div>
 
             <div id="sgManualInput" class="manual-input">
                 <label>Нормативная снеговая нагрузка Sg (кПа): 
-                    <input type="number" id="sgManual" step="0.1" value="1.5" min="0">
+                    <input type="number" id="sgManual" step="0.1" value="1.0" min="0" max="5.6" onchange="updateAllCalculations()">
                 </label>
-                <p class="note">Уточненное Sg (по данным Росгидромета, кПа, если объект на границе районов или в сложном рельефе)</p>
+                <p class="note">Значение должно соответствовать снеговому району по Таблице 10.1 СП 20.13330.2016</p>
             </div>
 
-            <div id="sgSpCalculation" class="sp-calculation">
+            <div id="sgSpCalculation" class="sp-calculation" style="display: none;">
                 <p><strong>Способ определения по СП 20.13330.2016:</strong></p>
                 <label class="method-label">
                     <input type="radio" name="spMethod" value="city" checked onchange="showSpMethod('city')"> 
-                    🏙️ По населённому пункту
+                    🏙️ По населенному пункту
                 </label>
                 <label class="method-label">
                     <input type="radio" name="spMethod" value="map" onchange="showSpMethod('map')"> 
@@ -56,265 +56,175 @@
 
                 <div id="cityMethod">
                     <label>Населенный пункт: 
-                        <select id="citySelect" onchange="setFromCity()">
+                        <select id="citySelect" onchange="updateAllCalculations()">
                             <option value="">Выберите город</option>
-                            <option value="Москва" data-temp="-7.7" data-district="III">Москва</option>
-                            <option value="Санкт-Петербург" data-temp="-5.5" data-district="III">Санкт-Петербург</option>
-                            <option value="Екатеринбург" data-temp="-12.6" data-district="IV">Екатеринбург</option>
-                            <option value="Новосибирск" data-temp="-16.2" data-district="V">Новосибирск</option>
-                            <option value="Нижний Новгород" data-temp="-8.9" data-district="IV">Нижний Новгород</option>
-                            <option value="Казань" data-temp="-9.8" data-district="IV">Казань</option>
-                            <option value="Самара" data-temp="-9.5" data-district="IV">Самара</option>
-                            <option value="Омск" data-temp="-16.3" data-district="IV">Омск</option>
-                            <option value="Челябинск" data-temp="-12.8" data-district="IV">Челябинск</option>
-                            <option value="Ростов-на-Дону" data-temp="-3.1" data-district="III">Ростов-на-Дону</option>
-                            <option value="Уфа" data-temp="-12.5" data-district="V">Уфа</option>
-                            <option value="Волгоград" data-temp="-6.7" data-district="III">Волгоград</option>
-                            <option value="Пермь" data-temp="-12.8" data-district="V">Пермь</option>
-                            <option value="Красноярск" data-temp="-15.6" data-district="IV">Красноярск</option>
-                            <option value="Воронеж" data-temp="-6.5" data-district="III">Воронеж</option>
-                            <option value="Саратов" data-temp="-7.9" data-district="III">Саратов</option>
-                            <option value="Краснодар" data-temp="-0.3" data-district="II">Краснодар</option>
-                            <option value="Тольятти" data-temp="-9.2" data-district="IV">Тольятти</option>
-                            <option value="Ижевск" data-temp="-12.5" data-district="V">Ижевск</option>
-                            <option value="Барнаул" data-temp="-15.5" data-district="IV">Барнаул</option>
-                            <option value="Ульяновск" data-temp="-10.1" data-district="IV">Ульяновск</option>
-                            <option value="Иркутск" data-temp="-17.8" data-district="II">Иркутск</option>
-                            <option value="Хабаровск" data-temp="-20.9" data-district="II">Хабаровск</option>
-                            <option value="Ярославль" data-temp="-8.9" data-district="IV">Ярославль</option>
-                            <option value="Владивосток" data-temp="-9.9" data-district="IV">Владивосток</option>
-                            <option value="Махачкала" data-temp="1.2" data-district="II">Махачкала</option>
-                            <option value="Томск" data-temp="-17.1" data-district="IV">Томск</option>
-                            <option value="Кемерово" data-temp="-15.8" data-district="IV">Кемерово</option>
-                            <option value="Новокузнецк" data-temp="-14.2" data-district="IV">Новокузнецк</option>
-                            <option value="Сочи" data-temp="5.0" data-district="II">Сочи</option>
-                            <option value="Якутск" data-temp="-39.6" data-district="VII">Якутск</option>
-                            <option value="Мурманск" data-temp="-8.1" data-district="V">Мурманск</option>
-                            <option value="Архангельск" data-temp="-12.8" data-district="V">Архангельск</option>
-                            <option value="Калининград" data-temp="-1.5" data-district="II">Калининград</option>
-                            <option value="Владикавказ" data-temp="-1.2" data-district="II">Владикавказ</option>
-                            <option value="Грозный" data-temp="-2.1" data-district="II">Грозный</option>
-                            <option value="Ставрополь" data-temp="-2.3" data-district="III">Ставрополь</option>
-                            <option value="Петрозаводск" data-temp="-9.0" data-district="IV">Петрозаводск</option>
-                            <option value="Сыктывкар" data-temp="-14.1" data-district="V">Сыктывкар</option>
-                            <option value="Нальчик" data-temp="-2.5" data-district="II">Нальчик</option>
-                            <option value="Черкесск" data-temp="-2.8" data-district="II">Черкесск</option>
-                            <option value="Магас" data-temp="-1.8" data-district="II">Магас</option>
-                            <option value="Магадан" data-temp="-16.4" data-district="VI">Магадан</option>
-                            <option value="Салехард" data-temp="-23.0" data-district="VI">Салехард</option>
-                            <option value="Нарьян-Мар" data-temp="-16.5" data-district="VI">Нарьян-Мар</option>
-                            <option value="Анадырь" data-temp="-22.1" data-district="VII">Анадырь</option>
-                            <option value="Петропавловск-Камчатский" data-temp="-7.6" data-district="VIII">Петропавловск-Камчатский</option>
+                            <!-- Города будут заполнены скриптом -->
                         </select>
                     </label>
-                    <p id="sgDisplay">Sg: <span id="sgValue">1.5</span> кПа</p>
+                    <p id="sgDisplay">Sg: <span id="sgValue">1.0</span> кПа (Снеговой район: <span id="snowDistrict">III</span>)</p>
                 </div>
 
                 <div id="mapMethod" style="display: none;">
                     <label>Выберите карту: 
                         <select id="mapType" onchange="updateMapSrc()">
-                            <option value="main">Основная Россия</option>
-                            <option value="krym">Крым</option>
-                            <option value="sakhalin">Сахалин</option>
+                            <option value="main">Основная территория России</option>
+                            <option value="krym">Крымский полуостров</option>
+                            <option value="sakhalin">Сахалин и Курилы</option>
                         </select>
                     </label>
                     <br>
-                    <button type="button" id="mapToggleBtn" onclick="toggleMap('snowMap')">🗺️ Показать карту</button>
-                    <img id="snowMap" src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/karta1.jpg" alt="Карта снеговых районов России по СП 20.13330.2016" style="display: none;">
+                    <button type="button" id="mapToggleBtn" onclick="toggleMap()">🗺️ Показать карту снеговых районов</button>
+                    <div id="mapContainer" style="display: none; margin-top: 15px;">
+                        <img id="snowMap" src="" alt="Карта снеговых районов России по СП 20.13330.2016" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+                        <p class="note">Карта снеговых районов Российской Федерации согласно Приложению 5 СП 20.13330.2016</p>
+                    </div>
+                    
                     <label>Выбранный снеговой район: 
-                        <select id="snowDistrictMap" onchange="updateSgFromMap()">
-                            <option value="I">I (0.5 кПа)</option>
-                            <option value="II">II (1.0 кПа)</option>
-                            <option value="III">III (1.5 кПа)</option>
-                            <option value="IV">IV (2.0 кПа)</option>
-                            <option value="V">V (2.5 кПа)</option>
-                            <option value="VI">VI (3.0 кПа)</option>
-                            <option value="VII">VII (3.5 кПа)</option>
-                            <option value="VIII">VIII (4.0 кПа)</option>
+                        <select id="snowDistrictMap" onchange="updateAllCalculations()">
+                            <option value="I">I (0.5 кПа) - Южные регионы</option>
+                            <option value="II">II (0.7 кПа) - Центральные регионы</option>
+                            <option value="III" selected>III (1.0 кПа) - Центральная Россия</option>
+                            <option value="IV">IV (1.5 кПа) - Урал, Западная Сибирь</option>
+                            <option value="V">V (2.0 кПа) - Восточная Сибирь</option>
+                            <option value="VI">VI (2.5 кПа) - Северные регионы</option>
+                            <option value="VII">VII (3.0 кПа) - Побережье Северного Ледовитого океана</option>
+                            <option value="VIII">VIII (4.0 кПа) - Чукотка, острова Северного Ледовитого океана</option>
                         </select>
                     </label>
+                    <p class="note">Согласно Таблице 10.1 СП 20.13330.2016</p>
                 </div>
 
                 <div class="note">
                     <label>Уточненное Sg (по данным Росгидромета, кПа): 
-                        <input type="number" id="customSg" step="0.1" placeholder="Оставить пустым для табличного">
+                        <input type="number" id="customSg" step="0.1" placeholder="Оставить пустым для табличного" onchange="updateAllCalculations()">
                     </label>
-                    <p class="italic">Используется если объект на границе районов или в сложном рельефе</p>
+                    <p class="italic">Используется если объект на границе районов или в сложном рельефе (п.10.2 примечание 1)</p>
                 </div>
             </div>
 
-            <!-- Горные районы -->
-            <div class="mountain-control">
-                <h3>🏔️ Учёт высотного коэффициента для горных районов (Таблица Ж.1 СП 20.13330.2016)</h3>
-                <label class="method-label">
-                    <input type="checkbox" id="mountainArea" onchange="toggleMountainArea()">
-                    🗻 Применить высотный коэффициент k_b для горных районов
+            <!-- Коэффициент надежности -->
+            <div class="parameter-group">
+                <label>🏢 Уровень ответственности здания: 
+                    <select id="buildingType" onchange="updateAllCalculations()">
+                        <option value="1">I уровень (γf=1.4) - Повышенный</option>
+                        <option value="2">II уровень (γf=1.2) - Нормальный</option>
+                        <option value="3">III уровень (γf=1.0) - Пониженный</option>
+                    </select>
                 </label>
-                
-                <div id="mountainCalculation" style="display: none;">
-                    <div class="altitude-input">
-                        <label>Высота расположения объекта над уровнем моря H (м): 
-                            <input type="number" id="altitude" min="0" max="5000" value="500" onchange="updateKb()">
-                        </label>
-                        <p class="italic">Введите высоту расположения объекта над уровнем моря</p>
-                    </div>
-                    
-                    <label>Выберите горный район: 
-                        <select id="mountainRegion" onchange="updateKb()">
-                            <option value="">Выберите район</option>
-                            <option value="dagestan">Республика Дагестан</option>
-                            <option value="krasnodar_adler">Краснодарский край: Адлерский район</option>
-                            <option value="krasnodar_apsheron">Краснодарский край: Апшеронский и Лазаревский районы</option>
-                            <option value="krasnodar_tuapse">Краснодарский край: Туапсинский район</option>
-                            <option value="krasnodar_other">Краснодарский край: Остальные районы</option>
-                            <option value="stavropol">Ставропольский край</option>
-                            <option value="evenkia">Эвенкийский автономный округ</option>
-                            <option value="krasnoyarsk_kuznetsk">Красноярский край: Кемеровская область, Кузнецкий Алатау, Горная Шория</option>
-                            <option value="krasnoyarsk_sayan">Красноярский край: Саянский хр., Куртушибинский хр.</option>
-                            <option value="krasnoyarsk_north">Красноярский край: Северо-Енисейский район</option>
-                            <option value="buryatia_khamar">Республика Бурятия, хр. Хамар-Дабам</option>
-                            <option value="buryatia_baikal">Республика Бурятия, Байкальский хр.</option>
-                            <option value="yakutia_aldan">Республика Якутия, Алданское нагорье</option>
-                            <option value="crimea_yayla">Крым: Яйлы (главная гряда Крымских гор)</option>
-                            <option value="crimea_south">Крым: Южный берег Крыма</option>
-                        </select>
-                    </label>
-                    
-                    <div id="kbCalculationDetails"></div>
-                    <div id="kbDisplay" class="kb-display"></div>
-                    
-                    <div class="mountain-table">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Территориальный район РФ</th>
-                                    <th>Снеговой район</th>
-                                    <th>k_b</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td>Республика Дагестан</td><td>II</td><td>0,001</td></tr>
-                                <tr><td>Краснодарский Край: Адлерский район</td><td>III</td><td>0,009</td></tr>
-                                <tr><td>Краснодарский Край: Апшеронский и Лазаревский районы</td><td>II</td><td>0,008</td></tr>
-                                <tr><td>Краснодарский Край: Туапсинский район</td><td>II</td><td>0,005</td></tr>
-                                <tr><td>Краснодарский Край: Остальные районы</td><td>II</td><td>0,003</td></tr>
-                                <tr><td>Ставропольский Край</td><td>II</td><td>0,001</td></tr>
-                                <tr><td>Эвенкийский автономный округ</td><td>VI</td><td>0,001</td></tr>
-                                <tr><td>Красноярский Край: Кемеровская область, Кузнецкий Алатау, Горная Шория</td><td>VI, VII</td><td>0,0068</td></tr>
-                                <tr><td>Красноярский Край: Саянский хр., Куртушибинский хр.</td><td>IV</td><td>0,0063</td></tr>
-                                <tr><td>Красноярский Край: Северо-Енисейский район</td><td>VI</td><td>0,0028</td></tr>
-                                <tr><td>Республика Бурятия, хр. Хамар-Дабам</td><td>IV</td><td>0,002</td></tr>
-                                <tr><td>Республика Бурятия, Байкальский хр.</td><td>IV</td><td>0,0046</td></tr>
-                                <tr><td>Республика Якутия, Алданское нагорье</td><td>III</td><td>0,002</td></tr>
-                                <tr><td>Крым: Яйлы (главная гряда Крымских гор)</td><td>II</td><td>0,004</td></tr>
-                                <tr><td>Крым: Южный берег Крыма</td><td>II</td><td>0,002</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <p class="note">п.10.12 СП 20.13330.2016 - коэффициент надежности по нагрузке в зависимости от уровня ответственности здания</p>
             </div>
 
             <!-- Температура января -->
             <div id="temperatureControl" class="temperature-control">
                 <label>🌡️ Среднемесячная температура января: 
-                    <select id="januaryTemp" onchange="updateTemperatureInfo()">
+                    <select id="januaryTemp" onchange="updateAllCalculations()">
                         <option value="unknown">Не определена</option>
                         <option value="cold">≤ -5°C (холодная зима)</option>
                         <option value="warm">> -5°C (теплая зима)</option>
                     </select>
                 </label>
-                <p class="italic">
-                    Значение средней температуры наиболее холодного месяца (января) можно посмотреть в 
-                    <a href="https://docs.cntd.ru/document/1200175796" target="_blank" class="sp-link">таблице 7.1 СП 131.13330.2020</a>
-                </p>
                 
                 <div id="temperatureInfo">
                     <!-- Информация о температуре будет заполняться здесь -->
                 </div>
             </div>
 
+            <div id="sgCalculationDetails" class="calculation-details"></div>
+
             <div class="step-navigation">
                 <button type="button" class="btn-next" onclick="nextStep(2)">Далее →</button>
             </div>
         </div>
 
-<!-- Шаг 2 -->
-<div class="step" id="step2">
-    <h2>🌄 Шаг 2: Коэффициент воздействия ветра Ce</h2>
-    <p class="italic">п. 10.5-10.9 СП 20.13330.2016</p>
-    
-    <div class="calculation-method">
-        <label>Способ определения Ce:</label>
-        <label class="method-label">
-            <input type="radio" name="ceMethod" value="manual" checked onchange="toggleCeMethod()"> 
-            ✏️ Ввести значение вручную
-        </label>
-        <label class="method-label">
-            <input type="radio" name="ceMethod" value="sp" onchange="toggleCeMethod()"> 
-            📖 Рассчитать по СП 20.13330.2016
-        </label>
-    </div>
+        <!-- Шаг 2 -->
+        <div class="step" id="step2">
+            <h2>🌄 Шаг 2: Коэффициент воздействия ветра Ce</h2>
+            <p class="italic">п. 10.5-10.9 СП 20.13330.2016</p>
+            
+            <div class="calculation-method">
+                <label>Способ определения Ce:</label>
+                <label class="method-label">
+                    <input type="radio" name="ceMethod" value="manual" checked onchange="toggleCeMethod()"> 
+                    ✏️ Ввести значение вручную
+                </label>
+                <label class="method-label">
+                    <input type="radio" name="ceMethod" value="sp" onchange="toggleCeMethod()"> 
+                    📖 Рассчитать по СП 20.13330.2016
+                </label>
+            </div>
 
-    <div id="ceManualInput" class="manual-input">
-        <label>Коэффициент воздействия ветра Ce: 
-            <input type="number" id="ceManual" step="0.01" value="1.0" min="0.5" max="1.0">
-        </label>
-        <p class="note">Допустимые значения: от 0.5 до 1.0 согласно п.10.5 СП 20.13330.2016</p>
-    </div>
+            <div id="ceManualInput" class="manual-input">
+                <label>Коэффициент воздействия ветра Ce: 
+                    <input type="number" id="ceManual" step="0.01" value="1.0" min="0.5" max="1.0" onchange="updateAllCalculations()">
+                </label>
+                <p class="note">Допустимые значения: от 0.5 до 1.0 согласно п.10.5 СП 20.13330.2016</p>
+            </div>
 
-    <div id="ceSpCalculation" class="sp-calculation">
-        <div class="algorithm">
-            <strong>Алгоритм расчета Ce по п.10.5-10.9 СП 20.13330.2016:</strong><br>
-            1. Если здание защищено от ветра → Ce = 1.0 (п.10.6)<br>
-            2. Если не защищено → расчет по размерам покрытия и типу местности (п.10.7)<br>
-            3. Для типа местности C → Ce = 1.0 всегда
-        </div>
-        
-        <label>🏠 Защищено от ветра? (соседние здания, лес и т.п.): 
-            <input type="checkbox" id="protected" onchange="updateCe()">
-        </label>
-        <p class="italic">п.10.6: При наличии защищающих объектов применяется Ce = 1.0</p>
+            <div id="ceSpCalculation" class="sp-calculation" style="display: none;">
+                <div class="algorithm">
+                    <strong>Алгоритм расчета Ce по п.10.5-10.9 СП 20.13330.2016:</strong><br>
+                    1. Определить характерный размер покрытия l (п.10.7)<br>
+                    2. Проверить условия применения снижения Ce (п.10.7)<br>
+                    3. Рассчитать по формуле 10.3: Ce = (1.2 - 0.1√l)<br>
+                    4. Применить ограничения: 0.5 ≤ Ce ≤ 1.0
+                </div>
+                
+                <label>🏠 Защищено от ветра? (соседние здания, лес и т.п.): 
+                    <input type="checkbox" id="protected" onchange="updateAllCalculations()">
+                </label>
+                <p class="italic">п.10.6: При наличии защищающих объектов применяется Ce = 1.0</p>
 
-        <div id="dimSection">
-            <p><strong>📏 Размеры покрытия для расчета сноса снега (п.10.7):</strong></p>
-            <label>Наименьший размер в плане l (м): <input type="number" id="dimMin" value="50" min="1" onchange="updateCe()"></label>
-            <label>Наибольший размер в плане L (м): <input type="number" id="dimMax" value="50" min="1" onchange="updateCe()"></label>
-            <div id="dimensionError" class="dimension-error" style="display: none;">
-                ❌ Ошибка: Наименьший размер не может быть больше наибольшего размера. Пожалуйста, исправьте значения.
+                <div id="windInfo" class="wind-info">
+                    <!-- Информация о ветре будет заполнена здесь -->
+                </div>
+
+                <div class="manual-wind-input">
+                    <label>💨 Средняя скорость ветра за зимний период v, м/с (если не выбрано из списка): 
+                        <input type="number" id="manualWindSpeed" step="0.1" min="0" max="20" value="4.0" onchange="updateAllCalculations()">
+                    </label>
+                    <p class="italic">По таблице 3.1 СП 131.13330.2020 "Строительная климатология"</p>
+                </div>
+
+                <div id="dimSection">
+                    <p><strong>📏 Размеры покрытия для расчета (п.10.7):</strong></p>
+                    <label>Наименьший размер в плане b (м): <input type="number" id="dimMin" value="50" min="1" onchange="updateAllCalculations()"></label>
+                    <label>Наибольший размер в плане L (м): <input type="number" id="dimMax" value="50" min="1" onchange="updateAllCalculations()"></label>
+                    <div id="dimensionError" class="dimension-error" style="display: none;">
+                        ❌ Ошибка: Наименьший размер не может быть больше наибольшего размера. Пожалуйста, исправьте значения.
+                    </div>
+                </div>
+
+                <p><strong>🏞️ Тип местности (п.10.9):</strong></p>
+                <p class="terrain-type">🌊 A - открытые побережья морей, озер и водохранилищ, пустыни, степи, лесостепи, тундра;</p>
+                <p class="terrain-type">🏘️ B - городские территории, лесные массивы и другие местности, равномерно покрытые препятствиями высотой более 10 м;</p>
+                <p class="terrain-type">🏙️ C - городские районы с застройкой зданиями высотой более 25 м.</p>
+                
+                <label>Тип местности: 
+                    <select id="terrainType" onchange="updateAllCalculations()">
+                        <option value="A">A (открытая)</option>
+                        <option value="B" selected>B (с препятствиями)</option>
+                        <option value="C">C (городская)</option>
+                    </select>
+                </label>
+
+                <div id="ceResult">
+                    <p id="ceValue" class="calculation-result">Рассчитанное значение Ce: 1.0</p>
+                    <div id="ceCalculationDetails" class="calculation-details">
+                        <!-- Детали расчета будут заполнены динамически -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-navigation">
+                <button type="button" class="btn-prev" onclick="prevStep(1)">← Назад</button>
+                <button type="button" class="btn-next" onclick="nextStep(3)">Далее →</button>
             </div>
         </div>
-
-        <p><strong>🏞️ Тип местности (п.10.9):</strong></p>
-        <p class="terrain-type">🌊 A - открытые побережья морей, озер и водохранилищ, пустыни, степи, лесостепи, тундра;</p>
-        <p class="terrain-type">🏘️ B - городские территории, лесные массивы и другие местности, равномерно покрытые препятствиями высотой более 10 м;</p>
-        <p class="terrain-type">🏙️ C - городские районы с застройкой зданиями высотой более 25 м.</p>
-        
-        <label>Тип местности: 
-            <select id="terrainType" onchange="updateCe()">
-                <option value="A">A (открытая)</option>
-                <option value="B" selected>B (с препятствиями)</option>
-                <option value="C">C (городская)</option>
-            </select>
-        </label>
-
-        <div id="ceResult">
-            <p id="ceValue" class="calculation-result">Рассчитанное значение Ce: 1.0</p>
-            <div id="ceCalculationDetails" class="detailed-explanation">
-                <!-- Детали расчета будут заполнены динамически -->
-            </div>
-        </div>
-    </div>
-
-    <div class="step-navigation">
-        <button type="button" class="btn-prev" onclick="prevStep(1)">← Назад</button>
-        <button type="button" class="btn-next" onclick="nextStep(3)">Далее →</button>
-    </div>
-</div>
 
         <!-- Шаг 3 -->
         <div class="step" id="step3">
             <h2>🔥 Шаг 3: Термический коэффициент Ct</h2>
-            <p class="italic">п. 10.10-10.11</p>
+            <p class="italic">п. 10.10 СП 20.13330.2016</p>
             
             <div class="calculation-method">
                 <label>Способ определения Ct:</label>
@@ -324,37 +234,38 @@
                 </label>
                 <label class="method-label">
                     <input type="radio" name="ctMethod" value="sp" onchange="toggleCtMethod()"> 
-                    📖 Рассчитать по СП 20.13330.2016
+                    📖 Определить по СП 20.13330.2016
                 </label>
             </div>
 
             <div id="ctManualInput" class="manual-input">
                 <label>Термический коэффициент Ct: 
-                    <input type="number" id="ctManual" step="0.01" value="1.0" min="0.8" max="1.2">
+                    <input type="number" id="ctManual" step="0.01" value="1.0" min="0.8" max="1.2" onchange="updateAllCalculations()">
                 </label>
+                <p class="note">Допустимые значения: от 0.8 до 1.2 согласно п.10.10</p>
             </div>
 
-            <div id="ctSpCalculation" class="sp-calculation">
-                <p><strong>Выберите тип покрытия:</strong></p>
+            <div id="ctSpCalculation" class="sp-calculation" style="display: none;">
+                <p><strong>Выберите тип покрытия согласно п.10.10:</strong></p>
                 <label class="method-label">
-                    <input type="radio" name="ctType" value="normal" checked onchange="updateCt()"> 
-                    🏠 Обычное покрытие с утеплением
+                    <input type="radio" name="ctType" value="normal" checked onchange="updateAllCalculations()"> 
+                    🏠 Обычные покрытия с утеплением
                 </label>
                 <label class="method-label">
-                    <input type="radio" name="ctType" value="transparent" onchange="updateCt()"> 
+                    <input type="radio" name="ctType" value="transparent" onchange="updateAllCalculations()"> 
                     ☀️ Прозрачные покрытия (с коэффициентом теплопередачи > 1 Вт/(м²·°C))
                 </label>
                 <label class="method-label">
-                    <input type="radio" name="ctType" value="highLoss" onchange="updateCt()"> 
+                    <input type="radio" name="ctType" value="highLoss" onchange="updateAllCalculations()"> 
                     ❄️ Покрытия с повышенными тепловыми потерями
                 </label>
                 <label class="method-label">
-                    <input type="radio" name="ctType" value="cold" onchange="updateCt()"> 
+                    <input type="radio" name="ctType" value="cold" onchange="updateAllCalculations()"> 
                     🏭 Холодные покрытия (с коэффициентом теплопередачи ≤ 1 Вт/(м²·°C))
                 </label>
                 
                 <div id="ctValue">Рассчитанное значение Ct: 1.0</div>
-                <div id="ctCalculationDetails"></div>
+                <div id="ctCalculationDetails" class="calculation-details"></div>
             </div>
 
             <div class="step-navigation">
@@ -366,7 +277,7 @@
         <!-- Шаг 4 -->
         <div class="step" id="step4">
             <h2>🏠 Шаг 4: Коэффициент перехода μ и схема нагрузки</h2>
-            <p class="italic">п. 10.4, Приложение Б</p>
+            <p class="italic">п. 10.4, Приложение Б СП 20.13330.2016</p>
             
             <div class="calculation-method">
                 <label>Способ определения μ:</label>
@@ -382,50 +293,43 @@
 
             <div id="muManualInput" class="manual-input mu-manual-option" style="display: none;">
                 <label>Коэффициент перехода μ: 
-                    <input type="number" id="muManual" step="0.01" value="1.0" min="0">
+                    <input type="number" id="muManual" step="0.01" value="1.0" min="0" max="4" onchange="updateAllCalculations()">
                 </label>
+                <p class="note">Значения от 0 до 4 согласно схемам Приложения Б</p>
             </div>
 
             <div id="muSpCalculation">
                 <p>Выберите тип покрытия и укажите параметры. Рассчитывается μ для различных схем.</p>
                 
                 <label>Тип покрытия: 
-                    <select id="roofType" onchange="showParams()">
-                        <option value="single_slope" data-ref="Б.1">1. Односкатное покрытие</option>
-                        <option value="pitched" data-ref="Б.1" selected>2. Двускатное покрытие</option>
-                        <option value="arched" data-ref="Б.2">3. Сводчатое покрытие</option>
-                        <option value="pointed" data-ref="Б.2">4. Стрельчатое покрытие</option>
-                        <option value="lantern" data-ref="Б.3">5. Покрытие с фонарями</option>
-                        <option value="long_lantern" data-ref="Б.4">6. Покрытие с продольными фонарями</option>
-                        <option value="shed" data-ref="Б.5">7. Шедовые покрытия</option>
-                        <option value="multi_pitched" data-ref="Б.6">8. Многопролётные двускатные</option>
-                        <option value="multi_arched" data-ref="Б.6">9. Многопролётные сводчатые</option>
-                        <option value="multi_lantern" data-ref="Б.7">10. Многопролётные с фонарями</option>
-                        <option value="height_drop" data-ref="Б.8">11. Покрытия с перепадом высоты</option>
-                        <option value="double_height_drop" data-ref="Б.8">12. Покрытия с двумя перепадами высоты</option>
-                        <option value="cylindrical" data-ref="Б.10">13. Висячие цилиндрической формы</option>
-                        <option value="dome" data-ref="Б.11">14. Купольные покрытия</option>
-                        <option value="cone" data-ref="Б.12">15. Конические круговые покрытия</option>
-                        <option value="parapet" data-ref="Б.13">16. Парапеты</option>
-                        <option value="heightened" data-ref="Б.14">17. Участки, примыкающие к возвышающимся надстройкам</option>
+                    <select id="roofType" onchange="updateRoofParameters()">
+                        <option value="flat" data-ref="Б.1">1. Плоские покрытия (уклон ≤ 2.5%)</option>
+                        <option value="single_slope" data-ref="Б.1">2. Односкатные покрытия (Б.1)</option>
+                        <option value="pitched" data-ref="Б.1" selected>3. Двускатные покрытия (Б.1)</option>
+                        <option value="arched" data-ref="Б.2">4. Сводчатые покрытия (Б.2)</option>
+                        <option value="multi_slope" data-ref="Б.3">5. Многопролетные покрытия (Б.3)</option>
+                        <option value="height_drop" data-ref="Б.4">6. Покрытия с перепадами высот (Б.4)</option>
+                        <option value="obstacles" data-ref="Б.5">7. Покрытия с препятствиями (Б.5)</option>
+                        <option value="spatial" data-ref="Б.6">8. Пространственные покрытия (Б.6)</option>
+                        <option value="lantern" data-ref="Б.7">9. Покрытия с фонарями (Б.7)</option>
+                        <option value="shed" data-ref="Б.8">10. Шедовые покрытия (Б.8)</option>
                     </select>
                 </label>
                 
                 <p id="roofRef">Ссылка на СП: Б.1</p>
-                
+
                 <div id="roofImageContainer">
-                    <img id="roofImage" src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/2_Двускатная.png" alt="Изображение конфигурации кровли">
+                    <img id="roofImage" src="" alt="Изображение конфигурации кровли" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;">
                 </div>
 
                 <div id="roofParams">
-                    <label>Угол наклона крыши α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateMu()"></label>
+                    <label>Угол наклона крыши α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateAllCalculations()"></label>
                 </div>
 
-                <div id="muCalculationDetails">
+                <div id="muCalculationDetails" class="calculation-details">
                     <!-- Детали расчета μ будут заполняться динамически -->
                 </div>
 
-                <!-- ДОБАВЛЕННЫЙ БЛОК -->
                 <div id="muValueContainer" style="margin: 10px 0;">
                     <p id="muValue">Максимальное значение μ: 1.0</p>
                 </div>
@@ -443,39 +347,44 @@
 
         <!-- Шаг 5 -->
         <div class="step" id="step5">
-            <h2>📉 Шаг 5: Пониженная снеговая нагрузка</h2>
-            <p class="italic">п. 10.11</p>
+            <h2>📉 Шаг 5: Дополнительные параметры и расчет</h2>
+            <p class="italic">п. 10.4, 10.11 СП 20.13330.2016</p>
             
             <div class="detailed-explanation">
-                <p><strong>🔍 Подробное объяснение по пониженной нагрузке:</strong></p>
-                <p>В <strong>холодных регионах</strong> (t_янв ≤ -5°C) снег лежит стабильно всю зиму, формируя предсказуемый снежный покров. Это позволяет использовать пониженную нагрузку S_n_red = 0.5 × S_g для расчета деформаций и прогибов конструкций.</p>
-                
-                <p>В <strong>теплых регионах</strong> (t_янв > -5°C) ситуация принципиально иная:</p>
-                <ul>
-                    <li>❄️ <strong>Периодические оттепели</strong> - снег подтаивает и уплотняется</li>
-                    <li>🌨️ <strong>Новые снегопады</strong> - наслаиваются на уплотненный снег</li>
-                    <li>💧 <strong>Образование ледяных корок</strong> - между слоями снега образуются ледяные прослойки</li>
-                    <li>⚖️ <strong>Непредсказуемое распределение</strong> - из-за неравномерного таяния и замерзания</li>
-                </ul>
-                
-                <p>Поэтому в теплых регионах для обеспечения безопасности пониженная нагрузка <strong>не применяется</strong> - расчет ведется только по полной нормативной нагрузку.</p>
+                <p><strong>🔍 Пониженная снеговая нагрузка согласно п.10.11:</strong></p>
+                <p>В <strong>холодных регионах</strong> (t_янв ≤ -5°C) допускается принимать пониженное значение нормативной снеговой нагрузки 0.5Sg для расчета деформаций конструкций.</p>
+                <p>В <strong>теплых регионах</strong> (t_янв > -5°C) пониженная нагрузка не применяется из-за неравномерного отложения снега и образования ледяных корок.</p>
             </div>
             
-            <label>📥 Рассчитать пониженную нагрузку? 
-                <input type="checkbox" id="reducedLoad">
+            <label>📥 Рассчитать пониженную нагрузку для деформаций? 
+                <input type="checkbox" id="reducedLoad" onchange="updateAllCalculations()">
             </label>
-            <p class="italic">Доступно только для холодных регионов с t_янв ≤ -5°C</p>
+            <p class="italic">Доступно только для холодных регионов с t_янв ≤ -5°C согласно п.10.11</p>
+
+            <div class="additional-parameters">
+                <h3>📏 Дополнительные параметры</h3>
+                <label>
+                    <input type="checkbox" id="forPurlins" onchange="updateAllCalculations()">
+                    📐 Учесть коэффициент 1.1 для расчета прогонов
+                </label>
+                <p class="italic">п.10.4 примечание 4: При расчете прогонов покрытий на снеговую равномерно распределенную нагрузку следует учесть локальную неравномерность снегоотложений введением дополнительного коэффициента 1,1.</p>
+            </div>
+
+            <div class="preview-calculation">
+                <h3>👁️ Предварительный расчет</h3>
+                <div id="previewResult"></div>
+            </div>
 
             <div class="step-navigation">
                 <button type="button" class="btn-prev" onclick="prevStep(4)">← Назад</button>
-                <button type="button" class="btn-calculate" onclick="calculate()">🎯 Рассчитать снеговую нагрузку</button>
+                <button type="button" class="btn-calculate" onclick="calculateFinal()">🎯 Рассчитать снеговую нагрузку</button>
             </div>
         </div>
     </div>
 
-    <div id="report">
+    <div id="report" style="display: none;">
         <h2>📋 Подробный отчёт по расчёту</h2>
-        <p class="italic">п. 10.1-10.12</p>
+        <p class="italic">СП 20.13330.2016 с Изменением №5</p>
         <div class="report-actions">
             <button type="button" onclick="window.print()" class="btn-print">🖨️ Печать отчета</button>
             <button type="button" onclick="saveAsPDF()" class="btn-print">📄 Сохранить как PDF</button>
