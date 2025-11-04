@@ -38,7 +38,7 @@
 
             <div id="sgManualInput" class="manual-input">
                 <label>Нормативная снеговая нагрузка Sg (кПа): 
-                    <input type="number" id="sgManual" step="0.1" value="1.0" min="0" max="5.6" onchange="updateAllCalculations()">
+                    <input type="number" id="sgManual" step="0.1" value="1.5" min="0" max="4.0" onchange="updateAllCalculations()">
                 </label>
                 <p class="note">Значение должно соответствовать снеговому району по Таблице 10.1 СП 20.13330.2016</p>
             </div>
@@ -60,7 +60,7 @@
                             <option value="">Выберите город</option>
                         </select>
                     </label>
-                    <p id="sgDisplay">Sg: <span id="sgValue">1.0</span> кПа (Снеговой район: <span id="snowDistrict">III</span>)</p>
+                    <p id="sgDisplay">Sg: <span id="sgValue">1.5</span> кПа (Снеговой район: <span id="snowDistrict">III</span>)</p>
                 </div>
 
                 <div id="mapMethod" style="display: none;">
@@ -81,16 +81,16 @@
                     <label>Выбранный снеговой район: 
                         <select id="snowDistrictMap" onchange="updateAllCalculations()">
                             <option value="I">I (0.5 кПа) - Южные регионы</option>
-                            <option value="II">II (0.7 кПа) - Центральные регионы</option>
-                            <option value="III" selected>III (1.0 кПа) - Центральная Россия</option>
-                            <option value="IV">IV (1.5 кПа) - Урал, Западная Сибирь</option>
-                            <option value="V">V (2.0 кПа) - Восточная Сибирь</option>
-                            <option value="VI">VI (2.5 кПа) - Северные регионы</option>
-                            <option value="VII">VII (3.0 кПа) - Побережье Северного Ледовитого океана</option>
+                            <option value="II">II (1.0 кПа) - Центральные регионы</option>
+                            <option value="III" selected>III (1.5 кПа) - Центральная Россия</option>
+                            <option value="IV">IV (2.0 кПа) - Урал, Западная Сибирь</option>
+                            <option value="V">V (2.5 кПа) - Восточная Сибирь</option>
+                            <option value="VI">VI (3.0 кПа) - Северные регионы</option>
+                            <option value="VII">VII (3.5 кПа) - Побережье Северного Ледовитого океана</option>
                             <option value="VIII">VIII (4.0 кПа) - Чукотка, острова Северного Ледовитого океана</option>
                         </select>
                     </label>
-                    <p class="note">Согласно Таблице 10.1 СП 20.13330.2016</p>
+                    <p class="note">Согласно Таблице 10.1 СП 20.13330.2016 с Изменением №5</p>
                 </div>
 
                 <div class="note">
@@ -100,8 +100,6 @@
                     <p class="italic">Используется если объект на границе районов или в сложном рельефе (п.10.2 примечание 1)</p>
                 </div>
             </div>
-
-            <!-- Убрана секция уровня ответственности здания -->
 
             <!-- Температура января -->
             <div id="temperatureControl" class="temperature-control">

@@ -1,7 +1,7 @@
 // Константы согласно СП 20.13330.2016 с Изм.5
 const SNOW_DISTRICTS = {
-    'I': 0.5, 'II': 0.7, 'III': 1.0, 'IV': 1.5, 
-    'V': 2.0, 'VI': 2.5, 'VII': 3.0, 'VIII': 4.0
+    'I': 0.5, 'II': 1.0, 'III': 1.5, 'IV': 2.0, 
+    'V': 2.5, 'VI': 3.0, 'VII': 3.5, 'VIII': 4.0
 };
 
 // п.10.12: "Для снеговых нагрузок коэффициент надежности по нагрузке γf = 1,4"
@@ -340,11 +340,11 @@ function prevStep(stepNumber) {
 
 function calculateSg() {
     const method = document.querySelector('input[name="sgMethod"]:checked');
-    if (!method) return 1.0;
+    if (!method) return 1.5;
     
     if (method.value === 'manual') {
         const manualSg = document.getElementById('sgManual');
-        return manualSg ? parseFloat(manualSg.value) || 1.0 : 1.0;
+        return manualSg ? parseFloat(manualSg.value) || 1.5 : 1.5;
     } else {
         let district;
         const spMethod = document.querySelector('input[name="spMethod"]:checked');
@@ -366,7 +366,7 @@ function calculateSg() {
             }
         }
         
-        return SNOW_DISTRICTS[district] || 1.0;
+        return SNOW_DISTRICTS[district] || 1.5;
     }
 }
 
@@ -677,7 +677,7 @@ function generateSgCalculationDetails(Sg, district) {
             details += `<div class="protocol-description"><strong>Уточнение:</strong> Применено уточненное значение по данным Росгидромета (для объектов на границах районов или в сложном рельефе)</div>`;
         }
         
-        details += `<div class="protocol-description"><strong>Нормативное основание:</strong> Таблица 10.1 СП 20.13330.2016 - Значения весового покрова снега на 1 м² горизонтальной поверхности земли</div>`;
+        details += `<div class="protocol-description"><strong>Нормативное основание:</strong> Таблица 10.1 СП 20.13330.2016 с Изменением №5 - Значения весового покрова снега на 1 м² горизонтальной поверхности земли</div>`;
     }
     
     details += `<div class="protocol-formula">Sg = ${Sg.toFixed(2)} кПа</div>`;
