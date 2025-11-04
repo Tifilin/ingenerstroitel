@@ -4,11 +4,8 @@ const SNOW_DISTRICTS = {
     'V': 2.0, 'VI': 2.5, 'VII': 3.0, 'VIII': 4.0
 };
 
-const GAMMA_F_VALUES = {
-    '1': 1.4, // I уровень ответственности
-    '2': 1.2, // II уровень ответственности  
-    '3': 1.0  // III уровень ответственности
-};
+// п.10.12: "Для снеговых нагрузок коэффициент надежности по нагрузке γf = 1,4"
+const GAMMA_F = 1.4;
 
 // Данные по городам согласно карте районирования
 const CITIES_DATA = {
@@ -84,6 +81,8 @@ function initializeCalculator() {
 
 function initializeCitySelect() {
     const citySelect = document.getElementById('citySelect');
+    if (!citySelect) return;
+    
     citySelect.innerHTML = '<option value="">Выберите город</option>';
     
     Object.keys(CITIES_DATA).forEach(city => {
@@ -99,6 +98,8 @@ function initializeCitySelect() {
 
 function initializeRoofTypeParameters() {
     const roofType = document.getElementById('roofType');
+    if (!roofType) return;
+    
     roofType.addEventListener('change', function() {
         updateRoofParameters();
         updateAllCalculations();
@@ -122,6 +123,7 @@ function setupEventListeners() {
         }
     });
 
+    // Обработчики для переключения методов
     document.querySelectorAll('input[name="sgMethod"]').forEach(radio => {
         radio.addEventListener('change', toggleSgMethod);
     });
@@ -148,35 +150,60 @@ function setupEventListeners() {
 // ФУНКЦИИ ПЕРЕКЛЮЧЕНИЯ МЕТОДОВ
 function toggleSgMethod() {
     const manualMethod = document.querySelector('input[name="sgMethod"][value="manual"]').checked;
-    document.getElementById('sgManualInput').style.display = manualMethod ? 'block' : 'none';
-    document.getElementById('sgSpCalculation').style.display = manualMethod ? 'none' : 'block';
+    const manualInput = document.getElementById('sgManualInput');
+    const spCalculation = document.getElementById('sgSpCalculation');
+    
+    if (manualInput && spCalculation) {
+        manualInput.style.display = manualMethod ? 'block' : 'none';
+        spCalculation.style.display = manualMethod ? 'none' : 'block';
+    }
     updateAllCalculations();
 }
 
 function toggleCeMethod() {
     const manualMethod = document.querySelector('input[name="ceMethod"][value="manual"]').checked;
-    document.getElementById('ceManualInput').style.display = manualMethod ? 'block' : 'none';
-    document.getElementById('ceSpCalculation').style.display = manualMethod ? 'none' : 'block';
+    const manualInput = document.getElementById('ceManualInput');
+    const spCalculation = document.getElementById('ceSpCalculation');
+    
+    if (manualInput && spCalculation) {
+        manualInput.style.display = manualMethod ? 'block' : 'none';
+        spCalculation.style.display = manualMethod ? 'none' : 'block';
+    }
     updateAllCalculations();
 }
 
 function toggleCtMethod() {
     const manualMethod = document.querySelector('input[name="ctMethod"][value="manual"]').checked;
-    document.getElementById('ctManualInput').style.display = manualMethod ? 'block' : 'none';
-    document.getElementById('ctSpCalculation').style.display = manualMethod ? 'none' : 'block';
+    const manualInput = document.getElementById('ctManualInput');
+    const spCalculation = document.getElementById('ctSpCalculation');
+    
+    if (manualInput && spCalculation) {
+        manualInput.style.display = manualMethod ? 'block' : 'none';
+        spCalculation.style.display = manualMethod ? 'none' : 'block';
+    }
     updateAllCalculations();
 }
 
 function toggleMuMethod() {
     const manualMethod = document.querySelector('input[name="muMethod"][value="manual"]').checked;
-    document.getElementById('muManualInput').style.display = manualMethod ? 'block' : 'none';
-    document.getElementById('muSpCalculation').style.display = manualMethod ? 'none' : 'block';
+    const manualInput = document.getElementById('muManualInput');
+    const spCalculation = document.getElementById('muSpCalculation');
+    
+    if (manualInput && spCalculation) {
+        manualInput.style.display = manualMethod ? 'block' : 'none';
+        spCalculation.style.display = manualMethod ? 'none' : 'block';
+    }
     updateAllCalculations();
 }
 
 function showSpMethod(method) {
-    document.getElementById('cityMethod').style.display = method === 'city' ? 'block' : 'none';
-    document.getElementById('mapMethod').style.display = method === 'map' ? 'block' : 'none';
+    const cityMethod = document.getElementById('cityMethod');
+    const mapMethod = document.getElementById('mapMethod');
+    
+    if (cityMethod && mapMethod) {
+        cityMethod.style.display = method === 'city' ? 'block' : 'none';
+        mapMethod.style.display = method === 'map' ? 'block' : 'none';
+    }
     updateAllCalculations();
 }
 
@@ -184,6 +211,8 @@ function showSpMethod(method) {
 function toggleMap() {
     const mapContainer = document.getElementById('mapContainer');
     const btn = document.getElementById('mapToggleBtn');
+    
+    if (!mapContainer || !btn) return;
     
     if (mapContainer.style.display === 'none') {
         mapContainer.style.display = 'block';
@@ -198,24 +227,29 @@ function toggleMap() {
 }
 
 function updateMapSrc() {
-    const type = document.getElementById('mapType').value;
+    const type = document.getElementById('mapType');
     const mapImg = document.getElementById('snowMap');
-    mapImg.src = MAP_URLS[type];
+    
+    if (!type || !mapImg) return;
+    
+    mapImg.src = MAP_URLS[type.value] || MAP_URLS.main;
     
     mapImg.onerror = function() {
         this.alt = 'Карта временно недоступна';
-        console.warn('Карта не загружена:', this.src);
     };
 }
 
 // ФУНКЦИИ ДЛЯ РАБОТЫ С ТИПАМИ ПОКРЫТИЙ
 function updateRoofParameters() {
-    const roofType = document.getElementById('roofType').value;
+    const roofType = document.getElementById('roofType');
     const paramsContainer = document.getElementById('roofParams');
     
+    if (!roofType || !paramsContainer) return;
+    
+    const type = roofType.value;
     let html = '';
     
-    switch(roofType) {
+    switch(type) {
         case 'flat':
             html = `
                 <label>Уклон покрытия i (%): <input type="number" id="roofSlopePercent" min="0" max="2.5" value="1.0" step="0.1" onchange="updateAllCalculations()"></label>
@@ -244,50 +278,6 @@ function updateRoofParameters() {
                 <p class="note">Сводчатые покрытия (Б.2)</p>
             `;
             break;
-        case 'multi_slope':
-            html = `
-                <label>Угол наклона α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateAllCalculations()"></label>
-                <label>Количество пролетов: <input type="number" id="spanCount" min="2" max="10" value="3" onchange="updateAllCalculations()"></label>
-                <p class="note">Многопролетные покрытия (Б.3)</p>
-            `;
-            break;
-        case 'height_drop':
-            html = `
-                <label>Высота перепада h (м): <input type="number" id="heightDrop" min="0.5" value="2.0" step="0.1" onchange="updateAllCalculations()"></label>
-                <label>Длина верхнего ската l₁ (м): <input type="number" id="lengthUpper" min="1" value="10" onchange="updateAllCalculations()"></label>
-                <label>Длина нижнего ската l₂ (м): <input type="number" id="lengthLower" min="1" value="10" onchange="updateAllCalculations()"></label>
-                <p class="note">Покрытия с перепадами высот (Б.4)</p>
-            `;
-            break;
-        case 'obstacles':
-            html = `
-                <label>Высота парапета h (м): <input type="number" id="parapetHeight" min="0.5" value="1.0" step="0.1" onchange="updateAllCalculations()"></label>
-                <label>Ширина зоны снегоотложения b (м): <input type="number" id="snowZoneWidth" min="1" value="5" onchange="updateAllCalculations()"></label>
-                <p class="note">Покрытия с препятствиями (Б.5)</p>
-            `;
-            break;
-        case 'spatial':
-            html = `
-                <label>Угол наклона α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateAllCalculations()"></label>
-                <label>Отношение f/d: <input type="number" id="spatialRatio" step="0.01" min="0" max="0.5" value="0.1" onchange="updateAllCalculations()"></label>
-                <p class="note">Пространственные покрытия (Б.6)</p>
-            `;
-            break;
-        case 'lantern':
-            html = `
-                <label>Высота фонаря h (м): <input type="number" id="lanternHeight" min="0.5" value="2.0" step="0.1" onchange="updateAllCalculations()"></label>
-                <label>Ширина фонаря b (м): <input type="number" id="lanternWidth" min="1" value="3" onchange="updateAllCalculations()"></label>
-                <label>Расстояние между фонарями (м): <input type="number" id="lanternSpacing" min="3" value="6" onchange="updateAllCalculations()"></label>
-                <p class="note">Покрытия с фонарями (Б.7)</p>
-            `;
-            break;
-        case 'shed':
-            html = `
-                <label>Угол наклона α (°): <input type="number" id="roofAngle" min="0" max="90" value="15" onchange="updateAllCalculations()"></label>
-                <label>Длина шеда l (м): <input type="number" id="shedLength" min="1" value="12" onchange="updateAllCalculations()"></label>
-                <p class="note">Шедовые покрытия (Б.8)</p>
-            `;
-            break;
         default:
             html = `
                 <label>Угол наклона α (°): <input type="number" id="roofAngle" min="0" max="90" value="30" onchange="updateAllCalculations()"></label>
@@ -296,20 +286,26 @@ function updateRoofParameters() {
     
     paramsContainer.innerHTML = html;
     
-    const ref = document.getElementById('roofType').selectedOptions[0].getAttribute('data-ref');
-    document.getElementById('roofRef').textContent = `Ссылка на СП: ${ref}`;
+    const ref = roofType.selectedOptions[0].getAttribute('data-ref');
+    const roofRef = document.getElementById('roofRef');
+    if (roofRef) {
+        roofRef.textContent = `Ссылка на СП: ${ref}`;
+    }
     
     updateRoofImage();
 }
 
 function updateRoofImage() {
-    const roofType = document.getElementById('roofType').value;
+    const roofType = document.getElementById('roofType');
     const roofImage = document.getElementById('roofImage');
-    const imageName = ROOF_IMAGES[roofType];
+    
+    if (!roofType || !roofImage) return;
+    
+    const imageName = ROOF_IMAGES[roofType.value];
     
     if (imageName) {
         roofImage.src = `https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/${imageName}`;
-        roofImage.alt = `Схема покрытия: ${roofType}`;
+        roofImage.alt = `Схема покрытия: ${roofType.value}`;
         
         roofImage.onerror = function() {
             this.alt = 'Схема временно недоступна';
@@ -322,7 +318,10 @@ function nextStep(stepNumber) {
     document.querySelectorAll('.step').forEach(step => {
         step.classList.remove('active');
     });
-    document.getElementById(`step${stepNumber}`).classList.add('active');
+    const nextStep = document.getElementById(`step${stepNumber}`);
+    if (nextStep) {
+        nextStep.classList.add('active');
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -330,30 +329,41 @@ function prevStep(stepNumber) {
     document.querySelectorAll('.step').forEach(step => {
         step.classList.remove('active');
     });
-    document.getElementById(`step${stepNumber}`).classList.add('active');
+    const prevStep = document.getElementById(`step${stepNumber}`);
+    if (prevStep) {
+        prevStep.classList.add('active');
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ОСНОВНЫЕ ФУНКЦИИ РАСЧЕТА СОГЛАСНО СП 20.13330.2016
 
 function calculateSg() {
-    const method = document.querySelector('input[name="sgMethod"]:checked').value;
+    const method = document.querySelector('input[name="sgMethod"]:checked');
+    if (!method) return 1.0;
     
-    if (method === 'manual') {
-        const manualSg = parseFloat(document.getElementById('sgManual').value) || 1.0;
-        return Math.max(0.5, Math.min(4.0, manualSg));
+    if (method.value === 'manual') {
+        const manualSg = document.getElementById('sgManual');
+        return manualSg ? parseFloat(manualSg.value) || 1.0 : 1.0;
     } else {
         let district;
-        if (document.querySelector('input[name="spMethod"]:checked').value === 'city') {
-            const city = document.getElementById('citySelect').value;
+        const spMethod = document.querySelector('input[name="spMethod"]:checked');
+        
+        if (spMethod && spMethod.value === 'city') {
+            const citySelect = document.getElementById('citySelect');
+            const city = citySelect ? citySelect.value : '';
             district = city ? CITIES_DATA[city].district : 'III';
         } else {
-            district = document.getElementById('snowDistrictMap').value;
+            const snowDistrictMap = document.getElementById('snowDistrictMap');
+            district = snowDistrictMap ? snowDistrictMap.value : 'III';
         }
         
-        const customSg = parseFloat(document.getElementById('customSg').value);
-        if (!isNaN(customSg) && customSg > 0) {
-            return Math.max(0.5, Math.min(4.0, customSg));
+        const customSg = document.getElementById('customSg');
+        if (customSg && customSg.value) {
+            const customValue = parseFloat(customSg.value);
+            if (!isNaN(customValue) && customValue > 0) {
+                return Math.max(0.5, Math.min(4.0, customValue));
+            }
         }
         
         return SNOW_DISTRICTS[district] || 1.0;
@@ -361,17 +371,17 @@ function calculateSg() {
 }
 
 function calculateCe() {
-    const method = document.querySelector('input[name="ceMethod"]:checked').value;
+    const method = document.querySelector('input[name="ceMethod"]:checked');
+    if (!method) return 1.0;
     
-    if (method === 'manual') {
-        const manualCe = parseFloat(document.getElementById('ceManual').value) || 1.0;
-        return Math.max(0.5, Math.min(1.0, manualCe));
+    if (method.value === 'manual') {
+        const manualCe = document.getElementById('ceManual');
+        return manualCe ? parseFloat(manualCe.value) || 1.0 : 1.0;
     }
     
     // Расчет по СП 20.13330.2016 п.10.5-10.9
-    const isProtected = document.getElementById('protected').checked;
-    
-    if (isProtected) {
+    const protectedCheckbox = document.getElementById('protected');
+    if (protectedCheckbox && protectedCheckbox.checked) {
         return 1.0; // п.10.6 - для защищенных зданий
     }
     
@@ -389,10 +399,17 @@ function calculateCe() {
 }
 
 function checkCeReductionConditions() {
-    const roofType = document.getElementById('roofType').value;
-    const angle = parseFloat(document.getElementById('roofAngle').value) || 0;
-    const archRatio = parseFloat(document.getElementById('archRatio').value) || 0;
-    const b = parseFloat(document.getElementById('dimMin').value) || 50;
+    const roofTypeElement = document.getElementById('roofType');
+    const roofAngleElement = document.getElementById('roofAngle');
+    const archRatioElement = document.getElementById('archRatio');
+    const dimMinElement = document.getElementById('dimMin');
+    
+    if (!roofTypeElement || !roofAngleElement || !dimMinElement) return false;
+    
+    const roofType = roofTypeElement.value;
+    const angle = parseFloat(roofAngleElement.value) || 0;
+    const archRatio = archRatioElement ? parseFloat(archRatioElement.value) || 0 : 0;
+    const b = parseFloat(dimMinElement.value) || 50;
     
     // Условия п.10.7 для снижения Ce
     if (roofType === 'flat' || roofType === 'single_slope' || roofType === 'pitched') {
@@ -410,15 +427,22 @@ function checkCeReductionConditions() {
 }
 
 function calculateCharacteristicSize() {
-    const b = parseFloat(document.getElementById('dimMin').value) || 50;
-    const L = parseFloat(document.getElementById('dimMax').value) || 50;
-    
+    const dimMin = document.getElementById('dimMin');
+    const dimMax = document.getElementById('dimMax');
     const dimensionError = document.getElementById('dimensionError');
-    if (b > L) {
-        dimensionError.style.display = 'block';
-        return 50;
-    } else {
-        dimensionError.style.display = 'none';
+    
+    if (!dimMin || !dimMax) return 50;
+    
+    const b = parseFloat(dimMin.value) || 50;
+    const L = parseFloat(dimMax.value) || 50;
+    
+    if (dimensionError) {
+        if (b > L) {
+            dimensionError.style.display = 'block';
+            return 50;
+        } else {
+            dimensionError.style.display = 'none';
+        }
     }
     
     // Характеристический размер согласно п.10.7 - наименьший размер
@@ -426,14 +450,16 @@ function calculateCharacteristicSize() {
 }
 
 function calculateCt() {
-    const method = document.querySelector('input[name="ctMethod"]:checked').value;
+    const method = document.querySelector('input[name="ctMethod"]:checked');
+    if (!method) return 1.0;
     
-    if (method === 'manual') {
-        const manualCt = parseFloat(document.getElementById('ctManual').value) || 1.0;
-        return Math.max(0.8, Math.min(1.2, manualCt));
+    if (method.value === 'manual') {
+        const manualCt = document.getElementById('ctManual');
+        return manualCt ? parseFloat(manualCt.value) || 1.0 : 1.0;
     }
     
-    const ctType = document.querySelector('input[name="ctType"]:checked').value;
+    const ctType = document.querySelector('input[name="ctType"]:checked');
+    if (!ctType) return 1.0;
     
     // Согласно п.10.10 СП 20.13330.2016
     const ctValues = {
@@ -443,52 +469,39 @@ function calculateCt() {
         'cold': 1.0         // Холодные покрытия
     };
     
-    return ctValues[ctType] || 1.0;
+    return ctValues[ctType.value] || 1.0;
 }
 
 function calculateMu() {
-    const method = document.querySelector('input[name="muMethod"]:checked').value;
+    const method = document.querySelector('input[name="muMethod"]:checked');
+    if (!method) return 1.0;
     
-    if (method === 'manual') {
-        const manualMu = parseFloat(document.getElementById('muManual').value) || 1.0;
-        return Math.max(0, Math.min(4.0, manualMu));
+    if (method.value === 'manual') {
+        const manualMu = document.getElementById('muManual');
+        return manualMu ? parseFloat(manualMu.value) || 1.0 : 1.0;
     }
     
-    const roofType = document.getElementById('roofType').value;
-    const angle = parseFloat(document.getElementById('roofAngle').value) || 30;
+    const roofTypeElement = document.getElementById('roofType');
+    const roofAngleElement = document.getElementById('roofAngle');
+    
+    if (!roofTypeElement || !roofAngleElement) return 1.0;
+    
+    const roofType = roofTypeElement.value;
+    const angle = parseFloat(roofAngleElement.value) || 30;
     
     // Расчет согласно Приложению Б СП 20.13330.2016
     switch(roofType) {
         case 'flat':
-            return calculateMuForFlat();
+            return 1.0; // Б.1 - плоские покрытия
         case 'single_slope':
             return calculateMuForSingleSlope(angle);
         case 'pitched':
             return calculateMuForPitched(angle);
         case 'arched':
             return calculateMuForArched(angle);
-        case 'multi_slope':
-            return calculateMuForMultiSlope(angle);
-        case 'height_drop':
-            return calculateMuForHeightDrop();
-        case 'obstacles':
-            return calculateMuForObstacles();
-        case 'spatial':
-            return calculateMuForSpatial(angle);
-        case 'lantern':
-            return calculateMuForLantern();
-        case 'shed':
-            return calculateMuForShed(angle);
         default:
             return 1.0;
     }
-}
-
-// РЕАЛИЗАЦИЯ ВСЕХ ФУНКЦИЙ ДЛЯ РАЗЛИЧНЫХ ТИПОВ ПОКРЫТИЙ
-
-function calculateMuForFlat() {
-    // Б.1 - плоские покрытия (уклон ≤ 2,5%)
-    return 1.0;
 }
 
 function calculateMuForSingleSlope(angle) {
@@ -593,62 +606,10 @@ function calculateMuSchemesForPitched(angle) {
 
 function calculateMuForArched(angle) {
     // Б.2 - сводчатые покрытия
-    const archRatio = parseFloat(document.getElementById('archRatio').value) || 0.1;
-    
     if (angle <= 30) {
         return 1.0;
     } else if (angle <= 60) {
         return (60 - angle) / 30;
-    } else {
-        return 0;
-    }
-}
-
-function calculateMuForMultiSlope(angle) {
-    // Б.3 - многопролетные покрытия
-    if (angle <= 25) {
-        return 1.0;
-    } else if (angle <= 60) {
-        return (60 - angle) / 35;
-    } else {
-        return 0;
-    }
-}
-
-function calculateMuForHeightDrop() {
-    // Б.4 - покрытия с перепадами высот
-    const heightDrop = parseFloat(document.getElementById('heightDrop').value) || 2.0;
-    return Math.min(2.0, 1 + heightDrop);
-}
-
-function calculateMuForObstacles() {
-    // Б.5 - покрытия с препятствиями
-    const parapetHeight = parseFloat(document.getElementById('parapetHeight').value) || 1.0;
-    return Math.min(2.0, 1 + parapetHeight);
-}
-
-function calculateMuForSpatial(angle) {
-    // Б.6 - пространственные покрытия
-    if (angle <= 30) {
-        return 1.0;
-    } else if (angle <= 60) {
-        return (60 - angle) / 30;
-    } else {
-        return 0;
-    }
-}
-
-function calculateMuForLantern() {
-    // Б.7 - покрытия с фонарями
-    return 1.4; // Типовое значение для фонарей
-}
-
-function calculateMuForShed(angle) {
-    // Б.8 - шедовые покрытия
-    if (angle <= 25) {
-        return 1.0;
-    } else if (angle <= 60) {
-        return (60 - angle) / 35;
     } else {
         return 0;
     }
@@ -667,35 +628,42 @@ function updateAllCalculations() {
 
 function updateSgDisplay() {
     const Sg = calculateSg();
-    let district = 'III';
+    const sgValueElement = document.getElementById('sgValue');
+    const snowDistrictElement = document.getElementById('snowDistrict');
+    const detailsElement = document.getElementById('sgCalculationDetails');
     
-    if (document.querySelector('input[name="sgMethod"]:checked').value === 'sp') {
-        if (document.querySelector('input[name="spMethod"]:checked').value === 'city') {
-            const city = document.getElementById('citySelect').value;
-            district = city ? CITIES_DATA[city].district : 'III';
-        } else {
-            district = document.getElementById('snowDistrictMap').value;
-        }
+    if (sgValueElement) sgValueElement.textContent = Sg.toFixed(2);
+    
+    let district = 'III';
+    const spMethod = document.querySelector('input[name="spMethod"]:checked');
+    
+    if (spMethod && spMethod.value === 'city') {
+        const citySelect = document.getElementById('citySelect');
+        const city = citySelect ? citySelect.value : '';
+        district = city ? CITIES_DATA[city].district : 'III';
+    } else {
+        const snowDistrictMap = document.getElementById('snowDistrictMap');
+        district = snowDistrictMap ? snowDistrictMap.value : 'III';
     }
     
-    document.getElementById('sgValue').textContent = Sg.toFixed(2);
-    document.getElementById('snowDistrict').textContent = district;
-    
-    const details = generateSgCalculationDetails(Sg, district);
-    document.getElementById('sgCalculationDetails').innerHTML = details;
+    if (snowDistrictElement) snowDistrictElement.textContent = district;
+    if (detailsElement) detailsElement.innerHTML = generateSgCalculationDetails(Sg, district);
 }
 
 function generateSgCalculationDetails(Sg, district) {
     let details = '<div class="protocol-step">';
     details += '<div class="protocol-header"><strong>Расчет нормативной снеговой нагрузки Sg</strong><span class="protocol-reference">п.10.2, Таблица 10.1</span></div>';
     
-    if (document.querySelector('input[name="sgMethod"]:checked').value === 'manual') {
+    const sgMethod = document.querySelector('input[name="sgMethod"]:checked');
+    
+    if (sgMethod && sgMethod.value === 'manual') {
         details += `<div class="protocol-description"><strong>Метод определения:</strong> Ручной ввод нормативной снеговой нагрузки</div>`;
         details += `<div class="protocol-description"><strong>Обоснование:</strong> п.10.2 СП 20.13330.2016 - Sg принимается по карте районирования или задается вручную</div>`;
     } else {
-        const method = document.querySelector('input[name="spMethod"]:checked').value;
-        if (method === 'city') {
-            const city = document.getElementById('citySelect').value;
+        const spMethod = document.querySelector('input[name="spMethod"]:checked');
+        if (spMethod && spMethod.value === 'city') {
+            const citySelect = document.getElementById('citySelect');
+            const city = citySelect ? citySelect.value : '';
             details += `<div class="protocol-description"><strong>Метод определения:</strong> По населенному пункту</div>`;
             details += `<div class="protocol-description"><strong>Населенный пункт:</strong> ${city}</div>`;
             details += `<div class="protocol-description"><strong>Снеговой район:</strong> ${district} (определен по карте районирования территории РФ)</div>`;
@@ -704,8 +672,8 @@ function generateSgCalculationDetails(Sg, district) {
             details += `<div class="protocol-description"><strong>Снеговой район:</strong> ${district} (выбран вручную по карте)</div>`;
         }
         
-        const customSg = parseFloat(document.getElementById('customSg').value);
-        if (!isNaN(customSg) && customSg > 0) {
+        const customSg = document.getElementById('customSg');
+        if (customSg && customSg.value) {
             details += `<div class="protocol-description"><strong>Уточнение:</strong> Применено уточненное значение по данным Росгидромета (для объектов на границах районов или в сложном рельефе)</div>`;
         }
         
@@ -721,17 +689,19 @@ function generateSgCalculationDetails(Sg, district) {
 
 function updateCeDisplay() {
     const Ce = calculateCe();
-    document.getElementById('ceValue').textContent = `Рассчитанное значение Ce: ${Ce.toFixed(2)}`;
+    const ceValueElement = document.getElementById('ceValue');
+    const detailsElement = document.getElementById('ceCalculationDetails');
     
-    const details = generateCeCalculationDetails(Ce);
-    document.getElementById('ceCalculationDetails').innerHTML = details;
+    if (ceValueElement) ceValueElement.textContent = `Рассчитанное значение Ce: ${Ce.toFixed(2)}`;
+    if (detailsElement) detailsElement.innerHTML = generateCeCalculationDetails(Ce);
 }
 
 function generateCeCalculationDetails(Ce) {
     let details = '<div class="protocol-step">';
     details += '<div class="protocol-header"><strong>Расчет коэффициента воздействия ветра Ce</strong><span class="protocol-reference">п.10.5-10.9</span></div>';
     
-    const isProtected = document.getElementById('protected').checked;
+    const protectedCheckbox = document.getElementById('protected');
+    const isProtected = protectedCheckbox && protectedCheckbox.checked;
     
     if (isProtected) {
         details += `<div class="protocol-description"><strong>Условия:</strong> Объект защищен от прямого воздействия ветра</div>`;
@@ -760,29 +730,32 @@ function generateCeCalculationDetails(Ce) {
 
 function updateCtDisplay() {
     const Ct = calculateCt();
-    document.getElementById('ctValue').textContent = `Рассчитанное значение Ct: ${Ct.toFixed(1)}`;
+    const ctValueElement = document.getElementById('ctValue');
+    const detailsElement = document.getElementById('ctCalculationDetails');
     
-    const details = generateCtCalculationDetails(Ct);
-    document.getElementById('ctCalculationDetails').innerHTML = details;
+    if (ctValueElement) ctValueElement.textContent = `Рассчитанное значение Ct: ${Ct.toFixed(1)}`;
+    if (detailsElement) detailsElement.innerHTML = generateCtCalculationDetails(Ct);
 }
 
 function generateCtCalculationDetails(Ct) {
-    const ctType = document.querySelector('input[name="ctType"]:checked').value;
-    let typeDescription = '';
+    const ctType = document.querySelector('input[name="ctType"]:checked');
+    let typeDescription = 'Обычные покрытия с утеплением';
     
-    switch(ctType) {
-        case 'normal':
-            typeDescription = 'Обычные покрытия с утеплением';
-            break;
-        case 'transparent':
-            typeDescription = 'Прозрачные покрытия (с коэффициентом теплопередачи > 1 Вт/(м²·°C))';
-            break;
-        case 'highLoss':
-            typeDescription = 'Покрытия с повышенными тепловыми потерями';
-            break;
-        case 'cold':
-            typeDescription = 'Холодные покрытия (с коэффициентом теплопередачи ≤ 1 Вт/(м²·°C))';
-            break;
+    if (ctType) {
+        switch(ctType.value) {
+            case 'normal':
+                typeDescription = 'Обычные покрытия с утеплением';
+                break;
+            case 'transparent':
+                typeDescription = 'Прозрачные покрытия (с коэффициентом теплопередачи > 1 Вт/(м²·°C))';
+                break;
+            case 'highLoss':
+                typeDescription = 'Покрытия с повышенными тепловыми потерями';
+                break;
+            case 'cold':
+                typeDescription = 'Холодные покрытия (с коэффициентом теплопередачи ≤ 1 Вт/(м²·°C))';
+                break;
+        }
     }
     
     let details = '<div class="protocol-step">';
@@ -798,17 +771,23 @@ function generateCtCalculationDetails(Ct) {
 
 function updateMuDisplay() {
     const Mu = calculateMu();
-    document.getElementById('muValue').textContent = `Максимальное значение μ: ${Mu.toFixed(2)}`;
+    const muValueElement = document.getElementById('muValue');
+    const detailsElement = document.getElementById('muCalculationDetails');
     
-    const details = generateMuCalculationDetails(Mu);
-    document.getElementById('muCalculationDetails').innerHTML = details;
+    if (muValueElement) muValueElement.textContent = `Максимальное значение μ: ${Mu.toFixed(2)}`;
+    if (detailsElement) detailsElement.innerHTML = generateMuCalculationDetails(Mu);
     
     updateMuSchemesDisplay();
 }
 
 function generateMuCalculationDetails(Mu) {
-    const roofType = document.getElementById('roofType').value;
-    const angle = parseFloat(document.getElementById('roofAngle').value) || 30;
+    const roofTypeElement = document.getElementById('roofType');
+    const roofAngleElement = document.getElementById('roofAngle');
+    
+    if (!roofTypeElement || !roofAngleElement) return '';
+    
+    const roofType = roofTypeElement.value;
+    const angle = parseFloat(roofAngleElement.value) || 30;
     
     let details = '<div class="protocol-step">';
     details += '<div class="protocol-header"><strong>Расчет коэффициента перехода μ</strong><span class="protocol-reference">п.10.4, Приложение Б</span></div>';
@@ -862,9 +841,14 @@ function generateMuCalculationDetails(Mu) {
 }
 
 function updateMuSchemesDisplay() {
-    const roofType = document.getElementById('roofType').value;
-    const angle = parseFloat(document.getElementById('roofAngle').value) || 30;
+    const roofTypeElement = document.getElementById('roofType');
+    const roofAngleElement = document.getElementById('roofAngle');
     const schemesContainer = document.getElementById('muSchemesContainer');
+    
+    if (!roofTypeElement || !roofAngleElement || !schemesContainer) return;
+    
+    const roofType = roofTypeElement.value;
+    const angle = parseFloat(roofAngleElement.value) || 30;
     
     let schemesHTML = '';
     
@@ -906,6 +890,8 @@ function updateTemperatureInfo() {
     const tempInfo = document.getElementById('temperatureInfo');
     const reducedLoadCheckbox = document.getElementById('reducedLoad');
     
+    if (!tempSelect || !tempInfo) return;
+    
     let explanation = '';
     let className = '';
     
@@ -913,18 +899,20 @@ function updateTemperatureInfo() {
         case 'cold':
             explanation = '❄️ Холодный регион (t_янв ≤ -5°C). Согласно п.10.11 допускается применение пониженной снеговой нагрузки 0.5Sg для расчета деформаций конструкций.';
             className = 'cold-region';
-            reducedLoadCheckbox.disabled = false;
+            if (reducedLoadCheckbox) reducedLoadCheckbox.disabled = false;
             break;
         case 'warm':
             explanation = '☀️ Теплый регион (t_янв > -5°C). Пониженная снеговая нагрузка не применяется из-за неравномерного отложения снега и образования ледяных корок.';
             className = 'warm-region';
-            reducedLoadCheckbox.disabled = true;
-            reducedLoadCheckbox.checked = false;
+            if (reducedLoadCheckbox) {
+                reducedLoadCheckbox.disabled = true;
+                reducedLoadCheckbox.checked = false;
+            }
             break;
         default:
             explanation = '❓ Температура января не определена. Для применения пониженной нагрузки необходимо указать среднемесячную температуру января.';
             className = 'unknown-region';
-            reducedLoadCheckbox.disabled = true;
+            if (reducedLoadCheckbox) reducedLoadCheckbox.disabled = true;
     }
     
     tempInfo.innerHTML = `<div class="${className}">${explanation}</div>`;
@@ -932,11 +920,15 @@ function updateTemperatureInfo() {
 
 function updateWindInfo() {
     const windInfo = document.getElementById('windInfo');
-    const windSpeed = parseFloat(document.getElementById('manualWindSpeed').value) || 4.0;
-    const terrainType = document.getElementById('terrainType').value;
+    const manualWindSpeed = document.getElementById('manualWindSpeed');
+    const terrainType = document.getElementById('terrainType');
     
+    if (!windInfo || !manualWindSpeed || !terrainType) return;
+    
+    const windSpeed = parseFloat(manualWindSpeed.value) || 4.0;
     let terrainDescription = '';
-    switch(terrainType) {
+    
+    switch(terrainType.value) {
         case 'A':
             terrainDescription = 'A - открытые побережья морей, озер и водохранилищ, пустыни, степи, лесостепи, тундра';
             break;
@@ -960,14 +952,18 @@ function updatePreview() {
     const Ce = calculateCe();
     const Ct = calculateCt();
     const Mu = calculateMu();
-    const buildingType = document.getElementById('buildingType').value;
-    const gammaF = GAMMA_F_VALUES[buildingType];
-    const forPurlins = document.getElementById('forPurlins').checked;
-    const reducedLoad = document.getElementById('reducedLoad').checked;
+    const forPurlinsCheckbox = document.getElementById('forPurlins');
+    const reducedLoadCheckbox = document.getElementById('reducedLoad');
+    const previewResult = document.getElementById('previewResult');
     
-    // Расчет по прочности
+    if (!previewResult) return;
+    
+    const forPurlins = forPurlinsCheckbox ? forPurlinsCheckbox.checked : false;
+    const reducedLoad = reducedLoadCheckbox ? reducedLoadCheckbox.checked : false;
+    
+    // Расчет по прочности (п.10.1)
     const S0 = Sg * Ce * Ct * Mu; // Нормативное значение
-    const S = gammaF * S0;         // Расчетное значение
+    const S = GAMMA_F * S0;       // Расчетное значение
     
     // Для прогонов (п.10.4 примечание 4)
     const S_purlins = forPurlins ? S * 1.1 : S;
@@ -979,7 +975,7 @@ function updatePreview() {
         <strong>Предварительный расчет:</strong><br>
         <div class="calculation-formula">
             S₀ = Sg × Ce × Ct × μ = ${Sg.toFixed(2)} × ${Ce.toFixed(2)} × ${Ct.toFixed(1)} × ${Mu.toFixed(2)} = ${S0.toFixed(2)} кПа<br>
-            S = γf × S₀ = ${gammaF} × ${S0.toFixed(2)} = ${S.toFixed(2)} кПа
+            S = γf × S₀ = 1,4 × ${S0.toFixed(2)} = ${S.toFixed(2)} кПа
         </div>
     `;
     
@@ -991,7 +987,7 @@ function updatePreview() {
         previewHTML += `<div class="calculation-result">Для деформаций (0.5Sg): ${S0_reduced.toFixed(2)} кПа</div>`;
     }
     
-    document.getElementById('previewResult').innerHTML = previewHTML;
+    previewResult.innerHTML = previewHTML;
 }
 
 // ФИНАЛЬНЫЙ РАСЧЕТ
@@ -1000,14 +996,15 @@ function calculateFinal() {
     const Ce = calculateCe();
     const Ct = calculateCt();
     const Mu = calculateMu();
-    const buildingType = document.getElementById('buildingType').value;
-    const gammaF = GAMMA_F_VALUES[buildingType];
-    const forPurlins = document.getElementById('forPurlins').checked;
-    const reducedLoad = document.getElementById('reducedLoad').checked;
+    const forPurlinsCheckbox = document.getElementById('forPurlins');
+    const reducedLoadCheckbox = document.getElementById('reducedLoad');
     
-    // Расчет по прочности
+    const forPurlins = forPurlinsCheckbox ? forPurlinsCheckbox.checked : false;
+    const reducedLoad = reducedLoadCheckbox ? reducedLoadCheckbox.checked : false;
+    
+    // Расчет по прочности (п.10.1)
     const S0 = Sg * Ce * Ct * Mu; // Нормативное значение
-    const S = gammaF * S0;         // Расчетное значение
+    const S = GAMMA_F * S0;       // Расчетное значение
     
     // Для прогонов (п.10.4 примечание 4)
     const S_purlins = forPurlins ? S * 1.1 : S;
@@ -1015,11 +1012,15 @@ function calculateFinal() {
     // Для деформаций (п.10.11)
     const S0_reduced = reducedLoad ? 0.5 * Sg * Ce * Ct * Mu : S0;
     
-    generateReport(S, S_purlins, S0_reduced, Sg, Ce, Ct, Mu, gammaF, S0);
+    generateReport(S, S_purlins, S0_reduced, Sg, Ce, Ct, Mu, S0);
 }
 
-function generateReport(S, S_purlins, S0_reduced, Sg, Ce, Ct, Mu, gammaF, S0) {
+function generateReport(S, S_purlins, S0_reduced, Sg, Ce, Ct, Mu, S0) {
+    const report = document.getElementById('report');
     const reportContent = document.getElementById('reportContent');
+    const stepsContainer = document.querySelector('.steps-container');
+    
+    if (!report || !reportContent || !stepsContainer) return;
     
     reportContent.innerHTML = `
         <div class="report-section">
@@ -1052,7 +1053,7 @@ function generateReport(S, S_purlins, S0_reduced, Sg, Ce, Ct, Mu, gammaF, S0) {
                 <div class="protocol-description">• Коэффициент воздействия ветра Ce = ${Ce.toFixed(2)}</div>
                 <div class="protocol-description">• Термический коэффициент Ct = ${Ct.toFixed(1)}</div>
                 <div class="protocol-description">• Коэффициент перехода μ = ${Mu.toFixed(2)}</div>
-                <div class="protocol-description">• Коэффициент надежности γf = ${gammaF} (п.10.12)</div>
+                <div class="protocol-description">• Коэффициент надежности γf = 1,4 (п.10.12)</div>
             </div>
             
             <div class="protocol-step">
@@ -1068,7 +1069,7 @@ function generateReport(S, S_purlins, S0_reduced, Sg, Ce, Ct, Mu, gammaF, S0) {
                 <div class="protocol-header"><strong>Расчет расчетного значения снеговой нагрузки S (п.10.1)</strong></div>
                 <div class="protocol-formula">
                     S = γf × S₀<br>
-                    S = ${gammaF} × ${S0.toFixed(2)}<br>
+                    S = 1,4 × ${S0.toFixed(2)}<br>
                     S = ${S.toFixed(2)} кПа
                 </div>
             </div>
@@ -1093,14 +1094,14 @@ function generateReport(S, S_purlins, S0_reduced, Sg, Ce, Ct, Mu, gammaF, S0) {
             <p>• п.10.5-10.9 - Коэффициент воздействия ветра Ce</p>
             <p>• п.10.10 - Термический коэффициент Ct</p>
             <p>• п.10.4, Приложение Б - Коэффициент перехода μ</p>
-            <p>• п.10.12 - Коэффициент надежности γf</p>
+            <p>• п.10.12 - Коэффициент надежности γf = 1,4</p>
             <p>• п.10.11 - Пониженная снеговая нагрузка для расчета деформаций</p>
         </div>
     `;
     
-    document.getElementById('report').style.display = 'block';
-    document.querySelector('.steps-container').style.display = 'none';
-    document.getElementById('report').scrollIntoView({ behavior: 'smooth' });
+    report.style.display = 'block';
+    stepsContainer.style.display = 'none';
+    report.scrollIntoView({ behavior: 'smooth' });
 }
 
 // Вспомогательные функции
