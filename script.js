@@ -55,8 +55,8 @@ const MAP_URLS = {
 
 // Изображения для типов покрытий
 const ROOF_IMAGES = {
-    'flat': '1_Плоская.png',
-    'single_slope': '2_Односкатная.png',
+    'flat': '1_Односкатная.png',
+    'single_slope': '1_Односкатная.png',
     'pitched': '2_Двускатная.png',
     'arched': '3_Сводчатая.png',
     'multi_slope': '4_Многопролетная.png',
