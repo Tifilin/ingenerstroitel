@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Многопролетные сводчатые покрытия - Коэффициент μ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Многопролетные сводчатые покрытия - Коэффициент μ</h1>
+            <p class="subtitle">Б.6 СП 20.13330.2016 с Изменением №5</p>
+        </div>
+
+        <div class="content-card">
+            <div class="scheme-image">
+                <img src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/4_Многопролетная.png" 
+                     alt="Схема многопролетных сводчатых покрытий" style="max-width: 100%; height: auto;">
+                <p class="image-caption">Рис. Б.3 - Многопролетные здания со сводчатыми покрытиями</p>
+            </div>
+
+            <div class="input-section">
+                <div class="param-group">
+                    <label>Угол в коньке α (°):</label>
+                    <input type="number" id="roofAngle" value="25" min="0" max="90" step="1">
+                </div>
+
+                <div class="param-group">
+                    <label>Количество пролетов:</label>
+                    <select id="spansCount">
+                        <option value="2">2 пролета</option>
+                        <option value="3" selected>3 пролета</option>
+                        <option value="4">4 пролета</option>
+                        <option value="5">5 пролетов</option>
+                    </select>
+                </div>
+
+                <div class="param-group">
+                    <label>Отношение f/l:</label>
+                    <input type="number" id="archRatio" value="0.1" step="0.01" min="0.05" max="0.3">
+                </div>
+
+                <div class="param-group">
+                    <label>Пролет l (м):</label>
+                    <input type="number" id="spanLength" value="24.0" step="0.1" min="6" max="50">
+                </div>
+            </div>
+
+            <div class="calculation-result">
+                <div class="result-header">
+                    <h3>📊 Результат расчета</h3>
+                </div>
+                
+                <div class="final-result">
+                    <strong>Максимальный коэффициент μ = <span id="mu-result">1.40</span></strong>
+                </div>
+                
+                <div id="schemes-container">
+                    <!-- Схемы будут заполнены динамически -->
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" onclick="goToStep('mu.html')">← Назад к выбору типа</button>
+                <button class="btn-primary" onclick="saveMultiSpanArchedMu()">💾 Использовать максимальное значение</button>
+            </div>
+        </div>
+
+        <div class="reference-section">
+            <h3>📚 Нормативные ссылки</h3>
+            <ul>
+                <li>СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</li>
+                <li>Б.6 - Двух- и многопролетные здания со сводчатыми покрытиями</li>
+                <li>Учет особенностей распределения снега на сводчатых покрытиях</li>
+                <li>Зависимость от количества пролетов и стрелы подъема</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script src="calculations.js"></script>
+    <script>
+        function initPage() {
+            loadSavedData();
+            setupEventListeners();
+            calculateMu();
+        }
+
+        function setupEventListeners() {
+            const inputs = ['roofAngle', 'spansCount', 'archRatio', 'spanLength'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', calculateMu);
+                    element.addEventListener('change', calculateMu);
+                }
+            });
+        }
+
+        function calculateMu() {
+            const angle = parseFloat(document.getElementById('roofAngle').value) || 25;
+            const spans = parseInt(document.getElementById('spansCount').value) || 3;
+            const ratio = parseFloat(document.getElementById('archRatio').value) || 0.1;
+            const span = parseFloat(document.getElementById('spanLength').value) || 24.0;
+            
+            const schemes = calculateMuForMultiSpanArched(angle, spans, ratio, span);
+            const maxMu = getMaxMuFromSchemes(schemes);
+            
+            document.getElementById('mu-result').textContent = maxMu.toFixed(2);
+            displaySchemes(schemes, angle, spans, ratio, span);
+        }
+
+        function displaySchemes(schemes, angle, spans, ratio, span) {
+            let html = '';
+            
+            Object.values(schemes).forEach(scheme => {
+                html += `<div class="mu-scheme">`;
+                html += `<h4>${scheme.name}</h4>`;
+                
+                if (scheme.zones) {
+                    // Визуализация зон
+                    html += '<div class="scheme-visualization">';
+                    Object.values(scheme.zones).forEach((zone, index) => {
+                        if (zone.mu > 0) {
+                            html += `
+                                <div class="scheme-zone">
+                                    <div class="zone-label">${zone.label}</div>
+                                    <div class="zone-value">${zone.mu.toFixed(2)}</div>
+                                    <div class="zone-label">μ</div>
+                                </div>
+                            `;
+                        }
+                    });
+                    html += '</div>';
+                    
+                    // Описание зон
+                    Object.values(scheme.zones).forEach(zone => {
+                        if (zone.mu > 0) {
+                            html += `<div class="protocol-description">${zone.description}</div>`;
+                        }
+                    });
+                }
+                
+                if (scheme.note) {
+                    html += `<div class="protocol-description warning-text">${scheme.note}</div>`;
+                }
+                
+                html += '</div>';
+            });
+            
+            document.getElementById('schemes-container').innerHTML = html;
+        }
+
+        function loadSavedData() {
+            const data = getCalculationData();
+            const params = ['roofAngle', 'spansCount', 'archRatio', 'spanLength'];
+            params.forEach(param => {
+                if (data[param] !== undefined) {
+                    const element = document.getElementById(param);
+                    if (element) element.value = data[param];
+                }
+            });
+            calculateMu();
+        }
+
+        function saveMultiSpanArchedMu() {
+            const angle = parseFloat(document.getElementById('roofAngle').value) || 25;
+            const spans = parseInt(document.getElementById('spansCount').value) || 3;
+            const ratio = parseFloat(document.getElementById('archRatio').value) || 0.1;
+            const span = parseFloat(document.getElementById('spanLength').value) || 24.0;
+            const mu = parseFloat(document.getElementById('mu-result').textContent);
+            
+            const saveData = {
+                mu: mu,
+                muMethod: 'auto',
+                roofType: 'multi_span_arched',
+                roofAngle: angle,
+                spansCount: spans,
+                archRatio: ratio,
+                spanLength: span
+            };
+            
+            updateCalculationData(saveData);
+            showNotification('Коэффициент μ для многопролетных сводчатых покрытий сохранен!', 'success');
+            setTimeout(() => goToStep('result.html'), 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

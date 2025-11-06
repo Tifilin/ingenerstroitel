@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Купольные покрытия - Коэффициент μ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏟️ Купольные покрытия - Коэффициент μ</h1>
+            <p class="subtitle">Б.11 СП 20.13330.2016 с Изменением №5</p>
+        </div>
+
+        <div class="content-card">
+            <div class="scheme-image">
+                <img src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/7_Пространственная.png" 
+                     alt="Схема купольных покрытий" style="max-width: 100%; height: auto;">
+                <p class="image-caption">Рис. Б.6 - Купольные круговые покрытия</p>
+            </div>
+
+            <div class="input-section">
+                <div class="param-group">
+                    <label>Диаметр купола D (м):</label>
+                    <input type="number" id="domeDiameter" value="20.0" step="0.1" min="5" max="100">
+                </div>
+
+                <div class="param-group">
+                    <label>Высота купола H (м):</label>
+                    <input type="number" id="domeHeight" value="5.0" step="0.1" min="1" max="30">
+                </div>
+
+                <div class="param-group">
+                    <label>Отношение H/D:</label>
+                    <input type="number" id="domeRatio" value="0.25" step="0.01" min="0.05" max="0.5" readonly>
+                    <p class="note">Рассчитывается автоматически</p>
+                </div>
+
+                <div class="param-group">
+                    <label>Тип купола:</label>
+                    <select id="domeType">
+                        <option value="spherical">Сферический</option>
+                        <option value="elliptical">Эллиптический</option>
+                        <option value="other">Другая форма</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="calculation-result">
+                <div class="result-header">
+                    <h3>📊 Результат расчета</h3>
+                </div>
+                
+                <div class="final-result">
+                    <strong>Коэффициент μ = <span id="mu-result">1.00</span></strong>
+                </div>
+                
+                <div id="calculation-details">
+                    <div class="protocol-step">
+                        <div class="protocol-description"><strong>Обоснование:</strong> Б.11 СП 20.13330.2016</div>
+                        <div class="protocol-description"><strong>Тип покрытия:</strong> Купольное круговое</div>
+                        <div class="protocol-formula">
+                            Коэффициент μ зависит от отношения H/D<br>
+                            При H/D ≤ 0,1: μ = 1,0<br>
+                            При 0,1 < H/D ≤ 0,2: линейная интерполяция<br>
+                            При H/D > 0,2: μ = 1,2
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" onclick="goToStep('mu.html')">← Назад к выбору типа</button>
+                <button class="btn-primary" onclick="saveDomeCircularMu()">💾 Использовать это значение</button>
+            </div>
+        </div>
+
+        <div class="reference-section">
+            <h3>📚 Нормативные ссылки</h3>
+            <ul>
+                <li>СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</li>
+                <li>Б.11 - Здания с купольными круговыми и близкими к ним по очертанию покрытиями</li>
+                <li>Особенности распределения снега на купольных поверхностях</li>
+                <li>Зависимость от геометрических параметров купола</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script src="calculations.js"></script>
+    <script>
+        function initPage() {
+            loadSavedData();
+            setupEventListeners();
+            calculateMu();
+        }
+
+        function setupEventListeners() {
+            const inputs = ['domeDiameter', 'domeHeight', 'domeType'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', calculateMu);
+                    element.addEventListener('change', calculateMu);
+                }
+            });
+        }
+
+        function calculateMu() {
+            const D = parseFloat(document.getElementById('domeDiameter').value) || 20.0;
+            const H = parseFloat(document.getElementById('domeHeight').value) || 5.0;
+            const domeType = document.getElementById('domeType').value;
+            
+            // Расчет отношения H/D
+            const ratio = H / D;
+            document.getElementById('domeRatio').value = ratio.toFixed(2);
+            
+            const mu = calculateMuForDomeCircular(D, H);
+            
+            document.getElementById('mu-result').textContent = mu.toFixed(2);
+            
+            let calculationText = '';
+            if (ratio <= 0.1) {
+                calculationText = `H/D = ${ratio.toFixed(2)} ≤ 0,1: μ = 1,0`;
+            } else if (ratio <= 0.2) {
+                calculationText = `H/D = ${ratio.toFixed(2)}: μ = ${mu.toFixed(2)} (линейная интерполяция)`;
+            } else {
+                calculationText = `H/D = ${ratio.toFixed(2)} > 0,2: μ = 1,2`;
+            }
+            
+            document.getElementById('calculation-details').innerHTML = `
+                <div class="protocol-step">
+                    <div class="protocol-description"><strong>Обоснование:</strong> Б.11 СП 20.13330.2016</div>
+                    <div class="protocol-description"><strong>Тип покрытия:</strong> Купольное круговое</div>
+                    <div class="protocol-description"><strong>Тип купола:</strong> ${getDomeTypeName(domeType)}</div>
+                    <div class="protocol-description"><strong>Отношение H/D:</strong> ${H.toFixed(1)} / ${D.toFixed(1)} = ${ratio.toFixed(2)}</div>
+                    <div class="protocol-formula">${calculationText}</div>
+                </div>
+            `;
+        }
+
+        function getDomeTypeName(type) {
+            const names = {
+                'spherical': 'Сферический',
+                'elliptical': 'Эллиптический', 
+                'other': 'Другая форма'
+            };
+            return names[type] || type;
+        }
+
+        function loadSavedData() {
+            const data = getCalculationData();
+            const params = ['domeDiameter', 'domeHeight', 'domeType'];
+            params.forEach(param => {
+                if (data[param] !== undefined) {
+                    const element = document.getElementById(param);
+                    if (element) element.value = data[param];
+                }
+            });
+            calculateMu();
+        }
+
+        function saveDomeCircularMu() {
+            const D = parseFloat(document.getElementById('domeDiameter').value) || 20.0;
+            const H = parseFloat(document.getElementById('domeHeight').value) || 5.0;
+            const domeType = document.getElementById('domeType').value;
+            const mu = parseFloat(document.getElementById('mu-result').textContent);
+            
+            const saveData = {
+                mu: mu,
+                muMethod: 'auto',
+                roofType: 'dome_circular',
+                domeDiameter: D,
+                domeHeight: H,
+                domeType: domeType
+            };
+            
+            updateCalculationData(saveData);
+            showNotification('Коэффициент μ для купольных покрытий сохранен!', 'success');
+            setTimeout(() => goToStep('result.html'), 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

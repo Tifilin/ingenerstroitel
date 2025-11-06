@@ -1,5 +1,202 @@
-<html>
-  <body>
-    <a href="snow.html">Расчёт снеговой нагрузки</a>
-  </body>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор снеговой нагрузки - Главная</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏔️ Калькулятор снеговой нагрузки</h1>
+            <p class="subtitle">СП 20.13330.2016 с Изменением №5</p>
+        </div>
+        
+        <div class="disclaimer">
+            <strong>Внимание:</strong> Данный калькулятор предоставляет справочный расчёт в соответствии с нормами СП 20.13330.2016 (с Изменением №5). 
+            Для окончательного проектирования необходима проверка квалифицированным специалистом.
+        </div>
+
+        <!-- Выбор типа расчета -->
+        <div class="calculation-types-section">
+            <h2>🎯 Выберите тип расчета</h2>
+            
+            <div class="calculation-types-grid">
+                <div class="calculation-type-card" onclick="startCalculation('main')">
+                    <div class="type-icon">📊</div>
+                    <div class="type-content">
+                        <h3>Расчет снеговой нагрузки на покрытие</h3>
+                        <p>Определение нормативной и расчетной снеговой нагрузки на горизонтальную проекцию покрытия</p>
+                        <div class="type-features">
+                            <span>• Sg - вес снегового покрова</span>
+                            <span>• Ce - коэффициент воздействия ветра</span>
+                            <span>• Ct - термический коэффициент</span>
+                            <span>• μ - коэффициент перехода</span>
+                        </div>
+                        <div class="type-reference">п. 10.1-10.12 СП 20.13330.2016</div>
+                    </div>
+                </div>
+
+                <div class="calculation-type-card" onclick="startCalculation('horizontal')">
+                    <div class="type-icon">📐</div>
+                    <div class="type-content">
+                        <h3>Горизонтальная нагрузка от сползания снега</h3>
+                        <p>Расчет нагрузки на парапеты, ограждения и снегозадерживающие устройства</p>
+                        <div class="type-features">
+                            <span>• Учет уклона покрытия</span>
+                            <span>• Коэффициенты трения материалов</span>
+                            <span>• Длина зоны сползания</span>
+                            <span>• Формула 10.4</span>
+                        </div>
+                        <div class="type-reference">п. 10.13 СП 20.13330.2016</div>
+                    </div>
+                </div>
+
+                <div class="calculation-type-card" onclick="startCalculation('extreme')">
+                    <div class="type-icon">⚠️</div>
+                    <div class="type-content">
+                        <h3>Экстремальные значения снеговой нагрузки</h3>
+                        <p>Расчет для особых сочетаний нагрузок и экстремальных условий</p>
+                        <div class="type-features">
+                            <span>• СП 296.1325800.2017</span>
+                            <span>• Таблица А.1 приложения А</span>
+                            <span>• Особые сочетания нагрузок</span>
+                            <span>• Редкие метеорологические условия</span>
+                        </div>
+                        <div class="type-reference">п. 10.14 СП 20.13330.2016</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Быстрый предварительный просмотр -->
+        <div class="quick-preview" id="quick-preview" style="display: none;">
+            <h3>📊 Текущие значения коэффициентов</h3>
+            <div class="preview-values" id="preview-values"></div>
+        </div>
+
+        <!-- Блок с формулами -->
+        <div class="formulas-section">
+            <h2>📐 Основные формулы расчета</h2>
+            
+            <div class="formula-card">
+                <h3>Расчетная снеговая нагрузка</h3>
+                <div class="formula">
+                    S = γ<sub>f</sub> × S<sub>0</sub>
+                </div>
+                <div class="formula">
+                    S<sub>0</sub> = Sg × C<sub>e</sub> × C<sub>t</sub> × μ
+                </div>
+                <div class="formula-details">
+                    <p><strong>где:</strong></p>
+                    <ul>
+                        <li>S - расчетное значение снеговой нагрузки</li>
+                        <li>S₀ - нормативное значение снеговой нагрузки</li>
+                        <li>γ<sub>f</sub> = 1,4 - коэффициент надежности по снеговой нагрузке</li>
+                        <li>Sg - вес снегового покрова на 1 м² горизонтальной поверхности земли</li>
+                        <li>C<sub>e</sub> - коэффициент воздействия ветра</li>
+                        <li>C<sub>t</sub> - термический коэффициент</li>
+                        <li>μ - коэффициент перехода от веса снегового покрова земли к снеговой нагрузке на покрытие</li>
+                    </ul>
+                </div>
+                <p class="formula-reference">п. 10.1, 10.12 СП 20.13330.2016</p>
+            </div>
+
+            <div class="formula-card">
+                <h3>Горизонтальная нагрузка от сползания снега</h3>
+                <div class="formula">
+                    T = k<sub>x</sub> × S<sub>0</sub> × (sin α - ν × cos α) × L
+                </div>
+                <div class="formula-details">
+                    <p><strong>где:</strong></p>
+                    <ul>
+                        <li>T - горизонтальная нагрузка, кН/м</li>
+                        <li>k<sub>x</sub> = 0,9 - коэффициент, учитывающий таяние снега</li>
+                        <li>S₀ - нормативное значение снеговой нагрузки на покрытие</li>
+                        <li>α - уклон поверхности покрытия (не менее 12°)</li>
+                        <li>ν - коэффициент трения снега по материалу покрытия</li>
+                        <li>L - длина зоны сползания снега, м</li>
+                    </ul>
+                </div>
+                <p class="formula-reference">п. 10.13, формула 10.4 СП 20.13330.2016</p>
+            </div>
+        </div>
+
+        <!-- Блок с нормативными ссылками -->
+        <div class="references-section">
+            <h3>📚 Нормативные документы</h3>
+            <div class="references-grid">
+                <div class="reference-card">
+                    <h4>СП 20.13330.2016</h4>
+                    <p>"Нагрузки и воздействия" с Изменением №5</p>
+                    <a href="https://normativ.kontur.ru/document?moduleId=9&documentId=470938" target="_blank" class="ref-link">🔗 Открыть документ</a>
+                </div>
+                <div class="reference-card">
+                    <h4>СП 131.13330.2020</h4>
+                    <p>"Строительная климатология"</p>
+                    <a href="https://docs.cntd.ru/document/573500552" target="_blank" class="ref-link">🔗 Открыть документ</a>
+                </div>
+                <div class="reference-card">
+                    <h4>СП 296.1325800.2017</h4>
+                    <p>"Экстремальные снеговые нагрузки"</p>
+                    <a href="https://docs.cntd.ru/document/1200157535" target="_blank" class="ref-link">🔗 Открыть документ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script>
+        function startCalculation(type) {
+            // Очищаем предыдущие данные при новом расчете
+            clearCalculationData();
+            
+            switch(type) {
+                case 'main':
+                    window.location.href = 'sg.html';
+                    break;
+                case 'horizontal':
+                    window.location.href = 'horizontal-load.html';
+                    break;
+                case 'extreme':
+                    window.location.href = 'extreme-load.html';
+                    break;
+                default:
+                    window.location.href = 'sg.html';
+            }
+        }
+
+        function updateQuickPreview() {
+            const data = getCalculationData();
+            const preview = document.getElementById('quick-preview');
+            const values = document.getElementById('preview-values');
+            
+            if (data.sg || data.ce || data.ct || data.mu) {
+                let html = '';
+                if (data.sg) html += `<div class="preview-item"><span>Sg:</span> ${data.sg} кПа</div>`;
+                if (data.ce) html += `<div class="preview-item"><span>Ce:</span> ${data.ce}</div>`;
+                if (data.ct) html += `<div class="preview-item"><span>Ct:</span> ${data.ct}</div>`;
+                if (data.mu) html += `<div class="preview-item"><span>μ:</span> ${data.mu}</div>`;
+                
+                values.innerHTML = html;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            updateQuickPreview();
+            
+            // Обновляем preview при возврате на главную страницу
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'snowCalculationData') {
+                    updateQuickPreview();
+                }
+            });
+        });
+    </script>
+</body>
 </html>

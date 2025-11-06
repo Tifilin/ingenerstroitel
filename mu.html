@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расчет μ - Коэффициент перехода</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Шаг 4: Коэффициент перехода μ</h1>
+            <p class="subtitle">п. 10.4, Приложение Б СП 20.13330.2016</p>
+        </div>
+
+        <div class="content-card">
+            <div class="method-selector">
+                <label class="method-option">
+                    <input type="radio" name="muMethod" value="manual">
+                    <span class="radio-label">✏️ Ввести значение вручную</span>
+                </label>
+                <label class="method-option">
+                    <input type="radio" name="muMethod" value="auto" checked>
+                    <span class="radio-label">📖 Рассчитать по СП</span>
+                </label>
+            </div>
+
+            <div id="manual-input" class="input-section" style="display: none;">
+                <label>Коэффициент перехода μ:</label>
+                <input type="number" id="muManual" value="1.0" step="0.01" min="0" max="4">
+                <p class="note">Значения от 0 до 4 согласно схемам Приложения Б</p>
+                
+                <div class="actions">
+                    <button class="btn-primary" onclick="saveManualMu()">💾 Сохранить и продолжить</button>
+                </div>
+            </div>
+
+            <div id="auto-input" class="input-section">
+                <h3>🎯 Выберите тип покрытия для детального расчета</h3>
+                
+                <!-- Б.1 Здания с односкатными и двускатными покрытиями -->
+                <div class="appendix-section">
+                    <h4>Б.1 Здания с односкатными и двускатными покрытиями</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-single-slope.html')">
+                            <div class="type-icon">📐</div>
+                            <div class="type-content">
+                                <h4>Односкатные покрытия</h4>
+                                <p>Расчет по схеме 3 Приложения Б.1</p>
+                                <div class="type-reference">Б.1 - Односкатные</div>
+                            </div>
+                        </div>
+
+                        <div class="roof-type-card" onclick="goToStep('mu-pitched.html')">
+                            <div class="type-icon">🏠</div>
+                            <div class="type-content">
+                                <h4>Двускатные покрытия</h4>
+                                <p>Расчет по схемам 1, 2, 3 Приложения Б.1</p>
+                                <div class="type-reference">Б.1 - Двускатные</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.2 Здания со сводчатыми и близкими к ним по очертанию покрытиями -->
+                <div class="appendix-section">
+                    <h4>Б.2 Здания со сводчатыми и близкими к ним по очертанию покрытиями</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-arched.html')">
+                            <div class="type-icon">🏛️</div>
+                            <div class="type-content">
+                                <h4>Сводчатые покрытия</h4>
+                                <p>Расчет по Приложению Б.2</p>
+                                <div class="type-reference">Б.2 - Сводчатые</div>
+                            </div>
+                        </div>
+
+                        <div class="roof-type-card" onclick="goToStep('mu-lancet-arches.html')">
+                            <div class="type-icon">⛪</div>
+                            <div class="type-content">
+                                <h4>Стрельчатые арки</h4>
+                                <p>Расчет для покрытий в виде стрельчатых арок</p>
+                                <div class="type-reference">Б.2 - Стрельчатые арки</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.3 Здания с продольными фонарями -->
+                <div class="appendix-section">
+                    <h4>Б.3 Здания с продольными фонарями</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-longitudinal-lanterns-closed.html')">
+                            <div class="type-icon">🏭</div>
+                            <div class="type-content">
+                                <h4>Фонари закрытые сверху</h4>
+                                <p>Продольные фонари, закрытые сверху</p>
+                                <div class="type-reference">Б.3 - Закрытые фонари</div>
+                            </div>
+                        </div>
+
+                        <div class="roof-type-card" onclick="goToStep('mu-longitudinal-lanterns-open.html')">
+                            <div class="type-icon">🏗️</div>
+                            <div class="type-content">
+                                <h4>Фонари открытые сверху</h4>
+                                <p>Продольные фонари, открытые сверху</p>
+                                <div class="type-reference">Б.3 - Открытые фонари</div>
+                            </div>
+                        </div>
+
+                        <div class="roof-type-card" onclick="goToStep('mu-skylights.html')">
+                            <div class="type-icon">🔍</div>
+                            <div class="type-content">
+                                <h4>Зенитные фонари</h4>
+                                <p>Расчет для зенитных фонарей</p>
+                                <div class="type-reference">Б.3 - Зенитные фонари</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.4 Шедовые покрытия -->
+                <div class="appendix-section">
+                    <h4>Б.4 Шедовые покрытия</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-shed.html')">
+                            <div class="type-icon">🏢</div>
+                            <div class="type-content">
+                                <h4>Шедовые покрытия</h4>
+                                <p>Расчет по Приложению Б.4</p>
+                                <div class="type-reference">Б.4 - Шедовые</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.5 Двух- и многопролетные здания с двускатными покрытиями -->
+                <div class="appendix-section">
+                    <h4>Б.5 Двух- и многопролетные здания с двускатными покрытиями</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-multi-span-pitched.html')">
+                            <div class="type-icon">📊</div>
+                            <div class="type-content">
+                                <h4>Многопролетные двускатные</h4>
+                                <p>Двух- и многопролетные здания с двускатными покрытиями</p>
+                                <div class="type-reference">Б.5 - Многопролетные двускатные</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.6 Двух- и многопролетные здания со сводчатыми покрытиями -->
+                <div class="appendix-section">
+                    <h4>Б.6 Двух- и многопролетные здания со сводчатыми покрытиями</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-multi-span-arched.html')">
+                            <div class="type-icon">🏛️</div>
+                            <div class="type-content">
+                                <h4>Многопролетные сводчатые</h4>
+                                <p>Двух- и многопролетные здания со сводчатыми покрытиями</p>
+                                <div class="type-reference">Б.6 - Многопролетные сводчатые</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.7 Многопролетные здания с фонарями -->
+                <div class="appendix-section">
+                    <h4>Б.7 Двух- и многопролетные здания с фонарями</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-multi-span-lantern.html')">
+                            <div class="type-icon">🏭</div>
+                            <div class="type-content">
+                                <h4>Многопролетные с фонарями</h4>
+                                <p>Многопролетные здания с двускатными и сводчатыми покрытиями с продольным фонарем</p>
+                                <div class="type-reference">Б.7 - С фонарями</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.8 Здания с перепадом высоты -->
+                <div class="appendix-section">
+                    <h4>Б.8 Здания с перепадом высоты</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-height-difference.html')">
+                            <div class="type-icon">📈</div>
+                            <div class="type-content">
+                                <h4>Перепад высоты</h4>
+                                <p>Здания с перепадом высоты</p>
+                                <div class="type-reference">Б.8 - Перепад высоты</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.9 Здания с двумя перепадами высоты -->
+                <div class="appendix-section">
+                    <h4>Б.9 Здания с двумя перепадами высоты</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-double-height-difference.html')">
+                            <div class="type-icon">📊</div>
+                            <div class="type-content">
+                                <h4>Два перепада высоты</h4>
+                                <p>Здания с двумя перепадами высоты</p>
+                                <div class="type-reference">Б.9 - Два перепада</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.10 Висячие покрытия цилиндрической формы -->
+                <div class="appendix-section">
+                    <h4>Б.10 Висячие покрытия цилиндрической формы</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-cylindrical-hanging.html')">
+                            <div class="type-icon">🔄</div>
+                            <div class="type-content">
+                                <h4>Висячие покрытия</h4>
+                                <p>Висячие покрытия цилиндрической формы</p>
+                                <div class="type-reference">Б.10 - Висячие</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.11 Купольные покрытия -->
+                <div class="appendix-section">
+                    <h4>Б.11 Здания с купольными круговыми покрытиями</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-dome-circular.html')">
+                            <div class="type-icon">🏟️</div>
+                            <div class="type-content">
+                                <h4>Купольные покрытия</h4>
+                                <p>Купольные круговые и близкие к ним по очертанию покрытия</p>
+                                <div class="type-reference">Б.11 - Купольные</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.12 Конические покрытия -->
+                <div class="appendix-section">
+                    <h4>Б.12 Здания с коническими круговыми покрытиями</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-conical-circular.html')">
+                            <div class="type-icon">🔺</div>
+                            <div class="type-content">
+                                <h4>Конические покрытия</h4>
+                                <p>Конические круговые покрытия и покрытия в виде сочетания сферической и конической поверхностей</p>
+                                <div class="type-reference">Б.12 - Конические</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.13 Парапеты -->
+                <div class="appendix-section">
+                    <h4>Б.13 Покрытие с парапетами</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-parapets.html')">
+                            <div class="type-icon">🧱</div>
+                            <div class="type-content">
+                                <h4>Парапеты</h4>
+                                <p>Покрытие с парапетами</p>
+                                <div class="type-reference">Б.13 - Парапеты</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Б.14 Надстройки -->
+                <div class="appendix-section">
+                    <h4>Б.14 Участки покрытий с надстройками</h4>
+                    <div class="roof-types-grid">
+                        <div class="roof-type-card" onclick="goToStep('mu-ventilation-shafts.html')">
+                            <div class="type-icon">🏗️</div>
+                            <div class="type-content">
+                                <h4>Надстройки</h4>
+                                <p>Участки покрытий, примыкающие к возвышающимся над кровлей вентиляционным шахтам и другим надстройкам</p>
+                                <div class="type-reference">Б.14 - Надстройки</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-preview">
+                    <h3>📊 Текущее значение μ</h3>
+                    <div class="preview-value">
+                        <span>Коэффициент μ:</span>
+                        <strong id="current-mu-preview">1.00</strong>
+                    </div>
+                    <p class="note">Значение будет использоваться в расчете снеговой нагрузки</p>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" onclick="goToStep('ct.html')">← Назад к Ct</button>
+                <button class="btn-primary" onclick="goToStep('result.html')" id="continueButton">Продолжить с текущим μ →</button>
+            </div>
+        </div>
+
+        <!-- Справка по нормативным документам -->
+        <div class="reference-section">
+            <h3>📚 Нормативные ссылки</h3>
+            <ul>
+                <li>СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</li>
+                <li>п. 10.4 - Коэффициент перехода μ</li>
+                <li>Приложение Б - Схемы снеговых нагрузок</li>
+                <li>Б.1 - Плоские, односкатные и двускатные покрытия</li>
+                <li>Б.2 - Сводчатые покрытия и стрельчатые арки</li>
+                <li>Б.3 - Здания с продольными фонарями</li>
+                <li>Б.4 - Шедовые покрытия</li>
+                <li>Б.5 - Многопролетные здания с двускатными покрытиями</li>
+                <li>Б.6 - Многопролетные здания со сводчатыми покрытиями</li>
+                <li>Б.7 - Многопролетные здания с фонарями</li>
+                <li>Б.8-Б.14 - Специальные типы покрытий</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script>
+        function initPage() {
+            loadSavedData();
+            setupEventListeners();
+            updatePreview();
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('input[name="muMethod"]').forEach(radio => {
+                radio.addEventListener('change', toggleMethod);
+            });
+            
+            document.getElementById('muManual').addEventListener('input', updatePreview);
+        }
+
+        function toggleMethod() {
+            const method = document.querySelector('input[name="muMethod"]:checked').value;
+            document.getElementById('manual-input').style.display = method === 'manual' ? 'block' : 'none';
+            document.getElementById('auto-input').style.display = method === 'auto' ? 'block' : 'none';
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const method = document.querySelector('input[name="muMethod"]:checked').value;
+            let muValue;
+            
+            if (method === 'manual') {
+                muValue = parseFloat(document.getElementById('muManual').value) || 1.0;
+            } else {
+                const data = getCalculationData();
+                muValue = data.mu || 1.0;
+            }
+            
+            document.getElementById('current-mu-preview').textContent = muValue.toFixed(2);
+        }
+
+        function loadSavedData() {
+            const data = getCalculationData();
+            
+            if (data.muMethod) {
+                document.querySelector(`input[name="muMethod"][value="${data.muMethod}"]`).checked = true;
+            }
+            
+            if (data.mu && data.muMethod === 'manual') {
+                document.getElementById('muManual').value = data.mu;
+            }
+            
+            toggleMethod();
+        }
+
+        function saveManualMu() {
+            const mu = parseFloat(document.getElementById('muManual').value) || 1.0;
+            
+            const saveData = {
+                mu: mu,
+                muMethod: 'manual'
+            };
+            
+            updateCalculationData(saveData);
+            showNotification('Коэффициент μ сохранен!', 'success');
+            setTimeout(() => goToStep('result.html'), 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

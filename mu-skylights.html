@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Зенитные фонари - Коэффициент μ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 Зенитные фонари - Коэффициент μ</h1>
+            <p class="subtitle">Б.3 СП 20.13330.2016 с Изменением №5</p>
+        </div>
+
+        <div class="content-card">
+            <div class="scheme-image">
+                <img src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/8_Фонарь.png" 
+                     alt="Схема зенитных фонарей" style="max-width: 100%; height: auto;">
+                <p class="image-caption">Рис. Б.4 - Зенитные фонари</p>
+            </div>
+
+            <div class="input-section">
+                <div class="param-group">
+                    <label>Угол наклона покрытия α (°):</label>
+                    <input type="number" id="roofAngle" value="15" min="0" max="90" step="1">
+                </div>
+
+                <div class="param-group">
+                    <label>Высота фонаря h (м):</label>
+                    <input type="number" id="lanternHeight" value="0.8" step="0.1" min="0.3" max="3">
+                </div>
+
+                <div class="param-group">
+                    <label>Размер фонаря a (м):</label>
+                    <input type="number" id="lanternSize" value="1.5" step="0.1" min="0.5" max="5">
+                </div>
+
+                <div class="param-group">
+                    <label>Расстояние между фонарями (м):</label>
+                    <input type="number" id="lanternSpacing" value="6.0" step="0.1" min="2" max="20">
+                </div>
+            </div>
+
+            <div class="calculation-result">
+                <div class="result-header">
+                    <h3>📊 Результат расчета</h3>
+                </div>
+                
+                <div class="final-result">
+                    <strong>Коэффициент μ = <span id="mu-result">1.40</span></strong>
+                </div>
+                
+                <div id="calculation-details">
+                    <div class="protocol-step">
+                        <div class="protocol-description"><strong>Обоснование:</strong> Б.3 СП 20.13330.2016</div>
+                        <div class="protocol-description"><strong>Тип фонарей:</strong> Зенитные фонари</div>
+                        <div class="protocol-formula">
+                            Для зенитных фонарей учитывается образование снеговых мешков<br>
+                            Коэффициент μ зависит от отношения h/a
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" onclick="goToStep('mu.html')">← Назад к выбору типа</button>
+                <button class="btn-primary" onclick="saveSkylightsMu()">💾 Использовать это значение</button>
+            </div>
+        </div>
+
+        <div class="reference-section">
+            <h3>📚 Нормативные ссылки</h3>
+            <ul>
+                <li>СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</li>
+                <li>Б.3 - Здания с продольными фонарями</li>
+                <li>Расчет для зенитных фонарей</li>
+                <li>Учет местных снеговых нагрузок вокруг фонарей</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script src="calculations.js"></script>
+    <script>
+        function initPage() {
+            loadSavedData();
+            setupEventListeners();
+            calculateMu();
+        }
+
+        function setupEventListeners() {
+            const inputs = ['roofAngle', 'lanternHeight', 'lanternSize', 'lanternSpacing'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', calculateMu);
+                document.getElementById(id).addEventListener('change', calculateMu);
+            });
+        }
+
+        function calculateMu() {
+            const angle = parseFloat(document.getElementById('roofAngle').value) || 15;
+            const h = parseFloat(document.getElementById('lanternHeight').value) || 0.8;
+            const a = parseFloat(document.getElementById('lanternSize').value) || 1.5;
+            const spacing = parseFloat(document.getElementById('lanternSpacing').value) || 6.0;
+            
+            const mu = calculateMuForSkylights(angle, h, a, spacing);
+            
+            document.getElementById('mu-result').textContent = mu.toFixed(2);
+            
+            const ratio = h / a;
+            let calculationText = '';
+            
+            if (ratio <= 0.5) {
+                calculationText = `h/a = ${ratio.toFixed(2)} ≤ 0.5: μ = 1.4`;
+            } else if (ratio <= 1.0) {
+                calculationText = `h/a = ${ratio.toFixed(2)}: μ = ${mu.toFixed(2)} (линейная интерполяция)`;
+            } else {
+                calculationText = `h/a = ${ratio.toFixed(2)} > 1.0: μ = 2.0`;
+            }
+            
+            document.getElementById('calculation-details').innerHTML = `
+                <div class="protocol-step">
+                    <div class="protocol-description"><strong>Обоснование:</strong> Б.3 СП 20.13330.2016</div>
+                    <div class="protocol-description"><strong>Тип фонарей:</strong> Зенитные фонари</div>
+                    <div class="protocol-description"><strong>Отношение h/a:</strong> ${h.toFixed(1)} / ${a.toFixed(1)} = ${ratio.toFixed(2)}</div>
+                    <div class="protocol-formula">${calculationText}</div>
+                </div>
+            `;
+        }
+
+        function loadSavedData() {
+            const data = getCalculationData();
+            const params = ['roofAngle', 'lanternHeight', 'lanternSize', 'lanternSpacing'];
+            params.forEach(param => {
+                if (data[param] !== undefined) {
+                    document.getElementById(param).value = data[param];
+                }
+            });
+            calculateMu();
+        }
+
+        function saveSkylightsMu() {
+            const angle = parseFloat(document.getElementById('roofAngle').value) || 15;
+            const h = parseFloat(document.getElementById('lanternHeight').value) || 0.8;
+            const a = parseFloat(document.getElementById('lanternSize').value) || 1.5;
+            const spacing = parseFloat(document.getElementById('lanternSpacing').value) || 6.0;
+            const mu = parseFloat(document.getElementById('mu-result').textContent);
+            
+            const saveData = {
+                mu: mu,
+                muMethod: 'auto',
+                roofType: 'skylights',
+                roofAngle: angle,
+                lanternHeight: h,
+                lanternSize: a,
+                lanternSpacing: spacing
+            };
+            
+            updateCalculationData(saveData);
+            showNotification('Коэффициент μ для зенитных фонарей сохранен!', 'success');
+            setTimeout(() => goToStep('result.html'), 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

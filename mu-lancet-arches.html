@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Стрельчатые арки - Коэффициент μ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⛪ Стрельчатые арки - Коэффициент μ</h1>
+            <p class="subtitle">Б.2 СП 20.13330.2016 с Изменением №5</p>
+        </div>
+
+        <div class="content-card">
+            <div class="scheme-image">
+                <img src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/3_Сводчатая.png" 
+                     alt="Схема стрельчатой арки" style="max-width: 100%; height: auto;">
+                <p class="image-caption">Рис. Б.3 - Стрельчатые арки</p>
+            </div>
+
+            <div class="info-section">
+                <div class="info-icon">ℹ️</div>
+                <div class="info-content">
+                    <h3>Особенности расчета</h3>
+                    <p>Для покрытий в виде стрельчатых арок при β ≥ 15° используется схема Б.1, при β < 15° - схема Б.2.</p>
+                    <p>В данном калькуляторе применяется упрощенный подход с использованием угла β.</p>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <div class="param-group">
+                    <label>Угол β между горизонталью и прямой, соединяющей конек и край покрытия (°):</label>
+                    <input type="number" id="betaAngle" value="20" min="0" max="90" step="1">
+                    <p class="note">Определяет выбор схемы расчета (Б.1 или Б.2)</p>
+                </div>
+            </div>
+
+            <div class="calculation-result">
+                <div class="result-header">
+                    <h3>📊 Результат расчета</h3>
+                </div>
+                
+                <div class="final-result">
+                    <strong>Коэффициент μ = <span id="mu-result">1.00</span></strong>
+                </div>
+                
+                <div id="calculation-details">
+                    <div class="protocol-step">
+                        <div class="protocol-description"><strong>Обоснование:</strong> Б.2 СП 20.13330.2016</div>
+                        <div class="protocol-description"><strong>Тип покрытия:</strong> Стрельчатые арки</div>
+                        <div class="protocol-formula">
+                            При β ≥ 15°: используется схема Б.1<br>
+                            При β < 15°: используется схема Б.2
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" onclick="goToStep('mu.html')">← Назад к выбору типа</button>
+                <button class="btn-primary" onclick="saveLancetMu()">💾 Использовать это значение</button>
+            </div>
+        </div>
+
+        <div class="reference-section">
+            <h3>📚 Нормативные ссылки</h3>
+            <ul>
+                <li>СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</li>
+                <li>Б.2 - Сводчатые покрытия и стрельчатые арки</li>
+                <li>Для β ≥ 15° используется схема Б.1 (двускатные покрытия)</li>
+                <li>Для β < 15° используется схема Б.2 (сводчатые покрытия)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script src="calculations.js"></script>
+    <script>
+        function initPage() {
+            loadSavedData();
+            setupEventListeners();
+            calculateMu();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('betaAngle').addEventListener('input', calculateMu);
+            document.getElementById('betaAngle').addEventListener('change', calculateMu);
+        }
+
+        function calculateMu() {
+            const beta = parseFloat(document.getElementById('betaAngle').value) || 20;
+            let mu, calculationText, schemeUsed;
+
+            if (beta >= 15) {
+                // Используем схему Б.1 (двускатные)
+                if (beta <= 30) {
+                    mu = 1.0;
+                    calculationText = `β = ${beta}° ≥ 15°, используется схема Б.1 (двускатные покрытия). При β ≤ 30° μ = 1,0`;
+                } else if (beta < 60) {
+                    mu = (60 - beta) / 30;
+                    calculationText = `β = ${beta}° ≥ 15°, используется схема Б.1 (двускатные покрытия). При 30° < β < 60° μ = (60 - ${beta})/30 = ${mu.toFixed(2)}`;
+                } else {
+                    mu = 0;
+                    calculationText = `β = ${beta}° ≥ 15°, используется схема Б.1 (двускатные покрытия). При β ≥ 60° μ = 0`;
+                }
+                schemeUsed = "Б.1 (двускатные покрытия)";
+            } else {
+                // Используем схему Б.2 (сводчатые)
+                if (beta <= 30) {
+                    mu = 1.0;
+                    calculationText = `β = ${beta}° < 15°, используется схема Б.2 (сводчатые покрытия). При β ≤ 30° μ = 1,0`;
+                } else if (beta < 60) {
+                    mu = (60 - beta) / 30;
+                    calculationText = `β = ${beta}° < 15°, используется схема Б.2 (сводчатые покрытия). При 30° < β < 60° μ = (60 - ${beta})/30 = ${mu.toFixed(2)}`;
+                } else {
+                    mu = 0;
+                    calculationText = `β = ${beta}° < 15°, используется схема Б.2 (сводчатые покрытия). При β ≥ 60° μ = 0`;
+                }
+                schemeUsed = "Б.2 (сводчатые покрытия)";
+            }
+
+            document.getElementById('mu-result').textContent = mu.toFixed(2);
+            
+            document.getElementById('calculation-details').innerHTML = `
+                <div class="protocol-step">
+                    <div class="protocol-description"><strong>Обоснование:</strong> Б.2 СП 20.13330.2016</div>
+                    <div class="protocol-description"><strong>Использованная схема:</strong> ${schemeUsed}</div>
+                    <div class="protocol-formula">${calculationText}</div>
+                </div>
+            `;
+        }
+
+        function loadSavedData() {
+            const data = getCalculationData();
+            if (data.betaAngle) {
+                document.getElementById('betaAngle').value = data.betaAngle;
+            }
+            calculateMu();
+        }
+
+        function saveLancetMu() {
+            const beta = parseFloat(document.getElementById('betaAngle').value) || 20;
+            const mu = parseFloat(document.getElementById('mu-result').textContent);
+            
+            const saveData = {
+                mu: mu,
+                muMethod: 'auto',
+                roofType: 'lancet_arches',
+                betaAngle: beta
+            };
+            
+            updateCalculationData(saveData);
+            showNotification('Коэффициент μ для стрельчатых арок сохранен!', 'success');
+            setTimeout(() => goToStep('result.html'), 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

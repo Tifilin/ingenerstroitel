@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сводчатые покрытия - Коэффициент μ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏛️ Сводчатые покрытия - Коэффициент μ</h1>
+            <p class="subtitle">Б.2 СП 20.13330.2016 с Изменением №5</p>
+        </div>
+
+        <div class="content-card">
+            <div class="scheme-image">
+                <img src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/3_Сводчатая.png" 
+                     alt="Схема сводчатого покрытия" style="max-width: 100%; height: auto;">
+                <p class="image-caption">Рис. Б.2 - Сводчатые покрытия</p>
+            </div>
+
+            <div class="warning-section">
+                <div class="warning-icon">⚠️</div>
+                <div class="warning-content">
+                    <h3>Сложный расчет</h3>
+                    <p>Расчет коэффициента μ для сводчатых покрытий требует определения значений в каждой точке покрытия и линейной интерполяции.</p>
+                    <p>В данном калькуляторе используется упрощенный подход по аналогии с односкатными покрытиями.</p>
+                </div>
+            </div>
+
+            <div class="input-section">
+                <div class="param-group">
+                    <label>Угол наклона в коньке α (°):</label>
+                    <input type="number" id="roofAngle" value="30" min="0" max="90" step="1">
+                    <p class="note">Угол в наиболее высокой точке свода</p>
+                </div>
+
+                <div class="param-group">
+                    <label>Отношение f/l (стрела подъема к пролету):</label>
+                    <input type="number" id="archRatio" value="0.1" step="0.01" min="0.05" max="0.5">
+                    <p class="note">Отношение высоты подъема свода к пролету</p>
+                </div>
+
+                <div class="param-group">
+                    <label>Пролет покрытия l (м):</label>
+                    <input type="number" id="archSpan" value="24" min="1" step="1">
+                </div>
+            </div>
+
+            <div class="calculation-result">
+                <div class="result-header">
+                    <h3>📊 Результат расчета</h3>
+                </div>
+                
+                <div class="final-result">
+                    <strong>Коэффициент μ = <span id="mu-result">1.00</span></strong>
+                </div>
+                
+                <div id="calculation-details">
+                    <div class="protocol-step">
+                        <div class="protocol-description"><strong>Обоснование:</strong> Б.2 СП 20.13330.2016</div>
+                        <div class="protocol-description"><strong>Метод:</strong> Упрощенный расчет по аналогии с односкатными покрытиями</div>
+                        <div class="protocol-formula">
+                            При α ≤ 30°: μ = 1,0<br>
+                            При α ≥ 60°: μ = 0<br>
+                            При 30° < α < 60°: линейная интерполяция
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" onclick="goToStep('mu.html')">← Назад к выбору типа</button>
+                <button class="btn-primary" onclick="saveArchedMu()">💾 Использовать это значение</button>
+            </div>
+        </div>
+
+        <div class="reference-section">
+            <h3>📚 Нормативные ссылки</h3>
+            <ul>
+                <li>СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</li>
+                <li>Б.2 - Сводчатые покрытия</li>
+                <li>Рис. Б.2 - Схемы распределения снеговой нагрузки</li>
+                <li>Требуется расчет в каждой точке покрытия с линейной интерполяцией</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script src="calculations.js"></script>
+    <script>
+        function initPage() {
+            loadSavedData();
+            setupEventListeners();
+            calculateMu();
+        }
+
+        function setupEventListeners() {
+            const inputs = ['roofAngle', 'archRatio', 'archSpan'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', calculateMu);
+                document.getElementById(id).addEventListener('change', calculateMu);
+            });
+        }
+
+        function calculateMu() {
+            const angle = parseFloat(document.getElementById('roofAngle').value) || 30;
+            const archRatio = parseFloat(document.getElementById('archRatio').value) || 0.1;
+            
+            const mu = calculateMuForArched(angle, archRatio);
+            
+            document.getElementById('mu-result').textContent = mu.toFixed(2);
+            
+            let calculationText = '';
+            if (angle <= 30) {
+                calculationText = `При α = ${angle}° ≤ 30°: μ = 1,0`;
+            } else if (angle >= 60) {
+                calculationText = `При α = ${angle}° ≥ 60°: μ = 0`;
+            } else {
+                calculationText = `При α = ${angle}°: μ = (60 - ${angle})/30 = ${mu.toFixed(2)}`;
+            }
+            
+            document.getElementById('calculation-details').innerHTML = `
+                <div class="protocol-step">
+                    <div class="protocol-description"><strong>Обоснование:</strong> Б.2 СП 20.13330.2016</div>
+                    <div class="protocol-description"><strong>Метод:</strong> Упрощенный расчет</div>
+                    <div class="protocol-description"><strong>Отношение f/l:</strong> ${archRatio}</div>
+                    <div class="protocol-formula">${calculationText}</div>
+                    <div class="protocol-description warning-text">Внимание: Для точного расчета требуется определение μ в каждой точке покрытия с линейной интерполяцией</div>
+                </div>
+            `;
+        }
+
+        function calculateMuForArched(angle, archRatio = 0.1) {
+            // Упрощенный расчет по аналогии с односкатными покрытиями
+            if (angle <= 30) {
+                return 1.0;
+            } else if (angle < 60) {
+                return (60 - angle) / 30;
+            } else {
+                return 0;
+            }
+        }
+
+        function loadSavedData() {
+            const data = getCalculationData();
+            const params = ['roofAngle', 'archRatio', 'archSpan'];
+            params.forEach(param => {
+                if (data[param] !== undefined) {
+                    document.getElementById(param).value = data[param];
+                }
+            });
+            calculateMu();
+        }
+
+        function saveArchedMu() {
+            const angle = parseFloat(document.getElementById('roofAngle').value) || 30;
+            const archRatio = parseFloat(document.getElementById('archRatio').value) || 0.1;
+            const archSpan = parseFloat(document.getElementById('archSpan').value) || 24;
+            const mu = calculateMuForArched(angle, archRatio);
+            
+            const saveData = {
+                mu: mu,
+                muMethod: 'auto',
+                roofType: 'arched',
+                roofAngle: angle,
+                archRatio: archRatio,
+                archSpan: archSpan
+            };
+            
+            updateCalculationData(saveData);
+            showNotification('Коэффициент μ для сводчатого покрытия сохранен!', 'success');
+            setTimeout(() => goToStep('result.html'), 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

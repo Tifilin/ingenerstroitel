@@ -1,559 +1,870 @@
-/* Основные стили */
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1.6;
-    margin: 0;
-    padding: 20px;
-    background: #f5f7fa;
-    color: #333;
+/* Дополнительные стили для формул и ссылок */
+
+/* Секция формул */
+.formulas-section {
+    margin: 30px 0;
 }
 
-.feedback-link {
-    text-align: right;
-    margin-bottom: 15px;
-    font-size: 14px;
-}
-
-h1 {
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 24px;
-}
-
-.disclaimer {
-    background: #fff3cd;
-    border: 1px solid #ffeaa7;
-    border-radius: 6px;
-    padding: 12px;
-    margin-bottom: 25px;
-    font-size: 14px;
-}
-
-.steps-container {
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.step {
-    display: none;
+.formula-card {
     background: white;
     padding: 25px;
-    border-radius: 8px;
+    border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     margin-bottom: 20px;
+    border-left: 4px solid #3498db;
 }
 
-.step.active {
-    display: block;
-}
-
-.step h2 {
-    color: #2c3e50;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 10px;
+.formula-card h3 {
     margin-top: 0;
+    color: #2c3e50;
+    border-bottom: 1px solid #e9ecef;
+    padding-bottom: 10px;
 }
 
-.italic {
-    font-style: italic;
-    color: #666;
-    font-size: 14px;
-}
-
-.calculation-method {
-    margin: 15px 0;
-    padding: 15px;
+.formula {
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
     background: #f8f9fa;
-    border-radius: 6px;
-}
-
-.method-label {
-    display: block;
-    margin: 8px 0;
-    cursor: pointer;
-}
-
-.method-label input {
-    margin-right: 8px;
-}
-
-.manual-input, .sp-calculation {
-    margin: 15px 0;
     padding: 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+    text-align: center;
     border: 1px solid #e9ecef;
-    border-radius: 6px;
-    background: #f8f9fa;
 }
 
-.note {
-    font-size: 13px;
-    color: #666;
-    margin: 8px 0;
+.formula-table {
+    margin: 20px 0;
+    overflow-x: auto;
 }
 
-.parameter-group {
-    margin: 15px 0;
-    padding: 15px;
-    background: #e8f4fd;
-    border-radius: 6px;
-}
-
-/* Температура */
-.temperature-control {
-    margin: 15px 0;
-    padding: 15px;
-    background: #fff3cd;
-    border-radius: 6px;
-}
-
-.cold-region {
-    background: #d1ecf1;
-    color: #0c5460;
-    padding: 10px;
-    border-radius: 4px;
-    border-left: 4px solid #17a2b8;
-}
-
-.warm-region {
-    background: #f8d7da;
-    color: #721c24;
-    padding: 10px;
-    border-radius: 4px;
-    border-left: 4px solid #dc3545;
-}
-
-.unknown-region {
-    background: #fff3cd;
-    color: #856404;
-    padding: 10px;
-    border-radius: 4px;
-    border-left: 4px solid #ffc107;
-}
-
-.wind-info {
-    background: #e8f4fd;
-    padding: 10px;
-    border-radius: 4px;
+.formula-table table {
+    width: 100%;
+    border-collapse: collapse;
     margin: 10px 0;
 }
 
-/* Навигация */
-.step-navigation {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 25px;
-    padding-top: 15px;
-    border-top: 1px solid #e9ecef;
+.formula-table th,
+.formula-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
 }
 
-.btn-prev, .btn-next, .btn-calculate {
+.formula-table th {
+    background: #34495e;
+    color: white;
+    font-weight: 500;
+}
+
+.formula-table td {
+    background: white;
+}
+
+.formula-table tr:nth-child(even) td {
+    background: #f8f9fa;
+}
+
+.table-reference {
+    text-align: right;
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.formula-details {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+}
+
+.formula-details ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.formula-details li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.formula-reference {
+    text-align: right;
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+/* Секция нормативных ссылок */
+.references-section {
+    margin: 30px 0;
+}
+
+.references-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.reference-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-left: 4px solid #27ae60;
+}
+
+.reference-card h4 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.reference-card p {
+    margin: 10px 0;
+    color: #666;
+}
+
+.ref-link {
+    display: inline-block;
+    padding: 8px 15px;
     background: #3498db;
     color: white;
-    border: none;
-    padding: 10px 20px;
+    text-decoration: none;
     border-radius: 4px;
-    cursor: pointer;
     font-size: 14px;
-    transition: background 0.3s;
+    transition: background 0.3s ease;
 }
 
-.btn-prev:hover, .btn-next:hover, .btn-calculate:hover {
+.ref-link:hover {
     background: #2980b9;
 }
 
-.btn-calculate {
-    background: #27ae60;
-}
-
-.btn-calculate:hover {
-    background: #219a52;
-}
-
-/* Отчет */
-#report {
+/* Секция начала расчета */
+.start-calculation-section {
+    text-align: center;
+    margin: 40px 0;
+    padding: 30px;
     background: white;
-    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.btn-start-calculation {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn-start-calculation:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+}
+
+/* Быстрый предварительный просмотр */
+.quick-preview {
+    background: white;
+    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     margin-top: 20px;
 }
 
-.report-actions {
+.preview-values {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.preview-item {
     display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.btn-print, .btn-reset {
-    background: #6c757d;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-
-.btn-print:hover, .btn-reset:hover {
-    background: #5a6268;
-}
-
-/* Детали расчета */
-.calculation-details {
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 6px;
-    margin: 10px 0;
-    font-size: 14px;
-}
-
-.calculation-result {
-    background: #d4edda;
-    color: #155724;
+    justify-content: space-between;
     padding: 12px;
-    border-radius: 4px;
-    border-left: 4px solid #28a745;
-    font-weight: bold;
-}
-
-.dimension-error {
-    background: #f8d7da;
-    color: #721c24;
-    padding: 10px;
-    border-radius: 4px;
-    border-left: 4px solid #dc3545;
-    margin: 10px 0;
-}
-
-/* Типы местности */
-.terrain-type {
-    margin: 5px 0;
-    padding: 8px;
-    background: #f8f9fa;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-/* Алгоритм */
-.algorithm {
-    background: #e8f4fd;
-    padding: 15px;
-    border-radius: 6px;
-    margin: 10px 0;
-    font-size: 14px;
-    line-height: 1.8;
-}
-
-/* Схемы */
-.mu-scheme {
-    background: white;
-    border: 1px solid #dee2e6;
-    border-radius: 6px;
-    padding: 15px;
-    margin: 10px 0;
-}
-
-.mu-scheme h4 {
-    color: #2c3e50;
-    margin-top: 0;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 8px;
-}
-
-.mu-scheme-image {
-    text-align: center;
-    margin: 10px 0;
-}
-
-.mu-scheme-image img {
-    max-width: 200px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-/* Подробное объяснение */
-.detailed-explanation {
-    background: #e8f4fd;
-    padding: 15px;
-    border-radius: 6px;
-    margin: 15px 0;
-}
-
-.detailed-explanation p {
-    margin: 8px 0;
-}
-
-/* Дополнительные параметры */
-.additional-parameters {
-    background: #fff3cd;
-    padding: 15px;
-    border-radius: 6px;
-    margin: 15px 0;
-}
-
-/* Предварительный расчет */
-.preview-calculation {
-    background: #d4edda;
-    padding: 15px;
-    border-radius: 6px;
-    margin: 15px 0;
-}
-
-/* Отчет */
-.report-section {
-    margin: 20px 0;
-    padding: 15px;
     background: #f8f9fa;
     border-radius: 6px;
-}
-
-.report-section h3 {
-    color: #2c3e50;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 8px;
-    margin-top: 0;
-}
-
-.final-result {
-    background: #d4edda;
-    color: #155724;
-    padding: 20px;
-    border-radius: 6px;
-    border: 2px solid #28a745;
-    text-align: center;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 20px 0;
-}
-
-/* Протокол расчета */
-.protocol-step {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 6px;
-    padding: 12px;
-    margin: 8px 0;
     border-left: 4px solid #3498db;
 }
 
-.protocol-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
+.preview-item span {
+    font-weight: 500;
+    color: #2c3e50;
 }
 
-.protocol-reference {
-    background: #2c3e50;
+/* Изображения покрытий */
+.roof-image-container {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.image-caption {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+/* Справка по нормативным документам на страницах */
+.reference-section {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+}
+
+.reference-section h3 {
+    margin-top: 0;
+    color: #2c3e50;
+}
+
+.reference-section ul {
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.reference-section li {
+    margin-bottom: 8px;
+    color: #555;
+    line-height: 1.4;
+}
+
+/* Таблицы в справках */
+.reference-table {
+    margin: 20px 0;
+    overflow-x: auto;
+}
+
+.reference-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+}
+
+.reference-table th,
+.reference-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+.reference-table th {
+    background: #34495e;
     color: white;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 11px;
+    font-weight: 500;
+}
+
+.reference-table td {
+    background: white;
+}
+
+/* Адаптивность для новых элементов */
+@media (max-width: 768px) {
+    .formula {
+        font-size: 16px;
+        padding: 12px;
+    }
+    
+    .formula-card {
+        padding: 20px;
+    }
+    
+    .references-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .btn-start-calculation {
+        padding: 15px 25px;
+        font-size: 18px;
+    }
+    
+    .preview-values {
+        grid-template-columns: 1fr;
+    }
+    
+    .formula-table table,
+    .reference-table table {
+        font-size: 14px;
+    }
+    
+    .formula-table th,
+    .formula-table td,
+    .reference-table th,
+    .reference-table td {
+        padding: 8px 5px;
+    }
+}
+
+/* Стили для уведомлений */
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+.notification.success {
+    background: #4CAF50;
+}
+
+.notification.error {
+    background: #f44336;
+}
+
+.notification.info {
+    background: #2196F3;
+}
+
+/* Гарантированные значения в протоколе */
+.guaranteed-value {
+    color: #4CAF50;
     font-weight: bold;
+}
+
+/* Стили для предупреждений */
+.warning {
+    border-left: 4px solid #ff9800;
+    background: #fff3e0;
+}
+
+.additional-result-card.warning {
+    background: #fff3e0;
+    border: 1px solid #ff9800;
+}
+
+/* Улучшение отображения протокола */
+.protocol-step {
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border-left: 4px solid #3498db;
 }
 
 .protocol-description {
-    color: #666;
-    font-size: 13px;
-    margin-bottom: 6px;
+    margin: 5px 0;
+    line-height: 1.4;
 }
 
 .protocol-formula {
-    background: #2c3e50;
-    color: white;
-    padding: 8px 12px;
-    border-radius: 4px;
     font-family: 'Courier New', monospace;
-    font-size: 13px;
-    margin: 6px 0;
-}
-
-.protocol-result {
-    background: #27ae60;
-    color: white;
-    padding: 6px 10px;
+    background: white;
+    padding: 10px;
     border-radius: 4px;
-    font-weight: bold;
-    margin-top: 6px;
-}
-
-/* Схемы распределения */
-.scheme-visualization {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin: 15px 0;
-}
-
-.scheme-zone {
-    flex: 1;
-    min-width: 120px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 12px;
-    border-radius: 6px;
-    text-align: center;
-}
-
-.zone-value {
-    font-size: 18px;
-    font-weight: bold;
-    margin: 5px 0;
-}
-
-.zone-label {
-    font-size: 12px;
-    opacity: 0.9;
-}
-
-/* Стили для изображений */
-#roofImageContainer {
-    text-align: center;
-    margin: 15px 0;
-}
-
-#roofImageContainer img {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-/* Стили для карт */
-#mapContainer {
-    margin: 15px 0;
-    text-align: center;
-}
-
-#snowMap {
-    max-width: 100%;
-    height: auto;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-/* Формулы */
-.calculation-formula {
-    background: #2c3e50;
-    color: white;
-    padding: 12px;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
     margin: 10px 0;
+    border: 1px solid #e9ecef;
+}
+
+.protocol-reference {
+    font-size: 12px;
+    color: #666;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+
+/* Стили для горизонтальной нагрузки */
+.error {
+    border-left: 4px solid #f44336;
+    background: #ffebee;
+}
+
+.btn-info {
+    background: #17a2b8;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
     font-size: 14px;
+    transition: background 0.3s ease;
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
-    body {
-        padding: 10px;
-    }
-    
-    .step {
-        padding: 15px;
-    }
-    
-    .step-navigation {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .btn-prev, .btn-next, .btn-calculate {
-        width: 100%;
-    }
-    
-    .scheme-visualization {
-        flex-direction: column;
-    }
-    
-    .scheme-zone {
-        min-width: auto;
-    }
-    
-    .protocol-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .protocol-reference {
-        margin-top: 5px;
-    }
+.btn-info:hover {
+    background: #138496;
 }
 
-/* Стили для полей ввода */
-input[type="number"], select {
-    padding: 8px 12px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 14px;
-    margin: 5px 0;
-    width: 100%;
-    box-sizing: border-box;
+/* Улучшение таблицы коэффициентов трения */
+.reference-table {
+    margin: 15px 0;
+    overflow-x: auto;
 }
 
-input[type="number"]:focus, select:focus {
-    border-color: #3498db;
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
-}
-
-/* Стили для чекбоксов */
-input[type="checkbox"] {
-    margin-right: 8px;
-    transform: scale(1.2);
-}
-
-/* Стили для таблиц */
-table {
+.reference-table table {
     width: 100%;
     border-collapse: collapse;
-    margin: 15px 0;
+    margin: 10px 0;
 }
 
-th, td {
+.reference-table th,
+.reference-table td {
     border: 1px solid #ddd;
     padding: 10px;
     text-align: left;
 }
 
-th {
+.reference-table th {
     background: #34495e;
     color: white;
+    font-weight: 500;
 }
 
-tr:nth-child(even) {
+.reference-table td {
+    background: white;
+}
+
+.reference-table tr:nth-child(even) td {
     background: #f8f9fa;
 }
 
-/* Стили для печати */
-@media print {
-    body {
-        background: white;
-        padding: 0;
+/* Стили для выбора типа расчета */
+.calculation-types-section {
+    margin: 30px 0;
+}
+
+.calculation-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.calculation-type-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.calculation-type-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    border-color: #3498db;
+}
+
+.type-icon {
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.type-content {
+    flex-grow: 1;
+}
+
+.type-content h3 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+    font-size: 18px;
+    line-height: 1.3;
+}
+
+.type-content p {
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.type-features {
+    margin: 20px 0;
+}
+
+.type-features span {
+    display: block;
+    padding: 5px 0;
+    color: #555;
+    font-size: 14px;
+}
+
+.type-reference {
+    font-size: 12px;
+    color: #888;
+    font-style: italic;
+    margin-top: auto;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+/* Стили для информационных секций */
+.info-section {
+    display: flex;
+    align-items: flex-start;
+    background: #e3f2fd;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 4px solid #2196F3;
+}
+
+.info-icon {
+    font-size: 32px;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.info-content h3 {
+    margin-top: 0;
+    color: #1976D2;
+}
+
+.info-content p {
+    margin: 10px 0;
+    line-height: 1.5;
+    color: #555;
+}
+
+/* Адаптивность для новых элементов */
+@media (max-width: 768px) {
+    .calculation-types-grid {
+        grid-template-columns: 1fr;
     }
     
-    .step-navigation,
-    .report-actions,
-    .feedback-link {
-        display: none;
+    .calculation-type-card {
+        padding: 20px;
     }
     
-    .step {
-        box-shadow: none;
-        border: 1px solid #ddd;
+    .info-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .info-icon {
+        margin-right: 0;
         margin-bottom: 15px;
-        page-break-inside: avoid;
+    }
+}
+
+/* Стили для структуры приложения Б */
+.appendix-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.appendix-section h4 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.roof-types-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+.roof-type-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+}
+
+.roof-type-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-color: #3498db;
+}
+
+.roof-type-card.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #f8f9fa;
+}
+
+.roof-type-card.disabled:hover {
+    transform: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border-color: #e9ecef;
+}
+
+.type-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.type-content h4 {
+    margin: 0 0 8px 0;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.type-content p {
+    margin: 0 0 8px 0;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.3;
+}
+
+.type-reference {
+    font-size: 11px;
+    color: #888;
+    font-style: italic;
+}
+
+/* Информационные секции */
+.info-section {
+    display: flex;
+    align-items: flex-start;
+    background: #e3f2fd;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 15px 0;
+    border-left: 4px solid #2196F3;
+}
+
+.info-icon {
+    font-size: 20px;
+    margin-right: 12px;
+    flex-shrink: 0;
+}
+
+.info-content h3 {
+    margin: 0 0 8px 0;
+    color: #1976D2;
+    font-size: 14px;
+}
+
+.info-content p {
+    margin: 4px 0;
+    color: #555;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+/* Быстрый просмотр */
+.quick-preview {
+    background: #e8f5e8;
+    padding: 15px;
+    border-radius: 6px;
+    margin: 20px 0;
+    border-left: 4px solid #4CAF50;
+}
+
+.quick-preview h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #2c3e50;
+}
+
+.preview-value {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: white;
+    border-radius: 4px;
+    margin: 8px 0;
+}
+
+.preview-value span {
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+.preview-value strong {
+    font-size: 20px;
+    color: #4CAF50;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .appendix-section {
+        padding: 15px;
+        margin: 15px 0;
     }
     
-    #report {
-        box-shadow: none;
-        border: 1px solid #ddd;
+    .roof-types-grid {
+        grid-template-columns: 1fr;
     }
     
-    .final-result {
-        background: #f8f9fa !important;
-        color: black !important;
-        border: 2px solid #333;
+    .info-section {
+        flex-direction: column;
+        text-align: center;
     }
+    
+    .info-icon {
+        margin-right: 0;
+        margin-bottom: 8px;
+    }
+    
+    .preview-value {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+}
+
+/* Улучшения для протокола */
+.protocol-step {
+    margin-bottom: 15px;
+    padding: 12px;
+    background: white;
+    border-radius: 4px;
+    border-left: 3px solid #3498db;
+}
+
+.protocol-description {
+    margin: 4px 0;
+    line-height: 1.4;
+    font-size: 13px;
+}
+
+.protocol-formula {
+    font-family: 'Courier New', monospace;
+    background: #f8f9fa;
+    padding: 8px;
+    border-radius: 4px;
+    margin: 8px 0;
+    font-size: 13px;
+    border: 1px solid #e9ecef;
+}
+/* Улучшения для визуализации зон */
+.scheme-zone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 15px;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    min-width: 90px;
+    border: 1px solid #e9ecef;
+}
+
+.zone-label {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 5px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.zone-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 5px 0;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 480px) {
+    .scheme-visualization {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .scheme-zone {
+        flex-direction: row;
+        justify-content: space-between;
+        min-width: auto;
+    }
+    
+    .zone-label {
+        margin-bottom: 0;
+        margin-right: 10px;
+    }
+}
+
+/* Улучшения для протокола расчета */
+.protocol-step {
+    margin-bottom: 15px;
+    padding: 15px;
+    background: white;
+    border-radius: 6px;
+    border-left: 4px solid #3498db;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.protocol-description {
+    margin: 6px 0;
+    line-height: 1.4;
+    font-size: 14px;
+    color: #555;
+}
+
+.protocol-formula {
+    font-family: 'Courier New', monospace;
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    font-size: 14px;
+    border: 1px solid #e9ecef;
+    line-height: 1.4;
+}
+
+/* Стили для предупреждений */
+.warning-text {
+    color: #e65100;
+    background: #fff3e0;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border-left: 3px solid #ff9800;
+    margin: 8px 0;
+    font-size: 13px;
+}
+
+/* Улучшения для секций ввода */
+.param-group {
+    margin-bottom: 20px;
+}
+
+.param-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.param-group input,
+.param-group select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.param-group input:focus,
+.param-group select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+.param-group .note {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+    font-style: italic;
 }

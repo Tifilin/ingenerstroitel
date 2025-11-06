@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конические покрытия - Коэффициент μ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔺 Конические покрытия - Коэффициент μ</h1>
+            <p class="subtitle">Б.12 СП 20.13330.2016 с Изменением №5</p>
+        </div>
+
+        <div class="content-card">
+            <div class="scheme-image">
+                <img src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/7_Пространственная.png" 
+                     alt="Схема конических покрытий" style="max-width: 100%; height: auto;">
+                <p class="image-caption">Рис. Б.6 - Конические круговые покрытия</p>
+            </div>
+
+            <div class="input-section">
+                <div class="param-group">
+                    <label>Диаметр основания D (м):</label>
+                    <input type="number" id="baseDiameter" value="15.0" step="0.1" min="5" max="50">
+                </div>
+
+                <div class="param-group">
+                    <label>Высота конуса H (м):</label>
+                    <input type="number" id="coneHeight" value="8.0" step="0.1" min="1" max="25">
+                </div>
+
+                <div class="param-group">
+                    <label>Угол наклона образующей α (°):</label>
+                    <input type="number" id="coneAngle" value="30" min="0" max="90" step="1">
+                    <p class="note">Угол между образующей и основанием конуса</p>
+                </div>
+
+                <div class="param-group">
+                    <label>Тип покрытия:</label>
+                    <select id="coneType">
+                        <option value="pure_cone">Чистый конус</option>
+                        <option value="spherical_cone">Сочетание сферической и конической поверхностей</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="calculation-result">
+                <div class="result-header">
+                    <h3>📊 Результат расчета</h3>
+                </div>
+                
+                <div class="final-result">
+                    <strong>Коэффициент μ = <span id="mu-result">1.00</span></strong>
+                </div>
+                
+                <div id="calculation-details">
+                    <div class="protocol-step">
+                        <div class="protocol-description"><strong>Обоснование:</strong> Б.12 СП 20.13330.2016</div>
+                        <div class="protocol-description"><strong>Тип покрытия:</strong> Коническое круговое</div>
+                        <div class="protocol-formula">
+                            При α ≤ 30°: μ = 1,0<br>
+                            При α ≥ 60°: μ = 0<br>
+                            При 30° < α < 60°: линейная интерполяция
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" onclick="goToStep('mu.html')">← Назад к выбору типа</button>
+                <button class="btn-primary" onclick="saveConicalCircularMu()">💾 Использовать это значение</button>
+            </div>
+        </div>
+
+        <div class="reference-section">
+            <h3>📚 Нормативные ссылки</h3>
+            <ul>
+                <li>СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</li>
+                <li>Б.12 - Здания с коническими круговыми покрытиями и покрытиями в виде сочетания сферической и конической поверхностей</li>
+                <li>Особенности распределения снега на конических поверхностях</li>
+                <li>Учет угла наклона образующей конуса</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script src="calculations.js"></script>
+    <script>
+        function initPage() {
+            loadSavedData();
+            setupEventListeners();
+            calculateMu();
+        }
+
+        function setupEventListeners() {
+            const inputs = ['baseDiameter', 'coneHeight', 'coneAngle', 'coneType'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', calculateMu);
+                    element.addEventListener('change', calculateMu);
+                }
+            });
+        }
+
+        function calculateMu() {
+            const D = parseFloat(document.getElementById('baseDiameter').value) || 15.0;
+            const H = parseFloat(document.getElementById('coneHeight').value) || 8.0;
+            const angle = parseFloat(document.getElementById('coneAngle').value) || 30;
+            const coneType = document.getElementById('coneType').value;
+            
+            const mu = calculateMuForConicalCircular(D, H, angle);
+            
+            document.getElementById('mu-result').textContent = mu.toFixed(2);
+            
+            let calculationText = '';
+            if (angle <= 30) {
+                calculationText = `При α = ${angle}° ≤ 30°: μ = 1,0`;
+            } else if (angle >= 60) {
+                calculationText = `При α = ${angle}° ≥ 60°: μ = 0`;
+            } else {
+                calculationText = `При α = ${angle}°: μ = (60 - ${angle})/30 = ${mu.toFixed(2)}`;
+            }
+            
+            document.getElementById('calculation-details').innerHTML = `
+                <div class="protocol-step">
+                    <div class="protocol-description"><strong>Обоснование:</strong> Б.12 СП 20.13330.2016</div>
+                    <div class="protocol-description"><strong>Тип покрытия:</strong> ${getConeTypeName(coneType)}</div>
+                    <div class="protocol-description"><strong>Диаметр основания:</strong> ${D.toFixed(1)} м</div>
+                    <div class="protocol-description"><strong>Высота конуса:</strong> ${H.toFixed(1)} м</div>
+                    <div class="protocol-formula">${calculationText}</div>
+                </div>
+            `;
+        }
+
+        function getConeTypeName(type) {
+            const names = {
+                'pure_cone': 'Чистый конус',
+                'spherical_cone': 'Сочетание сферической и конической поверхностей'
+            };
+            return names[type] || type;
+        }
+
+        function loadSavedData() {
+            const data = getCalculationData();
+            const params = ['baseDiameter', 'coneHeight', 'coneAngle', 'coneType'];
+            params.forEach(param => {
+                if (data[param] !== undefined) {
+                    const element = document.getElementById(param);
+                    if (element) element.value = data[param];
+                }
+            });
+            calculateMu();
+        }
+
+        function saveConicalCircularMu() {
+            const D = parseFloat(document.getElementById('baseDiameter').value) || 15.0;
+            const H = parseFloat(document.getElementById('coneHeight').value) || 8.0;
+            const angle = parseFloat(document.getElementById('coneAngle').value) || 30;
+            const coneType = document.getElementById('coneType').value;
+            const mu = parseFloat(document.getElementById('mu-result').textContent);
+            
+            const saveData = {
+                mu: mu,
+                muMethod: 'auto',
+                roofType: 'conical_circular',
+                baseDiameter: D,
+                coneHeight: H,
+                coneAngle: angle,
+                coneType: coneType
+            };
+            
+            updateCalculationData(saveData);
+            showNotification('Коэффициент μ для конических покрытий сохранен!', 'success');
+            setTimeout(() => goToStep('result.html'), 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

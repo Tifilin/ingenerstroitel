@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расчет Ct - Термический коэффициент</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔥 Термический коэффициент Ct</h1>
+            <p class="subtitle">п. 10.10 СП 20.13330.2016</p>
+        </div>
+
+        <div class="content-card">
+            <div class="method-selector">
+                <label class="method-option">
+                    <input type="radio" name="ctMethod" value="manual" checked>
+                    <span class="radio-label">✏️ Ввести значение вручную</span>
+                </label>
+                <label class="method-option">
+                    <input type="radio" name="ctMethod" value="auto">
+                    <span class="radio-label">📖 Определить по СП</span>
+                </label>
+            </div>
+
+            <div id="manual-input" class="input-section">
+                <label>Термический коэффициент Ct:</label>
+                <input type="number" id="ctManual" value="1.0" step="0.1" min="0.8" max="1.0">
+                <p class="note">Допустимые значения: от 0.8 до 1.0</p>
+            </div>
+
+            <div id="auto-input" class="input-section" style="display: none;">
+                <h3>Выберите тип покрытия:</h3>
+                
+                <div class="ct-options">
+                    <label class="ct-option">
+                        <input type="radio" name="ctType" value="normal" checked>
+                        <div class="option-card">
+                            <div class="option-icon">🏠</div>
+                            <div class="option-content">
+                                <strong>Обычные покрытия</strong>
+                                <p>Стандартные кровельные конструкции</p>
+                                <div class="ct-value">Ct = 1.0</div>
+                            </div>
+                        </div>
+                    </label>
+
+                    <label class="ct-option">
+                        <input type="radio" name="ctType" value="uninsulated">
+                        <div class="option-card">
+                            <div class="option-icon">🏭</div>
+                            <div class="option-content">
+                                <strong>Неутепленные покрытия с повышенными тепловыделениями</strong>
+                                <p>Уклон кровли свыше 3% с обеспечением отвода воды</p>
+                                <div class="ct-value">Ct = 0.8</div>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="calculation-result">
+                    <div class="result-header">
+                        <h3>📊 Результат</h3>
+                    </div>
+                    <div class="final-result">
+                        <strong>Ct = <span id="ct-result">1.0</span></strong>
+                    </div>
+                    <div id="ct-calculation-details" class="protocol-step">
+                        <div class="protocol-description">Выберите тип покрытия для расчета</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" id="backButton">← Назад</button>
+                <button class="btn-primary" id="saveButton">Сохранить и продолжить →</button>
+            </div>
+        </div>
+
+        <!-- Справка по нормативным документам -->
+        <div class="reference-section">
+            <h3>📚 Нормативные ссылки</h3>
+            <ul>
+                <li>СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</li>
+                <li>п. 10.10 - Термический коэффициент Ct</li>
+                <li>Применяется для учета снижения снеговых нагрузок на покрытия с высоким коэффициентом теплопередачи</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script>
+        let currentCt = 1.0;
+
+        function initPage() {
+            console.log('Initializing ct.html page');
+            loadSavedData();
+            setupEventListeners();
+            updateCtResult();
+        }
+
+        function setupEventListeners() {
+            console.log('Setting up event listeners for ct.html');
+            
+            document.querySelectorAll('input[name="ctMethod"]').forEach(radio => {
+                radio.addEventListener('change', toggleMethod);
+            });
+            
+            document.querySelectorAll('input[name="ctType"]').forEach(radio => {
+                radio.addEventListener('change', updateCtResult);
+            });
+
+            document.getElementById('backButton').addEventListener('click', () => goToStep('ce.html'));
+            document.getElementById('saveButton').addEventListener('click', saveCt);
+        }
+
+        function toggleMethod() {
+            const method = document.querySelector('input[name="ctMethod"]:checked').value;
+            document.getElementById('manual-input').style.display = method === 'manual' ? 'block' : 'none';
+            document.getElementById('auto-input').style.display = method === 'auto' ? 'block' : 'none';
+            
+            if (method === 'manual') {
+                currentCt = parseFloat(document.getElementById('ctManual').value) || 1.0;
+            } else {
+                updateCtResult();
+            }
+        }
+
+        function updateCtResult() {
+            const method = document.querySelector('input[name="ctMethod"]:checked').value;
+            
+            if (method === 'manual') {
+                currentCt = parseFloat(document.getElementById('ctManual').value) || 1.0;
+                showManualResult();
+                return;
+            }
+            
+            const ctType = document.querySelector('input[name="ctType"]:checked').value;
+            const ctValues = {
+                'normal': 1.0,
+                'uninsulated': 0.8
+            };
+            
+            currentCt = ctValues[ctType] || 1.0;
+            showAutoResult(ctType);
+        }
+
+        function showManualResult() {
+            document.getElementById('ct-result').textContent = currentCt.toFixed(1);
+            document.getElementById('ct-calculation-details').innerHTML = `
+                <div class="protocol-description"><strong>Метод:</strong> Ручной ввод</div>
+                <div class="protocol-description"><strong>Значение Ct:</strong> ${currentCt.toFixed(1)}</div>
+            `;
+        }
+
+        function showAutoResult(ctType) {
+            document.getElementById('ct-result').textContent = currentCt.toFixed(1);
+            
+            const descriptions = {
+                'normal': 'Обычные покрытия',
+                'uninsulated': 'Неутепленные покрытия с повышенными тепловыделениями'
+            };
+            
+            const reasons = {
+                'normal': 'п.10.10: В остальных случаях Ct = 1.0',
+                'uninsulated': 'п.10.10: Для неутепленных покрытий зданий с повышенными тепловыделениями, при уклоне кровли свыше 3% и обеспечении отвода воды Ct = 0.8'
+            };
+            
+            document.getElementById('ct-calculation-details').innerHTML = `
+                <div class="protocol-description"><strong>Тип покрытия:</strong> ${descriptions[ctType]}</div>
+                <div class="protocol-description"><strong>Обоснование:</strong> ${reasons[ctType]}</div>
+                <div class="protocol-formula">Ct = ${currentCt.toFixed(1)}</div>
+            `;
+        }
+
+        function loadSavedData() {
+            const data = getCalculationData();
+            console.log('Loading saved data for ct.html:', data);
+            
+            if (data.ctMethod) {
+                document.querySelector(`input[name="ctMethod"][value="${data.ctMethod}"]`).checked = true;
+            }
+            
+            if (data.ctType) {
+                document.querySelector(`input[name="ctType"][value="${data.ctType}"]`).checked = true;
+            }
+            
+            if (data.ct) {
+                document.getElementById('ctManual').value = data.ct;
+                currentCt = data.ct;
+            }
+            
+            toggleMethod();
+        }
+
+        function saveCt() {
+            console.log('Saving Ct data...');
+            const method = document.querySelector('input[name="ctMethod"]:checked').value;
+            const ctType = method === 'auto' ? document.querySelector('input[name="ctType"]:checked').value : null;
+            
+            const saveData = {
+                ct: currentCt,
+                ctMethod: method,
+                ctType: ctType
+            };
+            
+            console.log('Saving Ct data:', saveData);
+            updateCalculationData(saveData);
+            
+            // Проверяем сохранение
+            const verifyData = getCalculationData();
+            console.log('Data after save in ct.html:', verifyData);
+            
+            if (verifyData.ct === currentCt) {
+                showNotification('Ct сохранен!', 'success');
+                goToStep('mu.html');
+            } else {
+                showNotification('Ошибка сохранения Ct!', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

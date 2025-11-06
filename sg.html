@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Расчет Sg - Нормативная снеговая нагрузка</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Шаг 1: Нормативная снеговая нагрузка Sg</h1>
+            <p class="subtitle">п. 10.2, Таблица 10.1 СП 20.13330.2016</p>
+        </div>
+
+        <div class="content-card">
+            <!-- Таблица 10.1 всегда видна -->
+            <div class="formula-table">
+                <h3>Таблица 10.1 - Вес снегового покрова Sg</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Снеговой район</th>
+                            <th>I</th>
+                            <th>II</th>
+                            <th>III</th>
+                            <th>IV</th>
+                            <th>V</th>
+                            <th>VI</th>
+                            <th>VII</th>
+                            <th>VIII</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sg, кПа</td>
+                            <td>0.5</td>
+                            <td>1.0</td>
+                            <td>1.5</td>
+                            <td>2.0</td>
+                            <td>2.5</td>
+                            <td>3.0</td>
+                            <td>3.5</td>
+                            <td>4.0</td>
+                        </tr>
+                        <tr>
+                            <td>Sg, кгс/м²</td>
+                            <td>50</td>
+                            <td>100</td>
+                            <td>150</td>
+                            <td>200</td>
+                            <td>250</td>
+                            <td>300</td>
+                            <td>350</td>
+                            <td>400</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="table-reference">Таблица 10.1 СП 20.13330.2016 с Изменением №5</p>
+            </div>
+
+            <div class="method-selector">
+                <label class="method-option">
+                    <input type="radio" name="sgMethod" value="manual" checked>
+                    <span class="radio-label">✏️ Ввести значение вручную</span>
+                </label>
+                <label class="method-option">
+                    <input type="radio" name="sgMethod" value="auto">
+                    <span class="radio-label">📖 Определить по СП</span>
+                </label>
+            </div>
+
+            <div id="manual-input" class="input-section">
+                <div class="input-group">
+                    <label>Нормативная снеговая нагрузка Sg (кПа):</label>
+                    <input type="number" id="sgManual" value="1.5" step="0.1" min="0.5" max="4.0">
+                </div>
+                <p class="note">Значение должно соответствовать снеговому району по Таблице 10.1</p>
+            </div>
+
+            <div id="auto-input" class="input-section" style="display: none;">
+                <div class="method-selector">
+                    <label class="method-option">
+                        <input type="radio" name="spMethod" value="city" checked>
+                        <span class="radio-label">🏙️ По населенному пункту</span>
+                    </label>
+                    <label class="method-option">
+                        <input type="radio" name="spMethod" value="map">
+                        <span class="radio-label">📍 По карте снеговых районов</span>
+                    </label>
+                </div>
+
+                <div id="cityMethod">
+                    <div class="input-group">
+                        <label>Населенный пункт:</label>
+                        <select id="citySelect">
+                            <option value="">Выберите город</option>
+                        </select>
+                    </div>
+                    
+                    <div class="result-display">
+                        <div class="result-item">
+                            <span>Снеговой район:</span>
+                            <strong id="district-display">III</strong>
+                        </div>
+                        <div class="result-item">
+                            <span>Нормативная нагрузка Sg:</span>
+                            <strong id="sg-display">1.5 кПа</strong>
+                        </div>
+                        <div class="result-item">
+                            <span>Средняя температура января:</span>
+                            <strong id="temp-display">-8.0°C</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mapMethod" style="display: none;">
+                    <div class="input-group">
+                        <label>Выберите карту: </label>
+                        <select id="mapType">
+                            <option value="main">Основная территория России</option>
+                            <option value="krym">Крымский полуостров</option>
+                            <option value="sakhalin">Сахалин и Курилы</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn-info" id="toggleMapButton">
+                        🗺️ Показать карту снеговых районов
+                    </button>
+                    
+                    <div id="mapContainer" style="display: none; margin-top: 15px;">
+                        <img id="snowMap" src="" alt="Карта снеговых районов России по СП 20.13330.2016" 
+                             style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+                        <p class="note">Карта снеговых районов Российской Федерации согласно Приложению Е СП 20.13330.2016</p>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Выбранный снеговой район: </label>
+                        <select id="snowDistrictMap">
+                            <option value="I">I (0.5 кПа) - Южные регионы</option>
+                            <option value="II">II (1.0 кПа) - Центральные регионы</option>
+                            <option value="III" selected>III (1.5 кПа) - Центральная Россия</option>
+                            <option value="IV">IV (2.0 кПа) - Урал, Западная Сибирь</option>
+                            <option value="V">V (2.5 кПа) - Восточная Сибирь</option>
+                            <option value="VI">VI (3.0 кПа) - Северные регионы</option>
+                            <option value="VII">VII (3.5 кПа) - Побережье Северного Ледовитого океана</option>
+                            <option value="VIII">VIII (4.0 кПа) - Чукотка, острова Северного Ледовитого океана</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="note">
+                    <label>Уточненное Sg (по данным Росгидромета, кПа): 
+                        <input type="number" id="customSg" step="0.1" placeholder="Оставить пустым для табличного">
+                    </label>
+                    <p class="italic">Используется если объект на границе районов или в сложном рельефе (п.10.2 примечание 1)</p>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" id="backButton">← На главную</button>
+                <button class="btn-primary" id="saveButton">Сохранить и продолжить →</button>
+            </div>
+        </div>
+
+        <!-- Справка по нормативным документам -->
+        <div class="reference-section">
+            <h3>📚 Нормативные ссылки</h3>
+            <ul>
+                <li>СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</li>
+                <li>п. 10.2 - Нормативная снеговая нагрузка</li>
+                <li>Таблица 10.1 - Значения весового покрова снега</li>
+                <li>Приложение Е - Карты районирования территории РФ</li>
+                <li>СП 131.13330.2020 "Строительная климатология"</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script>
+        function initPage() {
+            console.log('Initializing sg.html page');
+            loadSavedData();
+            setupEventListeners();
+            initializeCitySelect();
+            updateMapSrc();
+            updateSgFromCity();
+        }
+
+        function setupEventListeners() {
+            console.log('Setting up event listeners for sg.html');
+            
+            document.querySelectorAll('input[name="sgMethod"]').forEach(radio => {
+                radio.addEventListener('change', toggleMethod);
+            });
+            
+            document.querySelectorAll('input[name="spMethod"]').forEach(radio => {
+                radio.addEventListener('change', toggleSpMethod);
+            });
+            
+            document.getElementById('citySelect').addEventListener('change', updateSgFromCity);
+            document.getElementById('snowDistrictMap').addEventListener('change', updateSgFromMap);
+            document.getElementById('customSg').addEventListener('change', updateCustomSg);
+            document.getElementById('toggleMapButton').addEventListener('click', toggleMap);
+            document.getElementById('mapType').addEventListener('change', updateMapSrc);
+            document.getElementById('backButton').addEventListener('click', () => goToStep('index.html'));
+            document.getElementById('saveButton').addEventListener('click', saveSg);
+        }
+
+        function toggleMethod() {
+            const method = document.querySelector('input[name="sgMethod"]:checked').value;
+            document.getElementById('manual-input').style.display = method === 'manual' ? 'block' : 'none';
+            document.getElementById('auto-input').style.display = method === 'auto' ? 'block' : 'none';
+            
+            if (method === 'auto') {
+                toggleSpMethod();
+            }
+        }
+
+        function toggleSpMethod() {
+            const method = document.querySelector('input[name="spMethod"]:checked').value;
+            document.getElementById('cityMethod').style.display = method === 'city' ? 'block' : 'none';
+            document.getElementById('mapMethod').style.display = method === 'map' ? 'block' : 'none';
+            
+            if (method === 'map') {
+                updateMapSrc();
+            }
+        }
+
+        function initializeCitySelect() {
+            const select = document.getElementById('citySelect');
+            select.innerHTML = '<option value="">Выберите город</option>';
+            
+            Object.keys(CITIES_DATA).forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                select.appendChild(option);
+            });
+            
+            select.value = 'Москва';
+        }
+
+        function updateSgFromCity() {
+            const city = document.getElementById('citySelect').value;
+            console.log('Updating Sg from city:', city);
+            
+            if (city && CITIES_DATA[city]) {
+                const data = CITIES_DATA[city];
+                const sg = SNOW_DISTRICTS[data.district];
+                
+                document.getElementById('district-display').textContent = data.district;
+                document.getElementById('sg-display').textContent = `${sg} кПа`;
+                document.getElementById('temp-display').textContent = `${data.temp}°C`;
+            }
+        }
+
+        function updateSgFromMap() {
+            const district = document.getElementById('snowDistrictMap').value;
+            const sg = SNOW_DISTRICTS[district];
+        }
+
+        function updateCustomSg() {
+            const customSg = document.getElementById('customSg').value;
+        }
+
+        function toggleMap() {
+            const mapContainer = document.getElementById('mapContainer');
+            const btn = document.getElementById('toggleMapButton');
+            
+            if (mapContainer.style.display === 'none') {
+                mapContainer.style.display = 'block';
+                btn.textContent = '🗺️ Скрыть карту';
+                updateMapSrc();
+            } else {
+                mapContainer.style.display = 'none';
+                btn.textContent = '🗺️ Показать карту';
+            }
+        }
+
+        function updateMapSrc() {
+            const type = document.getElementById('mapType').value;
+            const mapImg = document.getElementById('snowMap');
+            
+            if (!type || !mapImg) return;
+            
+            mapImg.src = MAP_URLS[type] || MAP_URLS.main;
+            
+            mapImg.onerror = function() {
+                this.alt = 'Карта временно недоступна';
+            };
+        }
+
+        function loadSavedData() {
+            const data = getCalculationData();
+            console.log('Loading saved data for sg.html:', data);
+            
+            if (data.sgMethod) {
+                document.querySelector(`input[name="sgMethod"][value="${data.sgMethod}"]`).checked = true;
+            }
+            if (data.spMethod) {
+                document.querySelector(`input[name="spMethod"][value="${data.spMethod}"]`).checked = true;
+            }
+            
+            toggleMethod();
+            
+            if (data.sg) {
+                document.getElementById('sgManual').value = data.sg;
+            }
+            
+            if (data.city) {
+                document.getElementById('citySelect').value = data.city;
+            } else {
+                document.getElementById('citySelect').value = 'Москва';
+            }
+            updateSgFromCity();
+            
+            if (data.snowDistrictMap) {
+                document.getElementById('snowDistrictMap').value = data.snowDistrictMap;
+            }
+            
+            if (data.customSg) {
+                document.getElementById('customSg').value = data.customSg;
+            }
+        }
+
+        function saveSg() {
+            console.log('Saving Sg data...');
+            const method = document.querySelector('input[name="sgMethod"]:checked').value;
+            let sg, city, snowDistrict, customSg, spMethod;
+            
+            if (method === 'manual') {
+                sg = parseFloat(document.getElementById('sgManual').value);
+                if (!sg || sg < 0.5 || sg > 4.0) {
+                    showNotification('Введите корректное значение Sg от 0.5 до 4.0 кПа', 'error');
+                    return;
+                }
+            } else {
+                spMethod = document.querySelector('input[name="spMethod"]:checked').value;
+                
+                if (spMethod === 'city') {
+                    city = document.getElementById('citySelect').value;
+                    if (!city) {
+                        showNotification('Выберите населенный пункт', 'error');
+                        return;
+                    }
+                    sg = SNOW_DISTRICTS[CITIES_DATA[city].district];
+                    snowDistrict = CITIES_DATA[city].district;
+                } else {
+                    snowDistrict = document.getElementById('snowDistrictMap').value;
+                    sg = SNOW_DISTRICTS[snowDistrict];
+                }
+                
+                customSg = document.getElementById('customSg').value;
+                if (customSg) {
+                    const customValue = parseFloat(customSg);
+                    if (!isNaN(customValue) && customValue > 0) {
+                        sg = Math.max(0.5, Math.min(4.0, customValue));
+                    }
+                }
+            }
+            
+            const saveData = {
+                sg: sg,
+                sgMethod: method,
+                spMethod: spMethod,
+                city: city,
+                snowDistrict: snowDistrict,
+                snowDistrictMap: snowDistrict,
+                customSg: customSg
+            };
+            
+            console.log('Saving Sg data:', saveData);
+            updateCalculationData(saveData);
+            
+            // Проверяем сохранение
+            const verifyData = getCalculationData();
+            console.log('Data after save in sg.html:', verifyData);
+            
+            if (verifyData.sg === sg) {
+                showNotification('Sg сохранен!', 'success');
+                goToStep('ce.html');
+            } else {
+                showNotification('Ошибка сохранения Sg!', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

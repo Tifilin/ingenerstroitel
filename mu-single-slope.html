@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Односкатные покрытия - Коэффициент μ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏠 Односкатные покрытия - Коэффициент μ</h1>
+            <p class="subtitle">Б.1 СП 20.13330.2016 с Изменением №5</p>
+        </div>
+
+        <div class="content-card">
+            <div class="scheme-image">
+                <img src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/2_Односкатная.png" 
+                     alt="Схема односкатного покрытия" style="max-width: 100%; height: auto;">
+                <p class="image-caption">Рис. Б.1 - Односкатное покрытие (схема 3)</p>
+            </div>
+
+            <div class="input-section">
+                <div class="param-group">
+                    <label>Угол наклона α (°):</label>
+                    <input type="number" id="roofAngle" value="25" min="0" max="90" step="1">
+                    <p class="note">Введите угол наклона покрытия от 0° до 90°</p>
+                </div>
+            </div>
+
+            <div class="calculation-result">
+                <div class="result-header">
+                    <h3>📊 Результат расчета</h3>
+                </div>
+                
+                <div class="final-result">
+                    <strong>Коэффициент μ = <span id="mu-result">1.00</span></strong>
+                </div>
+                
+                <div id="calculation-details">
+                    <div class="protocol-step">
+                        <div class="protocol-description"><strong>Обоснование:</strong> Б.1 СП 20.13330.2016</div>
+                        <div class="protocol-description"><strong>Схема:</strong> 3 - Односкатное покрытие</div>
+                        <div class="protocol-formula">
+                            При α ≤ 30°: μ = 1,0<br>
+                            При α ≥ 60°: μ = 0<br>
+                            При 30° < α < 60°: линейная интерполяция
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reference-section">
+                <h3>📚 Нормативные ссылки</h3>
+                <ul>
+                    <li>СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</li>
+                    <li>Б.1 - Плоские, односкатные и двускатные покрытия</li>
+                    <li>Таблица Б.1 - Коэффициент μ для односкатных покрытий</li>
+                    <li>Схема 3 - Распределение снеговой нагрузки</li>
+                </ul>
+
+                <div class="formula-table">
+                    <h4>Таблица Б.1 - Коэффициент μ для односкатных покрытий</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Уклон покрытия α</th>
+                                <th>Коэффициент μ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>α ≤ 30°</td>
+                                <td>1,0</td>
+                            </tr>
+                            <tr>
+                                <td>α ≥ 60°</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>30° < α < 60°</td>
+                                <td>(60 - α)/30</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" onclick="goToStep('mu.html')">← Назад к выбору типа</button>
+                <button class="btn-primary" onclick="saveSingleSlopeMu()">💾 Использовать это значение</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script src="calculations.js"></script>
+    <script>
+        function initPage() {
+            loadSavedData();
+            setupEventListeners();
+            calculateMu();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('roofAngle').addEventListener('input', calculateMu);
+            document.getElementById('roofAngle').addEventListener('change', calculateMu);
+        }
+
+        function calculateMu() {
+            const angle = parseFloat(document.getElementById('roofAngle').value) || 25;
+            const mu = calculateMuForSingleSlope(angle);
+            
+            document.getElementById('mu-result').textContent = mu.toFixed(2);
+            
+            let calculationText = '';
+            if (angle <= 30) {
+                calculationText = `При α = ${angle}° ≤ 30°: μ = 1,0`;
+            } else if (angle >= 60) {
+                calculationText = `При α = ${angle}° ≥ 60°: μ = 0`;
+            } else {
+                calculationText = `При α = ${angle}°: μ = (60 - ${angle})/30 = ${mu.toFixed(2)}`;
+            }
+            
+            document.getElementById('calculation-details').innerHTML = `
+                <div class="protocol-step">
+                    <div class="protocol-description"><strong>Обоснование:</strong> Б.1 СП 20.13330.2016</div>
+                    <div class="protocol-description"><strong>Схема:</strong> 3 - Односкатное покрытие</div>
+                    <div class="protocol-formula">${calculationText}</div>
+                </div>
+            `;
+        }
+
+        function calculateMuForSingleSlope(angle) {
+            if (angle <= 30) {
+                return 1.0;
+            } else if (angle < 60) {
+                return (60 - angle) / 30;
+            } else {
+                return 0;
+            }
+        }
+
+        function loadSavedData() {
+            const data = getCalculationData();
+            if (data.roofAngle) {
+                document.getElementById('roofAngle').value = data.roofAngle;
+            }
+            calculateMu();
+        }
+
+        function saveSingleSlopeMu() {
+            const angle = parseFloat(document.getElementById('roofAngle').value) || 25;
+            const mu = calculateMuForSingleSlope(angle);
+            
+            const saveData = {
+                mu: mu,
+                muMethod: 'auto',
+                roofType: 'single_slope',
+                roofAngle: angle
+            };
+            
+            updateCalculationData(saveData);
+            showNotification('Коэффициент μ для односкатного покрытия сохранен!', 'success');
+            setTimeout(() => goToStep('result.html'), 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

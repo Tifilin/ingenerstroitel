@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Многопролетные здания - Коэффициент μ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Многопролетные здания - Коэффициент μ</h1>
+            <p class="subtitle">Б.5 СП 20.13330.2016 с Изменением №5</p>
+        </div>
+
+        <div class="content-card">
+            <div class="scheme-image">
+                <img src="https://raw.githubusercontent.com/Tifilin/ingenerstroitel/refs/heads/main/4_Многопролетная.png" 
+                     alt="Схема многопролетных зданий" style="max-width: 100%; height: auto;">
+                <p class="image-caption">Рис. Б.3 - Многопролетные здания с двускатными покрытиями</p>
+            </div>
+
+            <div class="input-section">
+                <div class="param-group">
+                    <label>Угол наклона покрытия α (°):</label>
+                    <input type="number" id="roofAngle" value="25" min="0" max="90" step="1">
+                </div>
+
+                <div class="param-group">
+                    <label>Количество пролетов:</label>
+                    <select id="spansCount">
+                        <option value="2">2 пролета</option>
+                        <option value="3" selected>3 пролета</option>
+                        <option value="4">4 пролета</option>
+                        <option value="5">5 пролетов</option>
+                        <option value="6">6 пролетов</option>
+                    </select>
+                </div>
+
+                <div class="param-group">
+                    <label>Ширина пролета L (м):</label>
+                    <input type="number" id="spanWidth" value="18.0" step="0.1" min="6" max="36">
+                </div>
+
+                <div class="param-group">
+                    <label>Высота в коньке (м):</label>
+                    <input type="number" id="ridgeHeight" value="8.0" step="0.1" min="3" max="20">
+                </div>
+            </div>
+
+            <div class="calculation-result">
+                <div class="result-header">
+                    <h3>📊 Результат расчета</h3>
+                </div>
+                
+                <div class="final-result">
+                    <strong>Максимальный коэффициент μ = <span id="mu-result">1.40</span></strong>
+                </div>
+                
+                <div id="schemes-container">
+                    <!-- Схемы будут заполнены динамически -->
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" onclick="goToStep('mu.html')">← Назад к выбору типа</button>
+                <button class="btn-primary" onclick="saveMultiSpanMu()">💾 Использовать максимальное значение</button>
+            </div>
+        </div>
+
+        <div class="reference-section">
+            <h3>📚 Нормативные ссылки</h3>
+            <ul>
+                <li>СП 20.13330.2016 "Нагрузки и воздействия" с Изменением №5</li>
+                <li>Б.5 - Двух- и многопролетные здания с двускатными покрытиями</li>
+                <li>Учет перераспределения снега между пролетами</li>
+                <li>Зависимость от количества пролетов и их ширины</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script src="calculations.js"></script>
+    <script>
+        function initPage() {
+            loadSavedData();
+            setupEventListeners();
+            calculateMu();
+        }
+
+        function setupEventListeners() {
+            const inputs = ['roofAngle', 'spansCount', 'spanWidth', 'ridgeHeight'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', calculateMu);
+                document.getElementById(id).addEventListener('change', calculateMu);
+            });
+        }
+
+        function calculateMu() {
+            const angle = parseFloat(document.getElementById('roofAngle').value) || 25;
+            const spans = parseInt(document.getElementById('spansCount').value) || 3;
+            const L = parseFloat(document.getElementById('spanWidth').value) || 18.0;
+            const H = parseFloat(document.getElementById('ridgeHeight').value) || 8.0;
+            
+            const schemes = calculateMuForMultiSpanPitched(angle, spans, L, H);
+            const maxMu = getMaxMuFromSchemes(schemes);
+            
+            document.getElementById('mu-result').textContent = maxMu.toFixed(2);
+            displaySchemes(schemes, angle, spans, L, H);
+        }
+
+        function displaySchemes(schemes, angle, spans, L, H) {
+            let html = '';
+            
+            Object.values(schemes).forEach(scheme => {
+                html += `<div class="mu-scheme">`;
+                html += `<h4>${scheme.name}</h4>`;
+                
+                // Визуализация зон
+                html += '<div class="scheme-visualization">';
+                Object.values(scheme.zones).forEach((zone, index) => {
+                    if (zone.mu > 0) {
+                        html += `
+                            <div class="scheme-zone">
+                                <div class="zone-label">${zone.label}</div>
+                                <div class="zone-value">${zone.mu.toFixed(2)}</div>
+                                <div class="zone-label">μ</div>
+                            </div>
+                        `;
+                    }
+                });
+                html += '</div>';
+                
+                // Описание зон
+                Object.values(scheme.zones).forEach(zone => {
+                    if (zone.mu > 0) {
+                        html += `<div class="protocol-description">${zone.description}</div>`;
+                    }
+                });
+                
+                if (scheme.note) {
+                    html += `<div class="protocol-description warning-text">${scheme.note}</div>`;
+                }
+                
+                html += '</div>';
+            });
+            
+            document.getElementById('schemes-container').innerHTML = html;
+        }
+
+        function loadSavedData() {
+            const data = getCalculationData();
+            const params = ['roofAngle', 'spansCount', 'spanWidth', 'ridgeHeight'];
+            params.forEach(param => {
+                if (data[param] !== undefined) {
+                    document.getElementById(param).value = data[param];
+                }
+            });
+            calculateMu();
+        }
+
+        function saveMultiSpanMu() {
+            const angle = parseFloat(document.getElementById('roofAngle').value) || 25;
+            const spans = parseInt(document.getElementById('spansCount').value) || 3;
+            const L = parseFloat(document.getElementById('spanWidth').value) || 18.0;
+            const H = parseFloat(document.getElementById('ridgeHeight').value) || 8.0;
+            const mu = parseFloat(document.getElementById('mu-result').textContent);
+            
+            const saveData = {
+                mu: mu,
+                muMethod: 'auto',
+                roofType: 'multi_span_pitched',
+                roofAngle: angle,
+                spansCount: spans,
+                spanWidth: L,
+                ridgeHeight: H
+            };
+            
+            updateCalculationData(saveData);
+            showNotification('Коэффициент μ для многопролетных зданий сохранен!', 'success');
+            setTimeout(() => goToStep('result.html'), 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>

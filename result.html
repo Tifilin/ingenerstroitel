@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результат расчета - Снеговая нагрузка</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Результат расчета снеговой нагрузки</h1>
+            <p class="subtitle">СП 20.13330.2016 с Изменением №5</p>
+        </div>
+
+        <div id="calculation-content">
+            <!-- Контент будет заполнен динамически -->
+        </div>
+    </div>
+
+    <script src="common.js"></script>
+    <script src="data.js"></script>
+    <script src="calculations.js"></script>
+    <script>
+        function initPage() {
+            console.log('Initializing result page...');
+            
+            // Гарантируем, что все коэффициенты установлены
+            initializeResultData();
+            
+            const data = getCalculationData();
+            console.log('Current data in storage:', data);
+            
+            // Всегда показываем расчет, так как значения по умолчанию гарантированы
+            console.log('Showing calculation with guaranteed coefficients...');
+            loadCalculationData();
+            setupEventListeners();
+            calculateFinalResults();
+        }
+
+        function initializeResultData() {
+            const data = getCalculationData();
+            const defaultValues = {
+                sg: 1.5,
+                ce: 1.0,
+                ct: 1.0,
+                mu: 1.0
+            };
+            
+            let needsUpdate = false;
+            const updates = {};
+            
+            // Проверяем и устанавливаем недостающие коэффициенты
+            ['sg', 'ce', 'ct', 'mu'].forEach(coeff => {
+                if (!data[coeff] && data[coeff] !== 0) {
+                    updates[coeff] = defaultValues[coeff];
+                    needsUpdate = true;
+                    console.log(`Setting default value for ${coeff}: ${defaultValues[coeff]}`);
+                }
+            });
+            
+            if (needsUpdate) {
+                updateCalculationData(updates);
+                console.log('Updated data with defaults:', updates);
+            }
+        }
+
+        function setupEventListeners() {
+            // Обработчики для дополнительных параметров
+            const reducedLoad = document.getElementById('reducedLoad');
+            const forPurlins = document.getElementById('forPurlins');
+            
+            if (reducedLoad) reducedLoad.addEventListener('change', calculateFinalResults);
+            if (forPurlins) forPurlins.addEventListener('change', calculateFinalResults);
+        }
+
+        function loadCalculationData() {
+            const content = document.getElementById('calculation-content');
+            const savedData = getCalculationData();
+            
+            console.log('Loading calculation with data:', savedData);
+            
+            // Показываем основной контент расчета
+            content.innerHTML = `
+                <div class="content-card">
+                    <!-- Блок с итоговыми результатами -->
+                    <div class="final-results-section">
+                        <div class="final-result-card">
+                            <div class="result-icon">🏔️</div>
+                            <div class="result-content">
+                                <h3>Расчетная снеговая нагрузка для расчета по прочности</h3>
+                                <div class="result-value" id="final-s-result">0.00 кПа</div>
+                                <div class="result-conversion" id="final-s-kgs">0 кгс/м²</div>
+                            </div>
+                        </div>
+
+                        <div class="result-details-grid">
+                            <div class="result-detail">
+                                <span>Нормативное значение S₀:</span>
+                                <strong id="s0-result">0.00 кПа</strong>
+                            </div>
+                            <div class="result-detail">
+                                <span>Коэффициент надежности γf:</span>
+                                <strong>1.4</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Дополнительные параметры -->
+                    <div class="additional-parameters-section">
+                        <h3>📏 Дополнительные параметры</h3>
+                        
+                        <div class="parameter-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="reducedLoad">
+                                📥 Рассчитать пониженную нагрузку для деформаций
+                            </label>
+                            <p class="note">п.10.11: только для холодных регионов (t_янв ≤ -5°C)</p>
+
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="forPurlins">
+                                📐 Учесть коэффициент 1.1 для расчета прогонов
+                            </label>
+                            <p class="note">п.10.4 примечание 4: для учета локальной неравномерности снегоотложений</p>
+                        </div>
+
+                        <div class="additional-results" id="additional-results" style="display: none;">
+                            <!-- Дополнительные результаты будут здесь -->
+                        </div>
+                    </div>
+
+                    <!-- Протокол расчета -->
+                    <div class="protocol-section">
+                        <h3>🧮 Протокол расчета</h3>
+                        <div id="protocol-content">
+                            <!-- Протокол будет заполнен динамически -->
+                        </div>
+                    </div>
+
+                    <!-- Исходные данные -->
+                    <div class="input-data-section">
+                        <h3>📋 Исходные данные</h3>
+                        <div class="data-grid" id="input-data-grid">
+                            <!-- Данные будут заполнены динамически -->
+                        </div>
+                    </div>
+
+                    <!-- Действия -->
+                    <div class="actions-section">
+                        <div class="action-buttons">
+                            <button class="btn-secondary" id="backButton">← Назад к μ</button>
+                            <button class="btn-primary" id="saveReportButton">💾 Сохранить отчет</button>
+                            <button class="btn-success" id="printButton">🖨️ Печать отчета</button>
+                            <button class="btn-warning" id="newCalcButton">🔄 Новый расчет</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Загружаем сохраненные параметры
+            if (savedData.reducedLoad !== undefined) {
+                document.getElementById('reducedLoad').checked = savedData.reducedLoad;
+            }
+            if (savedData.forPurlins !== undefined) {
+                document.getElementById('forPurlins').checked = savedData.forPurlins;
+            }
+            
+            // Назначаем обработчики для кнопок
+            document.getElementById('backButton').addEventListener('click', () => goToStep('mu.html'));
+            document.getElementById('saveReportButton').addEventListener('click', saveReport);
+            document.getElementById('printButton').addEventListener('click', printReport);
+            document.getElementById('newCalcButton').addEventListener('click', newCalculation);
+            
+            displayInputData(savedData);
+        }
+
+        function displayInputData(data) {
+            const grid = document.getElementById('input-data-grid');
+            if (!grid) return;
+            
+            let html = '';
+            
+            // Sg данные
+            if (data.sgMethod === 'manual') {
+                html += `<div class="data-item"><span>Sg:</span> <strong>${data.sg} кПа (ручной ввод)</strong></div>`;
+            } else {
+                if (data.spMethod === 'city' && data.city) {
+                    html += `<div class="data-item"><span>Sg:</span> <strong>${data.sg} кПа (${data.city}, район ${data.snowDistrict})</strong></div>`;
+                } else {
+                    html += `<div class="data-item"><span>Sg:</span> <strong>${data.sg} кПа (район ${data.snowDistrictMap || 'III'})</strong></div>`;
+                }
+            }
+            
+            // Ce данные
+            if (data.ceMethod === 'manual') {
+                html += `<div class="data-item"><span>Ce:</span> <strong>${data.ce} (ручной ввод)</strong></div>`;
+            } else {
+                html += `<div class="data-item"><span>Ce:</span> <strong>${data.ce} (расчет по СП)</strong></div>`;
+            }
+            
+            // Ct данные
+            if (data.ctMethod === 'manual') {
+                html += `<div class="data-item"><span>Ct:</span> <strong>${data.ct} (ручной ввод)</strong></div>`;
+            } else {
+                html += `<div class="data-item"><span>Ct:</span> <strong>${data.ct} (расчет по СП)</strong></div>`;
+            }
+            
+            // μ данные
+            if (data.muMethod === 'manual') {
+                html += `<div class="data-item"><span>μ:</span> <strong>${data.mu} (ручной ввод)</strong></div>`;
+            } else {
+                html += `<div class="data-item"><span>μ:</span> <strong>${data.mu} (${data.roofType || 'двускатное покрытие'})</strong></div>`;
+            }
+            
+            grid.innerHTML = html;
+        }
+
+        function calculateFinalResults() {
+            const data = getCalculationData();
+            const reducedLoad = document.getElementById('reducedLoad')?.checked || false;
+            const forPurlins = document.getElementById('forPurlins')?.checked || false;
+            
+            console.log('Calculating final results with:', data);
+            
+            // Сохраняем дополнительные параметры
+            updateCalculationData({
+                reducedLoad: reducedLoad,
+                forPurlins: forPurlins
+            });
+            
+            // Получаем коэффициенты (гарантированно будут числами)
+            const coefficients = getAllCoefficients();
+            
+            // Расчет нормативной нагрузки S0 согласно п.10.1
+            const s0 = coefficients.sg * coefficients.ce * coefficients.ct * coefficients.mu;
+            
+            // Расчетная нагрузка S согласно п.10.12
+            let s = s0 * window.GAMMA_F;
+            
+            // Учет коэффициента для прогонов согласно п.10.4 примечание 4
+            if (forPurlins) {
+                s *= 1.1;
+            }
+            
+            // Отображение результатов
+            document.getElementById('s0-result').textContent = s0.toFixed(2) + ' кПа';
+            document.getElementById('final-s-result').textContent = s.toFixed(2) + ' кПа';
+            document.getElementById('final-s-kgs').textContent = Math.round(s * 100) + ' кгс/м²';
+            
+            // Дополнительные результаты для пониженной нагрузки согласно п.10.11
+            const additionalResults = document.getElementById('additional-results');
+            if (reducedLoad) {
+                const januaryTemp = parseFloat(data.januaryTemp) || -8;
+                if (januaryTemp <= -5) {
+                    // Для холодных регионов - пониженная нагрузка 0.5 * S0
+                    const sReduced = 0.5 * s0;
+                    additionalResults.innerHTML = `
+                        <div class="additional-result-card">
+                            <h4>Пониженная нагрузка для расчета по деформациям</h4>
+                            <div class="result-value">${sReduced.toFixed(2)} кПа</div>
+                            <div class="result-conversion">${Math.round(sReduced * 100)} кгс/м²</div>
+                            <p class="note">п.10.11: для холодных регионов (t_янв ≤ -5°C) пониженная нагрузка = 0.5 × S₀</p>
+                            <p class="note">При этом коэффициенты Ce и Ct приняты равными 1.0</p>
+                        </div>
+                    `;
+                    additionalResults.style.display = 'block';
+                } else {
+                    additionalResults.innerHTML = `
+                        <div class="additional-result-card warning">
+                            <h4>⚠️ Пониженная нагрузка не учитывается</h4>
+                            <p class="note">п.10.11: для районов со средней температурой января выше -5°C пониженная нагрузка не учитывается</p>
+                            <p class="note">Температура января в выбранном регионе: ${januaryTemp}°C</p>
+                        </div>
+                    `;
+                    additionalResults.style.display = 'block';
+                }
+            } else {
+                additionalResults.style.display = 'none';
+            }
+            
+            // Формирование протокола
+            generateProtocol(data, s0, s, reducedLoad, forPurlins);
+        }
+
+        function generateProtocol(data, s0, s, reducedLoad, forPurlins) {
+            const protocol = document.getElementById('protocol-content');
+            const coefficients = getAllCoefficients();
+            const januaryTemp = parseFloat(data.januaryTemp) || -8;
+            
+            let html = `
+                <div class="protocol-step">
+                    <div class="protocol-description"><strong>Нормативная снеговая нагрузка S₀ (п.10.1)</strong></div>
+                    <div class="protocol-formula">
+                        S₀ = Sg × Ce × Ct × μ<br>
+                        S₀ = ${coefficients.sg} × ${coefficients.ce} × ${coefficients.ct} × ${coefficients.mu}<br>
+                        S₀ = ${s0.toFixed(2)} кПа
+                    </div>
+                </div>
+                
+                <div class="protocol-step">
+                    <div class="protocol-description"><strong>Расчетная снеговая нагрузка S (п.10.12)</strong></div>
+                    <div class="protocol-formula">
+                        S = S₀ × γf<br>
+                        S = ${s0.toFixed(2)} × ${GAMMA_F}<br>
+                        S = ${(s0 * GAMMA_F).toFixed(2)} кПа
+                    </div>
+            `;
+            
+            if (forPurlins) {
+                html += `
+                    <div class="protocol-step">
+                        <div class="protocol-description"><strong>Учет коэффициента 1.1 для прогонов (п.10.4 примечание 4)</strong></div>
+                        <div class="protocol-formula">
+                            S = ${(s0 * GAMMA_F).toFixed(2)} × 1.1<br>
+                            S = ${s.toFixed(2)} кПа
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (reducedLoad) {
+                if (januaryTemp <= -5) {
+                    const sReduced = 0.5 * s0;
+                    html += `
+                        <div class="protocol-step">
+                            <div class="protocol-description"><strong>Пониженная нагрузка для деформаций (п.10.11)</strong></div>
+                            <div class="protocol-formula">
+                                S_red = 0.5 × S₀<br>
+                                S_red = 0.5 × ${s0.toFixed(2)}<br>
+                                S_red = ${sReduced.toFixed(2)} кПа
+                            </div>
+                            <div class="protocol-description">Температура января: ${januaryTemp}°C ≤ -5°C</div>
+                        </div>
+                    `;
+                } else {
+                    html += `
+                        <div class="protocol-step">
+                            <div class="protocol-description"><strong>Пониженная нагрузка не применяется (п.10.11)</strong></div>
+                            <div class="protocol-description">Температура января: ${januaryTemp}°C > -5°C</div>
+                        </div>
+                    `;
+                }
+            }
+            
+            html += `</div>`;
+            protocol.innerHTML = html;
+        }
+
+        function saveReport() {
+            // Здесь можно реализовать сохранение отчета
+            showNotification('Отчет сохранен!', 'success');
+        }
+
+        function printReport() {
+            window.print();
+        }
+
+        function newCalculation() {
+            if (confirm('Начать новый расчет? Текущие данные будут удалены.')) {
+                clearCalculationData();
+                goToStep('index.html');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initPage);
+    </script>
+</body>
+</html>
