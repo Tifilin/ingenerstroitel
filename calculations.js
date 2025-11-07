@@ -391,8 +391,8 @@ function calculateMuSchemesForPitched(angle) {
         schemes.scheme2 = {
             name: "Схема 2 - Неравномерное распределение",
             zones: {
-                'zone1': { mu: 0.5, description: "μ₁ = 0,5" },
-                'zone2': { mu: 1.4, description: "μ₂ = 1,4" }
+                'zone1': { mu: 0.75, description: "μ₁ = 0,75" },
+                'zone2': { mu: 1.25, description: "μ₂ = 1,25" }
             }
         };
     } else {
@@ -411,10 +411,9 @@ function calculateMuSchemesForPitched(angle) {
         schemes.scheme3 = {
             name: "Схема 3 - Образование снегового мешка",
             zones: {
-                'zone1': { mu: 0.75, description: "μ₁ = 0,75" },
-                'zone2': { mu: 1.25, description: "μ₂ = 1,25" },
-                'zone3': { mu: 1.0, description: "μ₃ = 1,0" },
-                'zone4': { mu: 1.0, description: "μ₄ = 1,0" }
+                'zone1': { mu: 0.6, description: "μ₁ = 0,6" },
+                'zone2': { mu: 1.4, description: "μ₂ = 1,4" },
+                'zone3': { mu: 0.6, description: "μ₃ = 0,6" },
             },
             note: "Применяется только при наличии ходовых мостиков или светоаэрационных устройств по коньку покрытия"
         };
